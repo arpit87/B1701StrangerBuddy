@@ -1,0 +1,79 @@
+package my.b1701.SB.Fragments;
+
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.Adapter.NearbyUsersListViewAdapter;
+import my.b1701.SB.HelperClasses.CommunicationHelper;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.Users.CurrentNearbyUsers;
+import my.b1701.SB.Users.NearbyUser;
+
+import java.util.List;
+
+public class SBListFragment extends ListFragment {
+	
+	private static final String TAG = "my.b1701.SB.Fragments.SBListFragment";
+	private ViewGroup mListViewContainer;
+	private List<NearbyUser> nearbyUserlist = null;
+	
+	
+	@Override
+	public void onCreate(Bundle savedState) {
+        super.onCreate(null);
+		//update listview
+        Log.i(TAG,"on create list view");
+        nearbyUserlist = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
+        if(nearbyUserlist!=null)
+        {
+			NearbyUsersListViewAdapter adapter = new NearbyUsersListViewAdapter(getActivity(), nearbyUserlist);
+			setListAdapter(adapter);
+			Log.i(TAG,"nearby users:"+nearbyUserlist.toString());
+        }
+        MapListActivityHandler.getInstance().setListFrag(this);
+	}
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        MapListActivityHandler.getInstance().updateUserNameInListView();
+        MapListActivityHandler.getInstance().updateUserPicInListView();
+        MapListActivityHandler.getInstance().updateSrcDstTimeInListView();
+    }
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreateView( inflater, container, null );
+		Log.i(TAG,"oncreateview listview");
+		mListViewContainer=  MapListActivityHandler.getInstance().getThisListContainerWithListView();
+		return mListViewContainer;
+	}
+	
+	@Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+		NearbyUser userAtthisPosition = CurrentNearbyUsers.getInstance().getNearbyUserAtPosition(position);
+		if(userAtthisPosition != null)
+			CommunicationHelper.getInstance().onChatClickWithUser(userAtthisPosition.getUserFBInfo().getFbid());
+		else
+			ToastTracker.showToast("Unable to chat,user not in current list");
+        ToastTracker.showToast("Chat with user at: " + position);
+    }
+	
+	@Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i(TAG,"ondestroyview listview");
+        ViewGroup parentViewGroup = (ViewGroup) mListViewContainer.getParent();
+		if( null != parentViewGroup ) {
+			parentViewGroup.removeView( mListViewContainer );
+		}
+		//mListViewContainer.removeAllViews();
+    }  
+	
+
+}

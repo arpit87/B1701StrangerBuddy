@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  
+       
+    <item
+            android:id="@+id/btn_listview"
+            android:title="@string/listviewstr"
+            android:icon="@drawable/maptolist"            
+            android:showAsAction="always"
+            /> 
+     <item
+            android:id="@+id/menu_search"
+            android:title="@string/menu_search"
+            android:icon="@drawable/ic_menu_search"            
+            android:showAsAction="always"
+            />        
+
+    <item android:id="@+id/history" android:title="History" android:showAsAction="never"></item>
+    <item android:id="@+id/settings_menuitem" android:title="Settings" android:showAsAction="never"></item> 
+    <item android:id="@+id/fb_login_menuitem" android:title="Login" android:showAsAction="never"></item>
+    <item android:id="@+id/fb_logout_menuitem" android:title="Logout" android:showAsAction="never"></item>
+    <item android:id="@+id/test_app_menuitem" android:title="Test" android:showAsAction="never" ></item>
+    <item android:id="@+id/exit_app_menuitem" android:title="Exit" android:showAsAction="never" ></item>
+      
+</menu>

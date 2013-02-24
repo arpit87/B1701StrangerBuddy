@@ -1,0 +1,168 @@
+package my.b1701.SB.Users;
+
+import java.util.LinkedList;
+
+import android.util.Log;
+import my.b1701.SB.Adapter.HistoryAdapter;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+/***
+ * This class has latest data to set all current req data of this user
+ * any activity to be updated like list map picks from this location
+ * @author arpit87
+ *
+ */
+public class ThisUserNew {
+	
+	
+	private SBGeoPoint currentGeoPoint=null;
+	private SBGeoPoint sourceGeoPoint=null;
+	private SBGeoPoint destinationGeoPoint=null;
+	private String sourceFullAddress = "";
+	private String destinationFullAddress = "";
+	private String sourceLocality = "";
+	private String destiantionLocality = "";
+	private String timeOfRequest = "";
+	private String dateOfRequest = "";
+	private int take_offer_type = 0; //0=>offer 1=>share
+	private int daily_instant_type = 0;//pool 0.instant 1
+	private int plan_instant_type = 0;//sent by plan tab 0.instant tab 1
+	private static final String TAG = "my.b1701.SB.Users.ThisUserNew";
+	private static ThisUserNew instance=new ThisUserNew();
+	private LinkedList<HistoryAdapter.HistoryItem> historyItemList;
+	private String userID;	
+	
+	public void setUserID(String userID) {
+		Log.i(TAG,"set user id");
+		this.userID = userID;
+	}
+	
+	public String getUserID() {
+		Log.i(TAG,"get user id"+this.userID);
+		return this.userID;
+	}
+	public static ThisUserNew getInstance() {
+		 return instance;
+	}
+	
+	public void setCurrentGeoPointToSourceGeopoint() {
+		sourceGeoPoint = currentGeoPoint;
+	}
+	
+	public SBGeoPoint getCurrentGeoPoint() {
+		return currentGeoPoint;
+	}
+
+	public SBGeoPoint getSourceGeoPoint() {
+		return sourceGeoPoint;
+	}
+	public SBGeoPoint getDestinationGeoPoint() {
+		return destinationGeoPoint;
+	}
+	public String getSourceFullAddress() {
+		return sourceFullAddress;
+	}
+	public String getDestinationFullAddress() {
+		return destinationFullAddress;
+	}
+	public String getSourceLocality() {
+		return sourceLocality;
+	}
+	public String getDestiantionLocality() {
+		return destiantionLocality;
+	}	
+	public void setCurrentGeoPoint(SBGeoPoint currentGeoPoint) {
+		this.currentGeoPoint = currentGeoPoint;
+	}
+	public void setSourceGeoPoint(SBGeoPoint sourceGeoPoint) {
+		this.sourceGeoPoint = sourceGeoPoint;
+	}
+	public void setDestinationGeoPoint(SBGeoPoint destinationGeoPoint) {
+		this.destinationGeoPoint = destinationGeoPoint;
+	}
+	public void setSourceFullAddress(String sourceFullAddress) {
+		this.sourceFullAddress = sourceFullAddress;
+	}
+	public void setDestinationFullAddress(String destinationFullAddress) {
+		this.destinationFullAddress = destinationFullAddress;
+	}
+	public void setSourceLocality(String sourceLocality) {
+		this.sourceLocality = sourceLocality;
+	}
+	public void setDestiantionLocality(String destiantionLocality) {
+		this.destiantionLocality = destiantionLocality;
+	}	
+	/**
+	 * this is in 24hr clock
+	 * @return
+	 */
+	public String getTimeOfTravel() {
+		return timeOfRequest;
+	}
+
+	public void setDateOfTravel(String dateOfRequest) {
+		this.dateOfRequest = dateOfRequest;
+	}	
+	
+	public String getDateOfTravel() {
+		return dateOfRequest;
+	}
+
+	public void setTimeOfTravelt(String timeOfRequest) {
+		this.timeOfRequest = timeOfRequest;
+	}
+	
+	public String getDateAndTimeOfTravel() {
+		return dateOfRequest + " " + timeOfRequest;
+	}
+	/**
+	 * if offering => 1
+	 * take => 0
+	 * @return
+	 */
+	public int get_Take_Offer_Type() {
+		return take_offer_type;
+	}
+	
+	public void set_Take_Offer_Type(int i)
+	{
+		take_offer_type = i;
+	}
+	/**
+	 * if instant => 1
+	 * pool => 0
+	 * @return
+	 */
+	public int get_Daily_Instant_Type() {		
+			return daily_instant_type;
+	}
+
+	public void set_Daily_Instant_Type(int i)
+	{
+		daily_instant_type = i;
+	}
+	
+	/**
+	 * if instant tab => 1
+	 * pool tab=> 0
+	 * this is used to store history and display it
+	 * @return
+	 */
+	public int get_Plan_Instant_Type() {		
+			return plan_instant_type;
+	}
+
+	public void set_Plan_Instant_Type(int i)
+	{
+		plan_instant_type = i;
+	}
+	
+	public LinkedList<HistoryAdapter.HistoryItem> getHistoryItemList(){
+        return historyItemList;
+    }
+
+    public void setHistoryItemList(LinkedList<HistoryAdapter.HistoryItem> historyItemList){
+        this.historyItemList = historyItemList;
+    }
+	
+
+}
