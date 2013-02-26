@@ -1,20 +1,11 @@
 package my.b1701.SB.Activities;
 
-import my.b1701.SB.R;
-import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.CustomViewsAndListeners.SBMapView;
-import my.b1701.SB.FacebookHelpers.FacebookConnector;
-import my.b1701.SB.Fragments.FBLoginDialogFragment;
-import my.b1701.SB.Fragments.SBListFragment;
-import my.b1701.SB.Fragments.SBMapFragment;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.LocationHelpers.SBLocationManager;
-import my.b1701.SB.Platform.Platform;
-import my.b1701.SB.Server.ServerConstants;
-import my.b1701.SB.Users.ThisUserNew;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -25,13 +16,25 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.google.analytics.tracking.android.EasyTracker;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
+import my.b1701.SB.Fragments.FBLoginDialogFragment;
+import my.b1701.SB.Fragments.SBListFragment;
+import my.b1701.SB.Fragments.SBMapFragment;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.LocationHelpers.SBLocationManager;
+import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.R;
+import my.b1701.SB.Server.ServerConstants;
+import my.b1701.SB.Users.ThisUserNew;
 
 
 public class MapListViewTabActivity extends SherlockFragmentActivity  {
@@ -91,14 +94,40 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         	Intent show_tutorial = new Intent(this,Tutorial.class);
     		show_tutorial.putExtra("uuid", uuid);
     		startActivity(show_tutorial);
-        } 
-        
+        }
+        checkIfGPSIsEnabled();
     }
     
     @Override
     public void onStart(){
         super.onStart();
         EasyTracker.getInstance().activityStart(this);
+    }
+
+    private void checkIfGPSIsEnabled() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
