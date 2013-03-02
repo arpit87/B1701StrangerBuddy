@@ -26,10 +26,16 @@ public class ThisUserNew {
 	private int take_offer_type = 0; //0=>offer 1=>share
 	private int daily_instant_type = 0;//pool 0.instant 1
 	private int plan_instant_type = 0;//sent by plan tab 0.instant tab 1
+	private int selected_radio_button_id = 0;//used in history to store which radio button was selected
 	private static final String TAG = "my.b1701.SB.Users.ThisUserNew";
 	private static ThisUserNew instance=new ThisUserNew();
-	private LinkedList<HistoryAdapter.HistoryItem> historyItemList;
+	private LinkedList<HistoryAdapter.HistoryItem> historyItemList = new LinkedList<HistoryAdapter.HistoryItem>();
 	private String userID;	
+	//these will 
+	private String sourceForHistory ="";
+	private String destinationForHistory = "";
+	private String timeForHistory = "";
+			
 	
 	public void setUserID(String userID) {
 		Log.i(TAG,"set user id");
@@ -111,6 +117,14 @@ public class ThisUserNew {
 		this.timeOfRequest = timeOfRequest;
 	}
 	
+	public int getSelected_radio_button_id() {
+		return selected_radio_button_id;
+	}
+
+	public void setSelected_radio_button_id(int selected_radio_button_id) {
+		this.selected_radio_button_id = selected_radio_button_id;
+	}
+
 	public String getDateAndTimeOfTravel() {
 		return dateOfRequest + " " + timeOfRequest;
 	}

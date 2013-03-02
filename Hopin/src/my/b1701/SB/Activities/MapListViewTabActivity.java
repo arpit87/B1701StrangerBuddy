@@ -1,4 +1,4 @@
-package my.b1701.SB.Activities;
+                     package my.b1701.SB.Activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -85,7 +85,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         ab.setDisplayShowTitleEnabled(true);
         this.registerReceiver(mapListActivityHandler,new IntentFilter(ServerConstants.NEARBY_USER_UPDATED));    
         fbconnect = new FacebookConnector(this);
-        
+        checkIfGPSIsEnabled();
         Intent i = getIntent();
         if(i.hasExtra("uuid"))
         {         	
@@ -95,7 +95,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     		show_tutorial.putExtra("uuid", uuid);
     		startActivity(show_tutorial);
         }
-        checkIfGPSIsEnabled();
+        
     }
     
     @Override
@@ -232,10 +232,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
    		 searchInputIntent1.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
    		 startActivity(searchInputIntent1);
    		 break;
-           
-     case R.id.history:
-         Intent intent = new Intent(MapListViewTabActivity.this, SBHistoryActivity.class);
-         startActivity(intent);
+     
         } 
         return super.onOptionsItemSelected(menuItem);
     }   

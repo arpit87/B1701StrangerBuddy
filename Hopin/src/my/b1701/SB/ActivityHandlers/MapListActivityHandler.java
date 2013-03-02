@@ -141,6 +141,7 @@ public class MapListActivityHandler  extends BroadcastReceiver{
 			    	  if(currLoc != null)
 			    	  {			    		  
 			    		  ThisUserNew.getInstance().setCurrentGeoPoint(new SBGeoPoint((int)(currLoc.getLatitude()*1e6),(int)(currLoc.getLongitude()*1e6)));
+			    		  ThisUserNew.getInstance().setCurrentGeoPointToSourceGeopoint();
 			    		  putInitialOverlay();
 			    	  }
 			    	  else
@@ -161,6 +162,7 @@ public class MapListActivityHandler  extends BroadcastReceiver{
 		}
 		else
 		{				
+			ThisUserNew.getInstance().setCurrentGeoPointToSourceGeopoint();
 			putInitialOverlay();		
 		}
 	}
@@ -477,17 +479,21 @@ public void updateSrcDstTimeInListView() {
         mSource =  (TextView) mListViewContainer.findViewById(R.id.my_source_listview);
         mtime = (TextView) mListViewContainer.findViewById(R.id.my_time_listview); 
 	}
-	
-    
-    mSource.setText(ThisUserNew.getInstance().getSourceFullAddress());
-       
-    mDestination.setText(ThisUserNew.getInstance().getDestinationFullAddress());
-    
-    String date_time = ThisUserNew.getInstance().getDateAndTimeOfTravel();
-    if(!StringUtils.isBlank(date_time))
-    {
-    	mtime.setText("Time: "+StringUtils.formatDate("yyyy-MM-dd HH:mm", "h:mm a, EEE, MMM d", date_time));
-    }
+	else
+	{
+	    String source = ThisUserNew.getInstance().getSourceFullAddress();
+	    if(source == "")
+	    	source = "My Location";
+	    mSource.setText(source);
+	       
+	    mDestination.setText(ThisUserNew.getInstance().getDestinationFullAddress());
+	    
+	    String date_time = ThisUserNew.getInstance().getDateAndTimeOfTravel();
+	    if(!StringUtils.isBlank(date_time))
+	    {
+	    	mtime.setText("Time: "+StringUtils.formatDate("yyyy-MM-dd HH:mm", "h:mm a, EEE, MMM d", date_time));
+	    }
+	}
 }
 		
 }

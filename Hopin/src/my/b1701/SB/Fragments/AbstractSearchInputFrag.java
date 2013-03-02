@@ -60,14 +60,16 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 	private static final String GOOGLE_PLACES_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
 	private static final String API_KEY = "AIzaSyAbahSqDp47FsP_U60bwXdknL_cAUgalrw";
 
-	    private static String[] columns = new String[]{ "sourceLocation",
-	            "destinationLocation",
-	            "timeOfTravel",
+	    private static String[] columns = new String[]{	  
+	    	    "sourceAddress",
+	    	    "destinationAddress",
+	    	    "timeOfTravel",
+	    	    "dateOfTravel",
 	            "dailyInstantType",
 	            "planInstantType",
-	            "takeOffer",
-	            "dateOfTravel",
-	            "reqDate",	            
+	            "takeOffer",	           
+	            "reqDate", 
+	            "radioButtonId",
 	            "date"
 	    };
 	 
@@ -85,11 +87,11 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 	boolean destinationSet = false;
 	boolean sourceSet = false;
 	//0 daily pool,1 instant share
-	//0 take ,1 offer
+	//0 take ,1 offer	
 	
-		
 	public abstract SBGeoPoint getSourceGeopoint();
 	public abstract SBGeoPoint getDestinationGeopoint();
+	public abstract int getRadioButtonID();
 	public abstract String getSource();
 	public abstract String getDestination();
 	public abstract String getDate();
@@ -189,8 +191,7 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 		{
 			ToastTracker.showToast("Please set destination");
 			return;
-		}
-		getActivity().finish();
+		}		
 		
 		//here in abstract type we are setting all..its responsibility of individual class to 
 		// implement these methods and return "" is its not required
@@ -202,11 +203,14 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 		ThisUserNew.getInstance().setSourceFullAddress(getSource());
 		ThisUserNew.getInstance().setDestinationFullAddress(getDestination());
 		ThisUserNew.getInstance().setTimeOfTravelt(getTime());
+		ThisUserNew.getInstance().set_Plan_Instant_Type(getPlanInstaTabType());
 		ThisUserNew.getInstance().setDateOfTravel(getDate());
 		ThisUserNew.getInstance().set_Daily_Instant_Type(getDailyInstaType());//0 daily pool,1 instant share
 		ThisUserNew.getInstance().set_Take_Offer_Type(takeRide?0:1);//0 take ,1 offer
+		ThisUserNew.getInstance().setSelected_radio_button_id(getRadioButtonID());
 		MapListActivityHandler.getInstance().updateSrcDstTimeInListView();
-				
+		
+		getActivity().finish();
 		Log.i(TAG, "user destination set... querying server");
 		ProgressHandler.showInfiniteProgressDialoge(MapListActivityHandler.getInstance().getUnderlyingActivity(), "Fetching users", "Please wait..");
 		SBHttpRequest addThisUserSrcDstRequest;
@@ -268,17 +272,19 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 
         // Use content resolver (not cursor) to insert/update this query
         try {
-            ContentValues values = new ContentValues();
+            ContentValues values = new ContentValues();            
             values.put(columns[0], thisUser.getSourceFullAddress());
             values.put(columns[1], thisUser.getDestinationFullAddress());
-            values.put(columns[2], thisUser.getTimeOfTravel() ); //24 hr
-            values.put(columns[3], thisUser.get_Daily_Instant_Type());
-            values.put(columns[4], thisUser.get_Plan_Instant_Type());
-            values.put(columns[5], thisUser.get_Take_Offer_Type());
-            values.put(columns[6], thisUser.getDateOfTravel()); // yyyy-mm--MM-dd
-            values.put(columns[7], StringUtils.gettodayDateInFormat("d MMM"));           
-            values.put(columns[8], System.currentTimeMillis());
+            values.put(columns[2], thisUser.getTimeOfTravel());           
+            values.put(columns[3], thisUser.getDateOfTravel());
+            values.put(columns[4], thisUser.get_Daily_Instant_Type());
+            values.put(columns[5], thisUser.get_Plan_Instant_Type()); 
+            values.put(columns[6], thisUser.get_Take_Offer_Type());
+            values.put(columns[7], StringUtils.gettodayDateInFormat("d MMM")); 
+            values.put(columns[8], thisUser.getSelected_radio_button_id());
+            values.put(columns[9], System.currentTimeMillis());
             cr.insert(mHistoryUri, values);
+            Log.d(TAG, "saveHistoryQuery:" +  values.toString());
         } catch (RuntimeException e) {
             Log.e(TAG, "saveHistoryQueryerror", e);
         }
@@ -287,14 +293,16 @@ public abstract class AbstractSearchInputFrag extends Fragment{
         truncateHistory(cr, MAX_HISTORY_COUNT);
 
         //update the inmemory cache
-        HistoryAdapter.HistoryItem historyItem = new HistoryAdapter.HistoryItem(thisUser.getSourceFullAddress(),
+        HistoryAdapter.HistoryItem historyItem = new HistoryAdapter.HistoryItem(
+        		thisUser.getSourceFullAddress(),
                 thisUser.getDestinationFullAddress(),
-                thisUser.getTimeOfTravel(),
-                thisUser.get_Daily_Instant_Type(),
-                thisUser.get_Plan_Instant_Type(),
-                thisUser.get_Take_Offer_Type(),
+                thisUser.getTimeOfTravel(),          
                 thisUser.getDateOfTravel(),
-                StringUtils.gettodayDateInFormat("d MMM")
+                thisUser.get_Daily_Instant_Type(),
+                thisUser.get_Plan_Instant_Type(), 
+                thisUser.get_Take_Offer_Type(),
+                StringUtils.gettodayDateInFormat("d MMM"),
+                thisUser.getSelected_radio_button_id()
                );
 
         addHistoryToMemory(historyItem);

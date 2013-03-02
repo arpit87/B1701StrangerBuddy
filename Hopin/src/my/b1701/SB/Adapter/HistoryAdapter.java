@@ -4,6 +4,7 @@ import java.util.List;
 
 import my.b1701.SB.R;
 import my.b1701.SB.Activities.SearchInputActivityNew;
+import my.b1701.SB.Util.StringUtils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -55,72 +56,94 @@ public class HistoryAdapter extends BaseAdapter{
         TextView source = (TextView)view.findViewById(R.id.history_source);
         TextView destination = (TextView)view.findViewById(R.id.history_destination);        
         TextView details = (TextView)view.findViewById(R.id.history_details);     
-        ImageView edit_button = (ImageView)view.findViewById(R.id.history_editbutton);
-        TextView reqDateView = (TextView)view.findViewById(R.id.history_req_date);
-        final String sourceStr = historyItem.getSourceLocation();
-        final String dstStr = historyItem.getDestinationLocation();
-        String time = historyItem.getTimeOfRequest();//HH:mm 24hr
-        int type = historyItem.getPlanInstantType();//plan 0,insta 1
-        String dateOfTravel = historyItem.getDateOfTravel(); //yyyy-MM-dd 
+       // ImageView edit_button = (ImageView)view.findViewById(R.id.history_editbutton);
+        TextView reqDateView = (TextView)view.findViewById(R.id.history_req_date);        
+        int type = historyItem.getPlanInstantType();//plan 0,insta 1       
         String reqdate = historyItem.getReqDate();
-        source.setText(sourceStr);
-        destination.setText(dstStr);
-        details.setText(dateOfTravel + ","+time);
-        reqDateView.setText(reqdate);
-        edit_button.setOnClickListener(new OnClickListener() {				
-			@Override
-			public void onClick(View chatIconView) {								
-				Intent i = new Intent(underlyingActiviy,SearchInputActivityNew.class);	
-				i.putExtra("source", sourceStr);
-				i.putExtra("destination", dstStr);
-				i.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
-				underlyingActiviy.startActivity(i);
-			}
-		});
-        
+        source.setText(historyItem.getSource());
+        destination.setText(historyItem.getDestination());
+        details.setText(historyItem.getTimeforHistoryLayout());
+        reqDateView.setText(reqdate); 
 	    return view;
     }
 
-    public static class HistoryItem {
-        String sourceLocation;
-        String destinationLocation;
-        String timeOfRequest;
+    public static class HistoryItem {      
         Integer dailyInstantType;
         Integer planInstantType;
-        Integer takeOffer;
+        Integer takeOffer;        
+        String reqDate;   
+        String source;
+		String destination;
+        String timeOfTravel;
         String dateOfTravel;
-        String reqDate;       
+        String details; 
+        int radioButtonID;
 
-        public HistoryItem(String sourceLocation, String destinationLocation, String timeOfRequest, 
-        		           int dailyInstantType,int planInstantType, int takeOffer, String dateOfTravel,String reqdate
-        		           ) {
-            this.sourceLocation = sourceLocation;
-            this.destinationLocation = destinationLocation;
-            this.timeOfRequest = timeOfRequest;
+        public HistoryItem( String source, String destination,String timeOfTravel,String dateOfTravel,
+        		             int dailyInstantType,int planInstantType, int takeOffer, String reqdate,
+        		             int radioButtonID
+        		           ) {           
             this.planInstantType = planInstantType;
             this.dailyInstantType = dailyInstantType;
-            this.takeOffer = takeOffer;
-            this.dateOfTravel = dateOfTravel;
+            this.takeOffer = takeOffer;            
             this.reqDate = reqdate;
-            
-        }
+            this.source = source;
+            this.destination = destination;
+            this.timeOfTravel = timeOfTravel;
+            this.dateOfTravel = dateOfTravel;
+            this.radioButtonID = radioButtonID;
+            processData();
+        }      
 
-        public String getSourceLocation() {
-            return sourceLocation;
+        private void processData()
+        {
+        	//this build the string to show in Time: of history layout
+        	if(StringUtils.isBlank(source))
+        		source = "My Location";
+        	if(dailyInstantType == 0)//dailypool
+        	{
+        		details = "DailyPool,"+StringUtils.formatDate("HH:mm", "hh:mm a", timeOfTravel);
+        	}
+        	else
+        	{
+        		//can get 5 min 15 min,today,tomo,enter date type        		
+        		switch(radioButtonID)
+        		{
+        			case R.id.search_user_insta_radiobutton_5min:
+        				timeOfTravel = StringUtils.getFutureTimeInformat(5, "HH:mm");
+        				dateOfTravel = StringUtils.gettodayDateInFormat("yyyy-MM-dd");
+        				details = "in 5min";
+        			break;
+        			case R.id.search_user_insta_radiobutton_15min:
+        				timeOfTravel = StringUtils.getFutureTimeInformat(15, "HH:mm");
+        				dateOfTravel = StringUtils.gettodayDateInFormat("yyyy-MM-dd");
+        				details = "in 15min";
+        			break;
+        			case R.id.search_user_insta_radiobutton_30min:
+        				timeOfTravel = StringUtils.getFutureTimeInformat(30, "HH:mm");
+        				dateOfTravel = StringUtils.gettodayDateInFormat("yyyy-MM-dd");
+        				details = "in 30min";
+        			break;	
+        			case R.id.search_user_plan_radiobutton_today:        				
+        				dateOfTravel = StringUtils.gettodayDateInFormat("yyyy-MM-dd");        				
+        				details = "Today,"+StringUtils.formatDate("HH:mm", "hh:mm a", timeOfTravel);
+        			break;
+        			case R.id.search_user_plan_radiobutton_tomo:        				
+        				dateOfTravel = StringUtils.getFutureDateInformat(1,"yyyy-MM-dd");
+        				details = "Tomorrow,"+StringUtils.formatDate("HH:mm", "hh:mm a", timeOfTravel);
+        			break;
+        			case R.id.search_user_plan_radiobutton_enterdate:        				
+        				String dateTime = dateOfTravel + " " + timeOfTravel;
+        				details = StringUtils.formatDate("yyyy-MM-dd HH:mm", "d MMM,hh:mm a", dateTime);
+        			break;
+        				
+        		}
+        	}
         }
-
-        public String getDestinationLocation() {
-            return destinationLocation;
+        
+        public String getTimeforHistoryLayout() {
+            return details;
         }
-
-        /**
-         * 12 hr format
-         * @return
-         */
-        public String getTimeOfRequest() {
-            return timeOfRequest;
-        }
-
         public int getPlanInstantType() {
             return planInstantType;
         }
@@ -137,9 +160,6 @@ public class HistoryAdapter extends BaseAdapter{
             return takeOffer;
         }
 
-        public String getDateOfTravel() {
-            return dateOfTravel;
-        }
         
         /**
          * it of format d MMM,ie.  14 Feb
@@ -148,6 +168,24 @@ public class HistoryAdapter extends BaseAdapter{
         public String getReqDate() {
             return reqDate;
         }
+        
+        public String getSource() {
+			return source;
+		}
+
+		public String getDestination() {
+			return destination;
+		}
+
+		public String getTimeOfTravel() {
+			return timeOfTravel;
+		}
+
+		public String getDateOfTravel() {
+			return dateOfTravel;
+		}
+        
+
 		
     }
 }

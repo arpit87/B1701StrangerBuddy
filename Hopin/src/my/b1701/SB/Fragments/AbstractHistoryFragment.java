@@ -70,7 +70,7 @@ public abstract class AbstractHistoryFragment extends ListFragment {
         List<HistoryAdapter.HistoryItem> historyItemList = ThisUserNew.getInstance().getHistoryItemList();
         for (HistoryAdapter.HistoryItem historyItem : historyItemList) {
             if (historyItem.getPlanInstantType() == getPlanInstantType()){
-                historyItems.add(historyItem);
+                historyItems.add(historyItem); //plan is 0,insta is 1
             }
         }
         return historyItems;
@@ -80,26 +80,25 @@ public abstract class AbstractHistoryFragment extends ListFragment {
 
         @Override
         protected Void doInBackground(HistoryAdapter.HistoryItem... historyItems) {
-            HistoryAdapter.HistoryItem historyItem = historyItems[0];            
-            String time24hr = historyItem.getTimeOfRequest(); //its 12 hr hh:MM AM/PM           
+            HistoryAdapter.HistoryItem historyItem = historyItems[0];                       
             int takeride = historyItem.getTakeOffer();
-            String date = historyItem.getDateOfTravel(); //this is "Daily",date
-            String travelDate = StringUtils.getDateFromTplusString(date, "yyyy-MM-dd");
-            String source = historyItem.getSourceLocation();
-            String destination = historyItem.getDestinationLocation();
+            String source = historyItem.getSource();
+            String destination = historyItem.getDestination();
             int daily_inta_type = historyItem.getDailyInstantType();
             
             //set all data in thisUser from where http req picks up to form req
             //doing this to make things uncoupled
-            if(source.equalsIgnoreCase("my location"))            
-            	ThisUserNew.getInstance().setCurrentGeoPointToSourceGeopoint();            
+            if(source.equalsIgnoreCase("my location"))      {      
+            	ThisUserNew.getInstance().setCurrentGeoPointToSourceGeopoint();
+            	source = "";
+            }
             else
             	ThisUserNew.getInstance().setSourceGeoPoint(null);
             ThisUserNew.getInstance().setDestinationGeoPoint(null);
             ThisUserNew.getInstance().setSourceFullAddress(source);
             ThisUserNew.getInstance().setDestinationFullAddress(destination);
-            ThisUserNew.getInstance().setTimeOfTravelt(time24hr);
-            ThisUserNew.getInstance().setDateOfTravel(travelDate);            
+            ThisUserNew.getInstance().setTimeOfTravelt(historyItem.getTimeOfTravel());
+            ThisUserNew.getInstance().setDateOfTravel(historyItem.getDateOfTravel());            
             ThisUserNew.getInstance().set_Daily_Instant_Type(daily_inta_type);//0 daily pool,1 instant share
             ThisUserNew.getInstance().set_Take_Offer_Type(takeride);//0 take ,1 offer
 
@@ -122,9 +121,10 @@ public abstract class AbstractHistoryFragment extends ListFragment {
             	SBHttpClient.getInstance().executeRequest(addThisCarpoolUserSrcDstRequest);
             }
             return null;
-        }
-
-        @Override
+        }       
+		
+		
+		@Override
         protected void onPreExecute() {
             super.onPreExecute();
             ProgressHandler.showInfiniteProgressDialoge(MapListActivityHandler.getInstance().getUnderlyingActivity(), "Fetching users", "Please wait..");

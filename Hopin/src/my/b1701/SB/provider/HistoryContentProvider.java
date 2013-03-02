@@ -38,15 +38,16 @@ public class HistoryContentProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
             StringBuilder builder = new StringBuilder();
             builder.append("CREATE TABLE history (" +
-                    "_id INTEGER PRIMARY KEY" +
-                    ",sourceLocation TEXT" +
-                    ",destinationLocation TEXT" +
+                    "_id INTEGER PRIMARY KEY" +   
+                    ",sourceAddress TEXT" +
+                    ",destinationAddress TEXT" +
                     ",timeOfTravel TEXT" +
+                    ",dateOfTravel TEXT" +
                     ",dailyInstantType INTEGER" +
                     ",planInstantType INTEGER" +
-                    ",takeOffer INTEGER" +
-                    ",dateOfTravel TEXT" +
-                    ",reqDate TEXT" +                    
+                    ",takeOffer INTEGER" +                    
+                    ",reqDate TEXT" +
+                    ",radioButtonId INTEGER" +
                     ",date LONG" +
                     ");");
             db.execSQL(builder.toString());

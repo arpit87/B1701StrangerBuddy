@@ -61,6 +61,18 @@ public class StringUtils {
 		return date;
     }
     
+    public static String getFutureTimeInformat(int add_minutes, String format)
+    {
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+		Date now = new Date();  		 
+		Calendar cal = Calendar.getInstance();  
+		cal.setTime(now);		
+		cal.add(Calendar.MINUTE, add_minutes);   
+		Date travelDate = cal.getTime();				
+		String date = dateFormat.format(travelDate);
+		return date;
+    }
+    
     public static String getDateFromTplusString(String TplusString,String format)
     {    	
     	SimpleDateFormat dateFormat = new SimpleDateFormat(format);

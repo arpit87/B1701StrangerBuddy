@@ -76,8 +76,20 @@ public class SearchUserInstaFrag extends AbstractSearchInputFrag{
 
 	@Override
 	public String getTime() {
-		// TODO Auto-generated method stub
-		return StringUtils.gettodayDateInFormat("HH:mm");
+		int checkedRadioButton = radio_group_time.getCheckedRadioButtonId();
+		switch(checkedRadioButton)
+		{
+		case R.id.search_user_insta_radiobutton_5min:
+			mRadio_button_selected = 5;
+			break;
+		case R.id.search_user_insta_radiobutton_15min:
+			mRadio_button_selected = 15;
+			break;
+		case R.id.search_user_insta_radiobutton_30min:
+			mRadio_button_selected = 30;
+			break;
+		}
+		return StringUtils.getFutureTimeInformat(mRadio_button_selected, "HH:mm");
 	}
 
 	@Override
@@ -107,7 +119,13 @@ public class SearchUserInstaFrag extends AbstractSearchInputFrag{
 	public int getPlanInstaTabType() {
 		// TODO Auto-generated method stub
 		return 1;
-	}	
+	}
+
+	@Override
+	public int getRadioButtonID() {
+		// TODO Auto-generated method stub
+		return radio_group_time.getCheckedRadioButtonId();
+	}		
 		
 
 }

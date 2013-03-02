@@ -29,7 +29,7 @@ import android.widget.ToggleButton;
 public class SearchUserPlanFrag extends AbstractSearchInputFrag implements SeekBar.OnSeekBarChangeListener{
 	
 	View mPlanViewContainer;
-	RadioGroup radio_group_daily_onetime;
+	RadioGroup radio_group_daily_onetime;	
 	RadioButton enterDateButton;
 	ToggleButton am_pm_toggle;
 	TextView timeView;
@@ -123,18 +123,21 @@ public class SearchUserPlanFrag extends AbstractSearchInputFrag implements SeekB
 
 	@Override
 	public String getDate() {
-		String date = "";
+		String date ="";
 		int checkedButton = radio_group_daily_onetime.getCheckedRadioButtonId();
 		if(checkedButton == R.id.search_user_plan_radiobutton_enterdate)
 		{
-			date = datePickerDate;
+			date = datePickerDate;			
 		}
 		else if(checkedButton == R.id.search_user_plan_radiobutton_tomo)
 		{
 			date = StringUtils.getFutureDateInformat(1, "yyyy-MM-dd");
-		}
-		else
+			
+		}else if(checkedButton == R.id.search_user_plan_radiobutton_today)
+		{
 			date = StringUtils.gettodayDateInFormat("yyyy-MM-dd");
+			
+		}
 		return date;
 	}
 
@@ -153,7 +156,9 @@ public class SearchUserPlanFrag extends AbstractSearchInputFrag implements SeekB
 	public int getDailyInstaType() {
 		int checkedButton = radio_group_daily_onetime.getCheckedRadioButtonId();
 		if(checkedButton == R.id.search_user_plan_radiobutton_daily)
+		{			
 			return 0;
+		}
 		else
 		    return 1;		
 	}
@@ -240,6 +245,12 @@ public class SearchUserPlanFrag extends AbstractSearchInputFrag implements SeekB
 	public int getPlanInstaTabType() {
 		// TODO Auto-generated method stub
 		return 0;
+	}		
+
+	@Override
+	public int getRadioButtonID() {
+		// TODO Auto-generated method stub
+		return radio_group_daily_onetime.getCheckedRadioButtonId();
 	}
 
 }
