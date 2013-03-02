@@ -37,6 +37,8 @@
 		android:layout_marginRight="10dip"
 		android:layout_marginLeft="12dip"
 		android:textColor="@color/gray" 
+		android:gravity="right"
+		android:textSize="10dip"
 		/>	
 	</LinearLayout> 
 	"
