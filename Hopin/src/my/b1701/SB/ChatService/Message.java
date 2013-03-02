@@ -35,6 +35,7 @@ public static final int MSG_TYPE_ACK = 600;
 
 public static final String UNIQUEID = "unique_id";
 public static final String SBMSGTYPE = "sb_msg_type";
+public static final String TIME = "time";
 
 
 
@@ -125,8 +126,7 @@ if (mType == MSG_TYPE_ERROR) {
 } else {
     mBody = smackMsg.getBody();
     mSubject = smackMsg.getSubject();
-    mThread = smackMsg.getThread();
-    mTime = (String) smackMsg.getProperty("time");
+    mThread = smackMsg.getThread();    
     mUniqueMsgIdentifier = (Long) smackMsg.getProperty(UNIQUEID);
 }
 }
@@ -144,6 +144,7 @@ mThread = in.readString();
 mFrom = in.readString();
 mStatus = in.readInt();
 mUniqueMsgIdentifier = in.readLong();
+mTime = in.readString();
 }
 
 /**
@@ -160,6 +161,7 @@ dest.writeString(mThread);
 dest.writeString(mFrom);
 dest.writeInt(mStatus);
 dest.writeLong(mUniqueMsgIdentifier);
+dest.writeString(mTime);
 }
 
 /**
@@ -329,6 +331,11 @@ public long getUniqueMsgIdentifier() {
 
 public void setUniqueMsgIdentifier(long l) {
 	this.mUniqueMsgIdentifier = l;
+}
+
+
+public void setTimeStamp(String mTime) {
+	this.mTime = mTime;
 }
 
 }

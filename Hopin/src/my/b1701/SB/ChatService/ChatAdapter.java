@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import my.b1701.SB.ChatClient.IMessageListener;
 import my.b1701.SB.ChatClient.SBChatMessage;
+import my.b1701.SB.Util.StringUtils;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
@@ -147,6 +148,7 @@ import android.util.Log;
 			       Log.i(TAG, "chat is open,sending ack to window ") ;
 				   callListeners(msg);
 			    }
+		    	return;
 		    }
 		    
 		    //this is chat coming from outside,send ack to this msg
@@ -154,7 +156,9 @@ import android.util.Log;
 		   {
 			    sendAck(msg.getUniqueMsgIdentifier());			    
 			    if (mMessages.size() == HISTORY_MAX_SIZE)
-				    mMessages.remove(0);				
+				    mMessages.remove(0);
+			    msg.setStatus(SBChatMessage.RECEIVED);
+			    msg.setTimeStamp(StringUtils.gettodayDateInFormat("hh:mm"));
 		    	mMessages.add(msg);
 			    if(mIsOpen)
 			    {
@@ -179,8 +183,8 @@ import android.util.Log;
 	private void sendAck(long uniqueID)
 	{		
 		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();
-		//msg type is overritten by smack so add property
-		//msgToSend.setType(org.jivesoftware.smack.packet.Message.Type.headline);
+		//msg type is overritten by smack so add property so need to set as property
+		//msgToSend.setType(org.jivesoftware.smack.packet.Message.Type.headline);	
 		msgToSend.setProperty(Message.UNIQUEID, uniqueID);
 		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_ACK);
 		try { 

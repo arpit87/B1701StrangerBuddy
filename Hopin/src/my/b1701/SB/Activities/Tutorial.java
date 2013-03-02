@@ -38,7 +38,7 @@ public class Tutorial extends Activity{
                 }
 
                ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, userNameText);
-               SBHttpRequest request = new AddUserRequest(uuid);		
+               SBHttpRequest request = new AddUserRequest(uuid,userNameText);		
        			SBHttpClient.getInstance().executeRequest(request);
        			finish();
 				

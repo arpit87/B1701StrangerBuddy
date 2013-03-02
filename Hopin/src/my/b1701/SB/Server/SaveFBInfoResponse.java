@@ -26,11 +26,9 @@ public class SaveFBInfoResponse extends ServerResponseBase{
 		
 		try {
 			body = jobj.getJSONObject("body");
-			status = body.getString("Status");			
+			//status = body.getString("Status");			
 			ThisUserConfig.getInstance().putBool(ThisUserConfig.FBINFOSENTTOSERVER, true);
-			ToastTracker.showToast("fb save:"+status);
-				
-			 
+			//ToastTracker.showToast("fb save:"+status);
 		} catch (JSONException e) {			
 			Log.e(TAG, "Error returned by server on user add");
 			e.printStackTrace();

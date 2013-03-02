@@ -21,6 +21,7 @@ import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Util.StringUtils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -230,23 +231,8 @@ public void onResume() {
 			newMessage.setFrom(mThiUserChatUserName+"@"+CHAT_SERVER_IP);
 			newMessage.setSubject(mThisUserChatFullName);			
 			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());		 
-			
-		 	//now update on our view
-		 	//sbchatmsg (from,to,...		    
-		   /* if (mMessagesListAdapter.getCount() != 0)
-		    	lastMessage = (SBChatMessage) mMessagesListAdapter.getItem(mMessagesListAdapter.getCount() - 1);
-
-		    if (lastMessage != null && lastMessage.getInitiator().equals(mThiUserChatUserName)) {
-		    	lastMessage.setMessage(lastMessage.getMessage().concat("\n" + inputContent));
-		    	lastMessage.setTimestamp(new Date().toString());
-		    	lastMessage.setStatus(ChatMsgStatus.SENDING); // sendin 0;
-			mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
-		    } else{
-		    mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID, inputContent, false, new Date().toString(),ChatMsgStatus.SENDING));
-		   }			    
-		    mMessagesListAdapter.notifyDataSetChanged();*/
-			
-			mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID,inputContent, false, new Date().toString(),
+					 				
+			mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID,inputContent, false, StringUtils.gettodayDateInFormat("hh:mm"),
 					                                          SBChatMessage.SENDING,newMessage.getUniqueMsgIdentifier()));
 			mMessagesListAdapter.notifyDataSetChanged();
 			
@@ -343,7 +329,7 @@ public void onResume() {
 			    	if(m.getInitiator().equals(lastMessage.getInitiator()))
 			    	{
 			    		lastMessage.setMessage(lastMessage.getMessage().concat("\n" + m.getBody()));
-			    		lastMessage.setStatus(m.getStatus());
+			    		lastMessage.setStatus(SBChatMessage.OLD);
 			    		lastMessage.setTimestamp(m.getTimestamp());
 			    	}
 			    	else

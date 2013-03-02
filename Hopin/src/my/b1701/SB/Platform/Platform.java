@@ -13,10 +13,7 @@ public class Platform {
 	private final String TAG = "my.b1701.SB.Platform.Platform";
 	private static Platform instance = new Platform();
 	private Context context;	
-	private SBHttpClient httpClient;
 	private Handler handler;
-	private ThisUserNew thisUser;
-	private CurrentNearbyUsers currentUsers;
 	public boolean SUPPORTS_NEWAPI = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD;
 	
 		
@@ -38,12 +35,10 @@ public class Platform {
 	
 	public void initialize(Context context) {
 		this.context= context;			
-		//initializing some singletons here makes them available even after activity dies
-		//and it also makes them thread safe!!
-		httpClient = SBHttpClient.getInstance();
+		SBHttpClient.getInstance();
 		handler = new Handler();
-		currentUsers = CurrentNearbyUsers.getInstance();
-		thisUser = ThisUserNew.getInstance();
+		CurrentNearbyUsers.getInstance().clearAllData();
+		ThisUserNew.getInstance();
 		startChatService();
 	}
 	

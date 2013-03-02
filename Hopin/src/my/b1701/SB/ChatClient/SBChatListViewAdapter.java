@@ -10,6 +10,7 @@ import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Util.StringUtils;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -140,7 +141,7 @@ public class SBChatListViewAdapter extends BaseAdapter {
 		    msgText.setText(msg.getMessage());
 		    
 		    if (msg.getTimestamp() != null) {
-				time = msg.getTime();				
+				time = msg.getTimeStamp();				
 			    }
 		    
 		    chatMsgStatus = msg.getStatus();		    
@@ -153,10 +154,10 @@ public class SBChatListViewAdapter extends BaseAdapter {
 		    	statusText = "Sending..";
 		    	break;
 		    	case SBChatMessage.SENT:
-		    	statusText = "Sent@"+time;
+		    	statusText = "Sent";
 		    	break;
 		    	case SBChatMessage.DELIVERED:
-		    	statusText = "Delivered@"+time;
+		    	statusText = "Delivered";
 			    break;	
 		    	case SBChatMessage.RECEIVED:
 			    statusText = "@"+time;

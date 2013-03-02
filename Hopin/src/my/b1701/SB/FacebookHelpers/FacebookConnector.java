@@ -198,10 +198,19 @@ public class FacebookConnector {
 			  
 			  //erase chat info too
 			  ThisUserConfig.getInstance().putString(ThisUserConfig.CHATUSERID,"");
-			  ThisUserConfig.getInstance().putString(ThisUserConfig.CHATPASSWORD,"");
-			  Store.getInstance().deleteFile(ThisUserConfig.FBPICFILENAME);
+			  ThisUserConfig.getInstance().putString(ThisUserConfig.CHATPASSWORD,"");			  
 			  ProgressHandler.dismissDialoge();
-			  ToastTracker.showToast("Successfully logged out");		
+			  
+			  //refresh user pic to silhutte
+			  Platform.getInstance().getHandler().post(new Runnable(){
+
+				@Override
+				public void run() {
+					 MapListActivityHandler.getInstance().updateThisUserMapOverlay();
+					 MapListActivityHandler.getInstance().updateUserPicInListView();
+					 ToastTracker.showToast("Successfully logged out");					
+				}			 		
+			  });
 			 
 		  }
 		  

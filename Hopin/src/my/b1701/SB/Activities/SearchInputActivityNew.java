@@ -180,12 +180,12 @@ public class SearchInputActivityNew extends FragmentActivity{
 	                            cursor.getInt(6), cursor.getString(7),cursor.getInt(8));
 	                    historyItems.add(historyItem);
 	                } while (cursor.moveToNext());
-
-	                cursor.close();
+	                
 	            }
 	            if(historyItems.size()>0)
 	                historyItemList = historyItems;
 	        }
+	        cursor.close();
 
 	        if (historyItemList == null) {
 	            historyItemList = new LinkedList<HistoryAdapter.HistoryItem>();

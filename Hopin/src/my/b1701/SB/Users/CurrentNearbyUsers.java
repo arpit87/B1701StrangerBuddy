@@ -105,9 +105,12 @@ public class CurrentNearbyUsers {
 	
 	public void clearAllData()
 	{
-		mCurrentNearbyUserList.clear();
-		mNewNearbyUserList.clear();
-		FBID_NearbyUserMap.clear();
+		if(mCurrentNearbyUserList!=null)
+			mCurrentNearbyUserList.clear();
+		if(mNewNearbyUserList!=null)
+			mNewNearbyUserList.clear();
+		if(FBID_NearbyUserMap!=null)
+			FBID_NearbyUserMap.clear();
 	}
 	
 }

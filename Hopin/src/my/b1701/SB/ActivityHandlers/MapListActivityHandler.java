@@ -250,8 +250,8 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		//caution while updating nearbyusers
 		//this user may be interacting with a view so we are going to show progressbar
 				
-		if(!CurrentNearbyUsers.getInstance().usersHaveChanged())
-			return;
+		if(!CurrentNearbyUsers.getInstance().usersHaveChanged())	
+			return;		
 		
 		String updateString ="";
 		if(CurrentNearbyUsers.getInstance().getAllNearbyUsers() == null)
@@ -419,7 +419,7 @@ public void clearAllData()
 	if(mDestination!=null)
 		mDestination.setText(R.string.destination_listview);
 	if(mtime!=null)
-		mtime.setText("");
+		mtime.setText("");	
 }
 
 

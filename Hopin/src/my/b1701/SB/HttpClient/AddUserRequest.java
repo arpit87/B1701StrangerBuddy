@@ -2,9 +2,12 @@ package my.b1701.SB.HttpClient;
 
 import android.util.Log;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Server.AddUserResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
+import my.b1701.SB.Users.UserAttributes;
+
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -28,7 +31,7 @@ public class AddUserRequest extends SBHttpRequest{
 	AddUserResponse addUserResponse;
 	String jsonStr;
 	
-	public AddUserRequest(String uuid)
+	public AddUserRequest(String uuid,String username)
 	{
 		super();
 		this.uuid=uuid;		
@@ -38,7 +41,8 @@ public class AddUserRequest extends SBHttpRequest{
 		httpQuery =  new HttpPost(URL);
 		
 		try {
-			jsonobj.put(ThisAppConfig.APPUUID, uuid);		
+			jsonobj.put(ThisAppConfig.APPUUID, uuid);
+			jsonobj.put(UserAttributes.USERNAME, username);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
