@@ -96,14 +96,15 @@ import android.util.Log;
 	@Override
 	public void addMessageListener(IMessageListener listener)
 			throws RemoteException {
-		mRemoteListeners.register(listener);
+		if(listener!=null)
+			mRemoteListeners.register(listener);
 		
 	}
 	
 	@Override
-    public void removeMessageListener(IMessageListener listen) {
-	if (listen != null) {
-	    mRemoteListeners.unregister(listen);
+    public void removeMessageListener(IMessageListener listener) {
+	if (listener != null) {		
+			mRemoteListeners.unregister(listener);
 	}
     }
 	
@@ -120,7 +121,7 @@ import android.util.Log;
 		    //if broadcast message from new user then do getMatch req
 		    if(msg.getType() == Message.MSG_TYPE_NEWUSER_BROADCAST)
 		    {
-		    	//TODO getMatch and notify user
+		        
 		    	return;
 		    }
 
@@ -137,6 +138,7 @@ import android.util.Log;
 		    	{
 		    		Log.i(TAG, "got ack for msg: "+origMsg.getBody()) ;
 		    		origMsg.setStatus(SBChatMessage.DELIVERED);
+		    		origMsg.setTimeStamp(StringUtils.gettodayDateInFormat("hh:mm"));
 		    		mSentNotDeliveredMsgHashSet.remove(origMsg);
 		    	}
 		    	else
@@ -195,6 +197,22 @@ import android.util.Log;
 		    e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void sendBroadCastMessage(int daily_insta_type)
+	{		
+		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();
+		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_NEWUSER_BROADCAST);
+		msgToSend.setProperty(Message.DAILYINSTABROADCASTTYPE, daily_insta_type);
+		try { 
+			mSmackChat.sendMessage(msgToSend);
+		} catch (XMPPException e) {
+			//TODO retry sending msg?
+			Log.e(TAG, "couldnt send broadcast");					
+		    e.printStackTrace();
+		}
+	}
+	
 	private void callListeners(Message msg)
 	{
 		int n = mRemoteListeners.beginBroadcast();

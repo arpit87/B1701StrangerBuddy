@@ -248,10 +248,8 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 	public void updateNearbyUsers() {
 		
 		//caution while updating nearbyusers
-		//this user may be interacting with a view so we are going to show progressbar
-				
-		if(!CurrentNearbyUsers.getInstance().usersHaveChanged())	
-			return;		
+		//this user may be interacting with a view so we are going to show progressbar			
+			
 		
 		String updateString ="";
 		if(CurrentNearbyUsers.getInstance().getAllNearbyUsers() == null)
@@ -262,7 +260,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		ProgressHandler.showInfiniteProgressDialoge(underlyingActivity, "Updating users",updateString);
 		//this call changes current list to new list
 		//we are maintaining two list as dont want to unnecessaarily update mapview is no user has changed
-		CurrentNearbyUsers.getInstance().updateCurrentToNew();
+		//CurrentNearbyUsers.getInstance().updateCurrentToNew();
 		List<NearbyUser> nearbyUsers = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
 		
 		//update map view

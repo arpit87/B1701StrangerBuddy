@@ -10,8 +10,6 @@ interface IXMPPAPIs {
      */
     void connect();
 
-	boolean isConnected();
-
     /**
      * Disconnect from the server
      */
@@ -21,21 +19,12 @@ interface IXMPPAPIs {
      
      void loginWithCallBack(in String login, in String password,in ISBChatConnAndMiscListener listener);
      
-     boolean isLoggedIn();
-     
-     boolean tryingLogging();
-
+    
     /**
      * Get the chat manager.
      */
     IChatManager getChatManager();
 
-    /**
-     * Change the status of the user.
-     * @param status the status to set
-     * @param msg the message state to set
-     */
-    void changeStatus(in int status, in String msg);
-   
+       
 
 }

@@ -23,6 +23,7 @@ public class CurrentNearbyUsers {
 	private List<NearbyUser> mCurrentNearbyUserList = null;
 	private List<NearbyUser> mNewNearbyUserList = null;
 	private static CurrentNearbyUsers instance=new CurrentNearbyUsers();
+	private boolean updatedToCurrent = false;	
 	public static CurrentNearbyUsers getInstance() {
 		 return instance;
 	}
@@ -32,6 +33,7 @@ public class CurrentNearbyUsers {
 		//we temporarily put new users in new list and MapHandler has to check if changed and callupdate then we change current to new
 		//we return null for 0 users so check for null always while getting nearby users
 		Log.i(TAG,"updating nearby users");
+		updatedToCurrent = false;
 		mNewNearbyUserList = JSONHandler.getInstance().GetNearbyUsersInfoFromJSONObject(body);	
 		if(mNewNearbyUserList!=null)
 			ToastTracker.showToast("new users:"+mNewNearbyUserList.size());
@@ -45,7 +47,7 @@ public class CurrentNearbyUsers {
 		return mCurrentNearbyUserList;
 	}
 	
-	public void updateCurrentToNew()
+	private void updateCurrentToNew()
 	{
 		mCurrentNearbyUserList = mNewNearbyUserList ;
 		FBID_NearbyUserMap.clear();
@@ -56,6 +58,7 @@ public class CurrentNearbyUsers {
 				FBID_NearbyUserMap.put(n.getUserFBInfo().getFbid(), n);
 			}
 		}		
+		updatedToCurrent = true;
 	}
 	
 	public NearbyUser getNearbyUserWithFBID(String FBid)
@@ -75,16 +78,22 @@ public class CurrentNearbyUsers {
 	public boolean usersHaveChanged()
 	{
 		Log.i(TAG,"chking if usr changed ");
+		if(updatedToCurrent)
+			return false;
 		if(mCurrentNearbyUserList == null)
 		{			
 			if(mNewNearbyUserList == null)
 				return false; //called before getMatch
 			else
+			{	
+				updateCurrentToNew();			
 				return true; //first time update
+			}
 		}
 		else if(mNewNearbyUserList == null)
 		{
 			ToastTracker.showToast("users changed to 0");
+			updateCurrentToNew();
 			return true; //new number of users is 0 but currently we showing some who moved out	
 		}
 				
@@ -96,6 +105,7 @@ public class CurrentNearbyUsers {
 				
 			Log.i(TAG,"user have changed ");
 			ToastTracker.showToast("users changed");
+			updateCurrentToNew();
 			return true;
 		}		
 		Log.i(TAG,"user did not change ");

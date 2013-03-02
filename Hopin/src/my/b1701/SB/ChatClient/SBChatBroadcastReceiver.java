@@ -46,14 +46,12 @@ public class SBChatBroadcastReceiver extends BroadcastReceiver{
 			//this is done to handle if chat comes in from a user who is not yet visible to this user
 			//then getnearbyuser called which fires intent after updation and then we proceed in chat
 			//updation is in new list and not in current list so we need to call update currenttonew
-			thisChatWindow.unregisterReceiver(this);
-			if(CurrentNearbyUsers.getInstance().usersHaveChanged())				
-				CurrentNearbyUsers.getInstance().updateCurrentToNew();
+			thisChatWindow.unregisterReceiver(this);			
 			NearbyUser thisNearbyUser= CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(thisChatWindow.getParticipantFBID());
 			if(thisNearbyUser == null)
 			{
 				//this can happen if user get a chat after long time n other user has moved out till then
-				Toast.makeText(context, "This user has moved out of request area,chat will close",
+				Toast.makeText(context, "Sorry the user changed his request,chat will close",
 					    Toast.LENGTH_SHORT).show();
 				thisChatWindow.finish();
 			}

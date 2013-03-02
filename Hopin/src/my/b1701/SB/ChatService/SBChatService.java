@@ -1,10 +1,16 @@
 package my.b1701.SB.ChatService;
 
+import java.util.List;
+
 import my.b1701.SB.R;
 import my.b1701.SB.ChatClient.ChatWindow;
 import my.b1701.SB.HelperClasses.SBConnectivity;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.Server.ServerConstants;
+import my.b1701.SB.Users.CurrentNearbyUsers;
+import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.ThisUserNew;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
@@ -13,7 +19,6 @@ import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.XMPPConnection;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -25,6 +30,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -187,6 +193,22 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 		Toast.makeText(context, "tryin loggin from intent",
 			    Toast.LENGTH_SHORT).show();
 		mConnectionAdapter.loginAsync(login, password);
+	} else if(intentAction.equals(ServerConstants.NEARBY_USER_UPDATED))
+	{
+		//send broad chat msg to all fb loggeged in nearby users
+		List <NearbyUser>nearbyUserList = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
+		for (NearbyUser n:nearbyUserList)
+		{
+			String fbid = n.getUserFBInfo().getFbid();
+			if(fbid!="")
+				try {
+					mConnectionAdapter.getChatManager().createChat(fbid, null).sendBroadCastMessage(ThisUserNew.getInstance().get_Daily_Instant_Type());
+				} catch (RemoteException e) {
+					Log.i(TAG,"Unable to send broadcast msg");
+					e.printStackTrace();
+				}
+		}
+		
 	}
   }
 }

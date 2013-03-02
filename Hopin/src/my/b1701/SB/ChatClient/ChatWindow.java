@@ -231,7 +231,7 @@ public void onResume() {
 			newMessage.setFrom(mThiUserChatUserName+"@"+CHAT_SERVER_IP);
 			newMessage.setSubject(mThisUserChatFullName);			
 			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());		 
-					 				
+				 				
 			mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID,inputContent, false, StringUtils.gettodayDateInFormat("hh:mm"),
 					                                          SBChatMessage.SENDING,newMessage.getUniqueMsgIdentifier()));
 			mMessagesListAdapter.notifyDataSetChanged();

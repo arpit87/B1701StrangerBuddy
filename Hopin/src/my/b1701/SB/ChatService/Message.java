@@ -35,7 +35,8 @@ public static final int MSG_TYPE_ACK = 600;
 
 public static final String UNIQUEID = "unique_id";
 public static final String SBMSGTYPE = "sb_msg_type";
-public static final String TIME = "time";
+public static final String DAILYINSTABROADCASTTYPE = "daily_insta_type"; //0 daily,1 insta..we need to know what type of broadcast
+
 
 
 

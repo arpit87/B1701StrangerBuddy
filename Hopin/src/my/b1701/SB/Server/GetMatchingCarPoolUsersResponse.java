@@ -37,13 +37,16 @@ public class GetMatchingCarPoolUsersResponse extends ServerResponseBase{
 		
 		CurrentNearbyUsers.getInstance().updateNearbyUsersFromJSON(body);		
 		//MapListActivityHandler.getInstance().updateNearbyUsers();	
-		Log.i(TAG,"updating nearby carpool users");
-		Intent notifyUpdateintent = new Intent();
-		notifyUpdateintent.setAction(ServerConstants.NEARBY_USER_UPDATED);		
-		
-		//this broadcast is for chat window which queries for nearby users in case of incoming chat 
-		//from user which has not yet been fetched by getmatch request
-		Platform.getInstance().getContext().sendBroadcast(notifyUpdateintent);
+		if(CurrentNearbyUsers.getInstance().usersHaveChanged())
+		{
+			Log.i(TAG,"updating changed nearby carpool users");
+			Intent notifyUpdateintent = new Intent();
+			notifyUpdateintent.setAction(ServerConstants.NEARBY_USER_UPDATED);		
+			
+			//this broadcast is for chat window which queries for nearby users in case of incoming chat 
+			//from user which has not yet been fetched by getmatch request
+			Platform.getInstance().getContext().sendBroadcast(notifyUpdateintent);			
+		}
 		ProgressHandler.dismissDialoge();
 	}
 	

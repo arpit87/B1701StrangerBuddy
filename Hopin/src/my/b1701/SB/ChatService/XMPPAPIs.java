@@ -32,12 +32,7 @@ public class XMPPAPIs extends IXMPPAPIs.Stub {
 		return mConnectionAdapter.getChatManager();
 	}
 
-	@Override
-	public void changeStatus(int status, String msg) throws RemoteException {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void loginAsync(String login,String password) throws RemoteException {
 		mConnectionAdapter.loginAsync(login, password);
@@ -51,24 +46,6 @@ public class XMPPAPIs extends IXMPPAPIs.Stub {
 		
 	}
 
-	@Override
-	public boolean isLoggedIn() throws RemoteException {
-		// TODO Auto-generated method stub
-		return mConnectionAdapter.isLoggedIn;
-	}
-
-	@Override
-	public boolean isConnected() throws RemoteException {
-		// TODO Auto-generated method stub
-		return mConnectionAdapter.isConnected;
-	}
-
-	@Override
-	public boolean tryingLogging() throws RemoteException {
 		
-		return mConnectionAdapter.tryinLogging.get();
-	}
-
-	
 
 }
