@@ -79,7 +79,7 @@
      android:orientation="vertical"
      android:layout_marginBottom="2dip"
      android:layout_marginRight="2dip"> 
-      <ImageView
+    <!--   <ImageView
         android:id="@+id/history_editbutton"
         android:layout_width="30.0dip"
         android:layout_height="0dip"        
@@ -87,7 +87,7 @@
         android:gravity="top"
         android:layout_weight="1"        
         
-        />        
+        />        --> 
       <TextView
         android:id="@+id/history_req_date"
         android:layout_width="wrap_content"

@@ -61,14 +61,15 @@
         android:text="Plan"
         android:layout_weight="1"/>
         
-        <Button
-            android:id="@+id/search_user_tab_gotohistory" 
-            android:layout_width="0dip"
+        <ToggleButton
+        android:id="@+id/search_user_tab_gotohistory" 
+        android:layout_width="0dip"
         android:layout_height="wrap_content"  
         android:background="@drawable/arrow_right_selector"
         android:textColor="@color/frame_blue"  
         android:textSize="15dip"          
-        android:text="        Pick from past"
+        android:textOff="        Show past search"
+        android:textOn="        Hide past search"
         android:layout_marginLeft="30dip"
         android:paddingRight="10dip"
         android:layout_weight="3"        
