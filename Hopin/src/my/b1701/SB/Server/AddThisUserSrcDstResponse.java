@@ -1,13 +1,18 @@
 package my.b1701.SB.Server;
 
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetMatchingNearbyUsersRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.Users.ThisUserNew;
+import my.b1701.SB.Users.UserAttributes;
 
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -33,7 +38,8 @@ public class AddThisUserSrcDstResponse extends ServerResponseBase{
 		
 		try {
 			body = jobj.getJSONObject("body");
-			ToastTracker.showToast("added this user src,dst");			
+			ToastTracker.showToast("added this user src,dst");
+			setSourceAndDestination(body);
             //Context context = Platform.getInstance().getContext();
             Log.i(TAG, "Fetching nearby users..");
             SBHttpRequest getNearbyUsersRequest = new GetMatchingNearbyUsersRequest();
@@ -52,6 +58,18 @@ public class AddThisUserSrcDstResponse extends ServerResponseBase{
 			e.printStackTrace();
 		}
 		
+		
 	}
+	
+	public void setSourceAndDestination(JSONObject jsonObject) throws JSONException {
+	       double srcLat = Double.parseDouble(jsonObject.getString(UserAttributes.SRCLATITUDE));
+	       double srcLong = Double.parseDouble(jsonObject.getString(UserAttributes.SRCLONGITUDE));
+	       double destLat = Double.parseDouble(jsonObject.getString(UserAttributes.DSTLATITUDE));
+	       double destLong = Double.parseDouble(jsonObject.getString(UserAttributes.DSTLONGITUDE));
+	       ThisUserNew.getInstance().setSourceGeoPoint(new SBGeoPoint((int)(srcLat*1e6),(int)(srcLong*1e6)));
+	       ThisUserNew.getInstance().setDestinationGeoPoint(new SBGeoPoint((int)(destLat*1e6),(int)(destLong*1e6)));
+	       MapListActivityHandler.getInstance().updateThisUserMapOverlay();
+	       MapListActivityHandler.getInstance().centreMapTo(ThisUserNew.getInstance().getSourceGeoPoint());
+	   }
 	
 }
