@@ -52,6 +52,10 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	boolean isVisibleExpanded = false;
 	private NearbyUser mNearbyUser = null;
 	private UserFBInfo mUserFBInfo = null;
+    
+    private int chatIconImgSrc;
+    private int smsIconImgSrc;
+    private int facebookIconImgSrc;
 		
 	public NearbyUserOverlayItem(NearbyUser user ,SBMapView mapView) {
 		super(user.getUserLocInfo().getGeoPoint(), user.getUserFBInfo().getImageURL(), user.getUserFBInfo().getFbid());
@@ -181,6 +185,10 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			facebookIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.fb_icon_view);
 			buttonClose = (ImageView)viewOnMarkerExpanded.findViewById(R.id.button_close_balloon_expandedview);
 			
+            chatIconImgSrc = R.drawable.chat_icon;
+            smsIconImgSrc = R.drawable.sms_icon;
+            facebookIconImgSrc = R.drawable.fb_icon;
+
 			if(!StringUtils.isBlank(mUserFBName))
 				expandedBalloonHeader.setText(mUserFBName);
 			else
@@ -194,21 +202,27 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				smsIcon.invalidate();
 				facebookIcon.setImageResource(R.drawable.fb_icon_disabled);
 				facebookIcon.invalidate();
-				
-			}
+
+                chatIconImgSrc = R.drawable.chat_icon_disabled;
+                smsIconImgSrc = R.drawable.sms_icon_disabled;
+                facebookIconImgSrc = R.drawable.fb_icon_disabled;
+            }
 			else if(!mUserFBInfo.FBInfoAvailable())
 			{
 				chatIcon.setImageResource(R.drawable.chat_icon_disabled);
 				chatIcon.invalidate();				
 				facebookIcon.setImageResource(R.drawable.fb_icon_disabled);
 				facebookIcon.invalidate();
-				
+
+                chatIconImgSrc = R.drawable.chat_icon_disabled;
+                facebookIconImgSrc = R.drawable.fb_icon_disabled;
 			}
 			
 			if(!mNearbyUser.getUserFBInfo().isPhoneAvailable())
 			{				
 				smsIcon.setImageResource(R.drawable.sms_icon_disabled);
 				smsIcon.invalidate();
+                smsIconImgSrc = R.drawable.sms_icon_disabled;
 			}
 			
 			buttonClose.setOnClickListener(new OnClickListener() {				
@@ -325,6 +339,49 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	{
 		if(viewOnMarkerExpanded!=null)
 		{
+            boolean isOtherUserFbInfoAvailable = mUserFBInfo.FBInfoAvailable();
+            boolean isOtherUserPhoneAvailable = mNearbyUser.getUserFBInfo().isPhoneAvailable();
+            boolean isThisUserFbLoggedIn = ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN);
+
+            if (!(isOtherUserFbInfoAvailable && isThisUserFbLoggedIn)){
+                if (chatIconImgSrc != R.drawable.chat_icon_disabled) {
+                    chatIcon.setImageResource(R.drawable.chat_icon_disabled);
+                    chatIcon.invalidate();
+                    chatIconImgSrc = R.drawable.chat_icon_disabled;
+                }
+                
+                if (facebookIconImgSrc != R.drawable.fb_icon_disabled){
+                    facebookIcon.setImageResource(R.drawable.fb_icon_disabled);
+                    facebookIcon.invalidate();
+                    facebookIconImgSrc = R.drawable.fb_icon_disabled;
+                }
+            } else {
+                if (chatIconImgSrc != R.drawable.chat_icon){
+                    chatIcon.setImageResource(R.drawable.chat_icon);
+                    chatIcon.invalidate();
+                    chatIconImgSrc = R.drawable.chat_icon;
+                }
+                
+                if (facebookIconImgSrc != R.drawable.fb_icon){
+                    facebookIcon.setImageResource(R.drawable.fb_icon);
+                    facebookIcon.invalidate();
+                    facebookIconImgSrc = R.drawable.fb_icon;
+                }
+            }
+
+            if (!(isOtherUserPhoneAvailable && isThisUserFbLoggedIn)){
+                if (smsIconImgSrc != R.drawable.sms_icon_disabled) {
+                    smsIcon.setImageResource(R.drawable.sms_icon_disabled);
+                    smsIcon.invalidate();
+                    smsIconImgSrc = R.drawable.sms_icon_disabled;
+                }
+            } else {
+                if (smsIconImgSrc != R.drawable.sms_icon){
+                    smsIcon.setImageResource(R.drawable.sms_icon);
+                    smsIcon.invalidate();
+                    smsIconImgSrc = R.drawable.sms_icon;
+                }
+            }
 			viewOnMarkerExpanded.setVisibility(View.VISIBLE);
 			isVisibleExpanded = true;
 		}

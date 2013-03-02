@@ -326,6 +326,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 					
 					@Override
 					public void onClick(View v) {
+                        MapListActivityHandler.getInstance().closeExpandedViews();
 						FBLoginDialogFragment fblogin_dialog = new FBLoginDialogFragment();
 						fblogin_dialog.show(underlyingActivity.getSupportFragmentManager(), "fblogin_dialog");
 						fbPopupWindow.dismiss();
@@ -495,5 +496,10 @@ public void updateSrcDstTimeInListView() {
 	    }
 	}
 }
-		
+
+    public void closeExpandedViews(){
+        BaseItemizedOverlay nearbyUserOverlay = MapListActivityHandler.getInstance().getNearbyUserItemizedOverlay();
+        if(nearbyUserOverlay!=null)
+            nearbyUserOverlay.removeExpandedShowSmallViews();
+    }
 }
