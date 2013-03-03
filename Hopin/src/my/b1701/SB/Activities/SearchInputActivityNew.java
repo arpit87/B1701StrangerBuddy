@@ -1,15 +1,5 @@
 package my.b1701.SB.Activities;
 
-import java.util.LinkedList;
-
-import my.b1701.SB.R;
-import my.b1701.SB.Adapter.HistoryAdapter;
-import my.b1701.SB.Fragments.HistoryInstaShareFragment;
-import my.b1701.SB.Fragments.HistoryPlanFragment;
-import my.b1701.SB.Fragments.SearchUserInstaFrag;
-import my.b1701.SB.Fragments.SearchUserPlanFrag;
-import my.b1701.SB.Users.ThisUserNew;
-import my.b1701.SB.provider.HistoryContentProvider;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -24,8 +14,17 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
-
 import com.google.analytics.tracking.android.EasyTracker;
+import my.b1701.SB.Adapter.HistoryAdapter;
+import my.b1701.SB.Fragments.HistoryInstaShareFragment;
+import my.b1701.SB.Fragments.HistoryPlanFragment;
+import my.b1701.SB.Fragments.SearchUserInstaFrag;
+import my.b1701.SB.Fragments.SearchUserPlanFrag;
+import my.b1701.SB.R;
+import my.b1701.SB.Users.ThisUserNew;
+import my.b1701.SB.provider.HistoryContentProvider;
+
+import java.util.LinkedList;
 
 public class SearchInputActivityNew extends FragmentActivity{
     public static final String TAG = "my.b1701.SB.Activites.SearchInputActivity";   
@@ -185,7 +184,10 @@ public class SearchInputActivityNew extends FragmentActivity{
 	            if(historyItems.size()>0)
 	                historyItemList = historyItems;
 	        }
-	        cursor.close();
+
+            if (cursor!= null) {
+                cursor.close();
+            }
 
 	        if (historyItemList == null) {
 	            historyItemList = new LinkedList<HistoryAdapter.HistoryItem>();
