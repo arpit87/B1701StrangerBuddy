@@ -1,12 +1,6 @@
 package my.b1701.SB.CustomViewsAndListeners;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
-import my.b1701.SB.Platform.Platform;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -14,8 +8,13 @@ import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.google.android.maps.MapView;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
+import my.b1701.SB.Platform.Platform;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SBMapView extends MapView implements OnGestureListener {
 
@@ -48,8 +47,10 @@ public class SBMapView extends MapView implements OnGestureListener {
     
     public void removeAllNearbyUserView()
     {
-    	for(View v:nearByUserViewList)
-    		super.removeView(v);     	
+    	for(View v:nearByUserViewList){
+    		super.removeView(v);
+        }
+        nearbyUserMApViewListIndex = 1;
     }
     
     public void addSelfView(View v, MapView.LayoutParams params )

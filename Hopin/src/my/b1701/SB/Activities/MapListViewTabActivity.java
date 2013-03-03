@@ -57,7 +57,10 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
 	FragmentManager fm = getSupportFragmentManager();
 	private boolean isMapShowing = true;
    
+    private SBMapFragment sbMapFragment;
+    private SBListFragment sbListFragment;
     private ImageView mFbLogin;
+    private Menu menu;
 	
 	public FacebookConnector getFbConnector()
 	{
@@ -169,10 +172,17 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     }
 	
 		
-	/*@Override
-	  public void onBackPressed() {
-	    moveTaskToBack(true);
-	  }*/
+	@Override
+	public void onBackPressed() {
+        if (!isMapShowing){
+            isMapShowing = true;
+            showMapView();
+            MenuItem menuItem = menu.findItem(R.id.btn_listview);
+            menuItem.setIcon(R.drawable.maptolist);
+        } else {
+            MapListViewTabActivity.super.onBackPressed();
+        }
+	}
 	
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -182,6 +192,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
@@ -271,7 +282,12 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     	if (fm != null) {
             
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.maplistviewcontent, new SBMapFragment());
+            if (sbMapFragment == null) {
+                sbMapFragment = new SBMapFragment();
+                ft.add(R.id.maplistviewcontent, sbMapFragment);
+            } else {
+                ft.replace(R.id.maplistviewcontent, sbMapFragment);
+            }
             ft.commit();
         }
     }
@@ -282,7 +298,10 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         if (fm != null) {
             
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.maplistviewcontent, new SBListFragment());
+            if (sbListFragment == null) {
+                sbListFragment = new SBListFragment();
+            }
+            ft.add(R.id.maplistviewcontent, sbListFragment);
             ft.commit();
         }
     }

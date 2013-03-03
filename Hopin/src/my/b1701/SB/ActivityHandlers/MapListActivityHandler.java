@@ -274,8 +274,10 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		
 		
 		//null means 0 users returned by server or not yet single call to server
-		if(nearbyUsers == null)
-			return;			
+		if(nearbyUsers == null) {
+			ProgressHandler.dismissDialoge();
+            return;
+        }
 		
 		nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
 		nearbyUserItemizedOverlay.addList(nearbyUsers);

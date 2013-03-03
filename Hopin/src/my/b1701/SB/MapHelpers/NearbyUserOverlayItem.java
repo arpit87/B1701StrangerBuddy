@@ -30,7 +30,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 
 	private static String TAG = "my.b1701.SB.MapHelpers.NearbyUserOverlayItem";
 
-	protected MapView mMapView = null;
+	protected SBMapView mMapView = null;
 	private static Context context =MapListActivityHandler.getInstance().getUnderlyingActivity();
 	protected static LayoutInflater mInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
 	private View viewOnMarkerSmall = null; 
@@ -104,7 +104,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 				picViewSmall.setImageDrawable( Platform.getInstance().getContext().getResources().getDrawable(R.drawable.nearbyusericon));
 			//SBImageLoader.getInstance().displayImage(mImageURL, picViewSmall);
 			
-			mMapView.addView(viewOnMarkerSmall,params);
+            mMapView.addNearbyUserView(viewOnMarkerSmall, params);
 			viewOnMarkerSmall.setVisibility(View.VISIBLE);
 			isVisibleSmall = true;
 		}
@@ -261,7 +261,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			});		
 						
 		
-			mMapView.addView(viewOnMarkerExpanded,params);
+            mMapView.addNearbyUserView(viewOnMarkerExpanded, params);
 			viewOnMarkerExpanded.setVisibility(View.VISIBLE);
 			isVisibleExpanded = true;
 		}
