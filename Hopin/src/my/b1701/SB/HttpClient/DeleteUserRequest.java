@@ -6,22 +6,24 @@ import my.b1701.SB.Server.ServerResponseBase;
 import my.b1701.SB.Users.ThisUserNew;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 
 public class DeleteUserRequest extends SBHttpRequest{
-			
-	HttpClient httpclient = new DefaultHttpClient();
-	HttpDelete httpQuery =  new HttpDelete(url);
+
+    public static final String BASE_URL = ServerConstants.SERVER_ADDRESS + ServerConstants.REQUESTSERVICE + "/deleteRequest/";
+    HttpClient httpclient = new DefaultHttpClient();
+	HttpGet httpQuery;
 	String jsonStr;
 	public DeleteUserRequest()
 	{
 		super();
 		queryMethod = QueryMethod.Post;
-		url = ServerConstants.SERVER_ADDRESS+ "\\"+ ThisUserNew.getInstance().getUserID();
-	};
+		url = BASE_URL + "?user_id=" + ThisUserNew.getInstance().getUserID();
+        httpQuery =  new HttpGet(url);
+	}
 	
 	public ServerResponseBase execute() {
 	

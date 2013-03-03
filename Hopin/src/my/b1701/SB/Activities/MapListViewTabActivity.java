@@ -30,6 +30,8 @@ import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.HttpClient.DeleteUserRequest;
+import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.R;
@@ -180,10 +182,34 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
             MenuItem menuItem = menu.findItem(R.id.btn_listview);
             menuItem.setIcon(R.drawable.maptolist);
         } else {
-            MapListViewTabActivity.super.onBackPressed();
+            if (ThisUserNew.getInstance().getDestinationGeoPoint() != null){
+                buildExitMessageDialog();
+            } else {
+                MapListViewTabActivity.super.onBackPressed();
+            }
         }
 	}
-	
+
+    private void buildExitMessageDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Do you want to keep you request active? You will be notified if any new users are available.")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        MapListViewTabActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+                        SBHttpClient.getInstance().executeRequest(deleteUserRequest);
+                        MapListViewTabActivity.super.onBackPressed();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

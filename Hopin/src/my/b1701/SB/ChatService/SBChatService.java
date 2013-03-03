@@ -1,29 +1,6 @@
 package my.b1701.SB.ChatService;
 
-import java.util.List;
-
-import my.b1701.SB.R;
-import my.b1701.SB.ChatClient.ChatWindow;
-import my.b1701.SB.HelperClasses.SBConnectivity;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.Server.ServerConstants;
-import my.b1701.SB.Users.CurrentNearbyUsers;
-import my.b1701.SB.Users.NearbyUser;
-import my.b1701.SB.Users.ThisUserNew;
-
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.ConnectionListener;
-import org.jivesoftware.smack.PacketListener;
-import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.Roster.SubscriptionMode;
-import org.jivesoftware.smack.XMPPConnection;
-
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
+import android.app.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +10,19 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
+import my.b1701.SB.ChatClient.ChatWindow;
+import my.b1701.SB.HelperClasses.SBConnectivity;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.R;
+import my.b1701.SB.Server.ServerConstants;
+import my.b1701.SB.Users.CurrentNearbyUsers;
+import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.ThisUserNew;
+import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.Roster.SubscriptionMode;
+
+import java.util.List;
 
 public class SBChatService extends Service {
 
@@ -45,7 +35,7 @@ public class SBChatService extends Service {
 	private int DEFAULT_XMPP_PORT = 5222;	
 	int mPort;
 	private SBChatBroadcastReceiver mReceiver = new SBChatBroadcastReceiver();
-	private String mHost = "54.243.171.212";
+	private String mHost = "hopin.co.in";
 	String mErrorMsg = "";
 	private Roster mRoster = null;
 	private ConnectionListener connectionListener = null;
