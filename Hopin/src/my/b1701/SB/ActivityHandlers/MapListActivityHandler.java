@@ -1,5 +1,6 @@
 package my.b1701.SB.ActivityHandlers;
 
+import java.util.Collections;
 import java.util.List;
 
 import my.b1701.SB.R;
@@ -140,7 +141,7 @@ public class MapListActivityHandler  extends BroadcastReceiver{
 			    	  progressDialog.dismiss();
 			    	  if(currLoc != null)
 			    	  {			    		  
-			    		  ThisUserNew.getInstance().setCurrentGeoPoint(new SBGeoPoint((int)(currLoc.getLatitude()*1e6),(int)(currLoc.getLongitude()*1e6)));
+			    		  ThisUserNew.getInstance().setCurrentGeoPoint(new SBGeoPoint((int) (currLoc.getLatitude() * 1e6), (int) (currLoc.getLongitude() * 1e6)));
 			    		  ThisUserNew.getInstance().setCurrentGeoPointToSourceGeopoint();
 			    		  putInitialOverlay();
 			    	  }
@@ -270,9 +271,11 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 			Log.i(TAG,"removing prev nearby users overlay");			
 			mapView.getOverlays().remove(nearbyUserItemizedOverlay);
 			mapView.removeAllNearbyUserView();
-		}		
-		
-		
+		}
+
+        //update listview
+        updateListFrag(nearbyUsers);
+
 		//null means 0 users returned by server or not yet single call to server
 		if(nearbyUsers == null) {
 			ProgressHandler.dismissDialoge();
@@ -284,15 +287,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		Log.i(TAG,"adding nearby useroverlay");		
 		mapView.getOverlays().add(nearbyUserItemizedOverlay);	
 		mapView.postInvalidate();
-		
-		//update listview
-		NearbyUsersListViewAdapter adapter = new NearbyUsersListViewAdapter(underlyingActivity, nearbyUsers);
-		
-		if(listFrag != null)
-		{
-			listFrag.setListAdapter(adapter);
-			adapter.notifyDataSetChanged();	
-		}
+
 		
 		//show fb login popup at bottom if not yet logged in
 		boolean isfbloggedin = ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN);
@@ -304,8 +299,22 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		ProgressHandler.dismissDialoge();
 		centerMap();
 	}
-	
-	public void fbloginpromptpopup_show(boolean show)
+
+    private void updateListFrag(List<NearbyUser> nearbyUsers) {
+        if (nearbyUsers == null){
+            nearbyUsers = Collections.emptyList();
+        }
+
+        NearbyUsersListViewAdapter adapter = new NearbyUsersListViewAdapter(underlyingActivity, nearbyUsers);
+
+        if(listFrag != null)
+        {
+            listFrag.setListAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void fbloginpromptpopup_show(boolean show)
 	{
 		
 		if(show )
