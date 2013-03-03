@@ -26,6 +26,7 @@ public class SBChatListViewAdapter extends BaseAdapter {
 
 	List<SBChatMessage> mListMessages = new ArrayList<SBChatMessage>();
 	HashMap<Long,SBChatMessage> mHashMapSentNotDeliveredMsgs = new HashMap<Long,SBChatMessage>();
+	String participantFBURL = "";
 	String selfFBId = ThisUserConfig.getInstance().getString(ThisUserConfig.FBUID);
 	String selfFirstName = ThisUserConfig.getInstance().getString(ThisUserConfig.FB_FIRSTNAME);
 	String selfImageURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
@@ -42,6 +43,11 @@ public class SBChatListViewAdapter extends BaseAdapter {
 	public void setMessage(int i,SBChatMessage msg) {
 	     mListMessages.set(i, msg);
 	}
+	
+	public void setParticipantFBURL(String fburl) {
+		participantFBURL = fburl;
+	}
+	
 	
 	public void addMessage(SBChatMessage msg) {
 	     mListMessages.add(msg);
@@ -120,19 +126,9 @@ public class SBChatListViewAdapter extends BaseAdapter {
 	    }
 	    else
 	    {
-	    	 chatRowView = inflater.inflate(R.layout.chat_msg_row_other, null);
-	    	 NearbyUser n = CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(msg.getInitiator());	    	  
-	 	    if(n!=null)
-	 	    {	 	
-	 	    	imageURL = n.getUserFBInfo().getImageURL();		    	
-	 	    }
-	 	  /* else
-		    {
-		    	String err = "#User not in current nearby user list!";
-		    	msgText.setText(err);
-		    	msgText.setTextColor(Color.RED);
-		    	msgText.setError(err);
-		    }*/
+	    	 chatRowView = inflater.inflate(R.layout.chat_msg_row_other, null);	    	 	
+	 	     imageURL = participantFBURL;		    	
+	
 	    }  
 	    	msgText = (TextView) chatRowView.findViewById(R.id.chatmessagetext);
 	    	msgStatus = (TextView) chatRowView.findViewById(R.id.chatmessagestatusandtime);

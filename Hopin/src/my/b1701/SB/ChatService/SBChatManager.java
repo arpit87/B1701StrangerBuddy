@@ -5,6 +5,7 @@ import java.util.Map;
 
 import my.b1701.SB.ChatClient.IChatManagerListener;
 import my.b1701.SB.ChatClient.IMessageListener;
+import my.b1701.SB.Server.ServerConstants;
 
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
@@ -74,7 +75,7 @@ public class SBChatManager extends IChatManager.Stub {
 
 	@Override
 	public IChatAdapter createChat(String participant, IMessageListener listener) throws RemoteException {
-			String key = participant+"@54.243.171.212";
+			String key = participant+"@"+ServerConstants.CHATSERVERIP;
 			ChatAdapter chatAdapter;
 			if (mAllChats.containsKey(key)) {
 				chatAdapter = mAllChats.get(key);
@@ -108,9 +109,8 @@ public class SBChatManager extends IChatManager.Stub {
 	    	mService.sendNotification(id,participant,participant_name);
 	   
 	}
-   
 	
-	
+		
 	private class SBChatManagerAndInitialMsgListener implements ChatManagerListener {
 
 		/****

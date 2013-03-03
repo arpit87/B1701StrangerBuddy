@@ -12,9 +12,9 @@ public class UserOtherInfo {
 
 	JSONObject allInfo = null;
 	private String type = "0";
-	private String percent_match = "0";
-	private String time ="";
+	private String percent_match = "0";	
 	private String username ="";
+	private String userid = "";
 	
 	
 		
@@ -28,13 +28,13 @@ public class UserOtherInfo {
 		try {
 			percent_match = allInfo.getString(UserAttributes.PERCENTMATCH);			
 		} catch (JSONException e) {	}
-		
+						
 		try {
-			time = allInfo.getString(UserAttributes.TIME);			
+			username = allInfo.getString(UserAttributes.USERNAME);			
 		} catch (JSONException e) {	}
 		
 		try {
-			username = allInfo.getString(UserAttributes.USERNAME);			
+			userid = allInfo.getString(UserAttributes.USERID);			
 		} catch (JSONException e) {	}
 				
 	}
@@ -58,9 +58,9 @@ public class UserOtherInfo {
 		return Integer.parseInt(percent_match);
 	}
 	
-	public String getTime()
+	public String getUserID()
 	{
-		return time;
+		return userid;
 	}
 	
 	public String getRideType()
@@ -76,8 +76,7 @@ public class UserOtherInfo {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((time == null) ? 0 : time.hashCode());
+		int result = 1;		
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -90,12 +89,7 @@ public class UserOtherInfo {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UserOtherInfo other = (UserOtherInfo) obj;
-		if (time == null) {
-			if (other.time != null)
-				return false;
-		} else if (!time.equals(other.time))
-			return false;
+		UserOtherInfo other = (UserOtherInfo) obj;		
 		if (type == null) {
 			if (other.type != null)
 				return false;

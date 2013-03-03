@@ -23,7 +23,7 @@ public class SaveFBInfoResponse extends ServerResponseBase{
 		Log.i(TAG,"processing SaveFBInfoResponse response.status:"+this.getStatus());	
 		
 		//jobj = JSONHandler.getInstance().GetJSONObjectFromHttp(serverResponse);
-		
+		Log.i(TAG,"got json "+jobj.toString());
 		try {
 			body = jobj.getJSONObject("body");
 			//status = body.getString("Status");			

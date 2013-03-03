@@ -1,5 +1,7 @@
 package my.b1701.SB.Users;
 
+import my.b1701.SB.Util.StringUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -69,11 +71,11 @@ public class NearbyUser {
 			mUserFBInfo = new UserFBInfo(userFBInfoJObj);			
 		} catch (JSONException e) {
 			mUserFBInfo = new UserFBInfo();
-			e.printStackTrace();
-		}
-		
+			e.printStackTrace();	}
 		
 	}
+	
+	
 
 	@Override
 	public int hashCode() {

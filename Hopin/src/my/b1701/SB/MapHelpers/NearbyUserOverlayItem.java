@@ -9,6 +9,7 @@ import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.ThisUserNew;
 import my.b1701.SB.Users.UserFBInfo;
 import my.b1701.SB.Util.StringUtils;
 import android.app.Activity;
@@ -62,7 +63,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		this.mGeoPoint = user.getUserLocInfo().getGeoPoint();		
 		this.mMapView = mapView;
 		this.mUserName = user.getUserOtherInfo().getUserName();
-		this.mUserID = user.getUserLocInfo().getUserID();
+		this.mUserID = user.getUserOtherInfo().getUserID();
 		this.mUserFBInfo = user.getUserFBInfo();
 		this.mImageURL = mUserFBInfo.getImageURL();
 		this.mUserFBID = mUserFBInfo.getFbid();
@@ -249,7 +250,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			chatIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View chatIconView) {
-					CommunicationHelper.getInstance().onChatClickWithUser(mUserFBID);						
+					CommunicationHelper.getInstance().onChatClickWithUser(mNearbyUser);						
 				}
 			});
 			

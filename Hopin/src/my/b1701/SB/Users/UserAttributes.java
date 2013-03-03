@@ -12,10 +12,10 @@ public class UserAttributes {
 	
 	//other info
 	public static String SHAREOFFERTYPE = "type";
+	public static String DAILYINSTATYPE = "insta";
 	public static String OTHERINFO = "other_info";
 	public static String PERCENTMATCH = "percent_match";
-	public static String DATETIME = "time";
-	public static String TIME = "time";
+	public static String DATETIME = "time";	
 	public static String MOBILENUMBER = "mobile_available";
 	public static String USERNAME = "username";
 	
@@ -26,6 +26,8 @@ public class UserAttributes {
 	public static String  LOCINFO = "loc_info"; 
 	public static String  SRCINFO = "src_info";
 	public static String  DSTINFO = "dst_info";
+	public static String  TIMEINFO = "time_info";
+	public static String TIME = "time";
 	
 	//src attributes
 	public static String  SRCLATITUDE = "src_latitude";

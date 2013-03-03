@@ -26,7 +26,7 @@ public class AddUserResponse extends ServerResponseBase{
 	public void process() {
 		Log.i(TAG,"processing AddUsersResponse response.status:"+this.getStatus());
 		
-				
+		Log.i(TAG,"got json "+jobj.toString());		
 		try {
 			body = jobj.getJSONObject("body");
 			user_id = body.getString(ThisUserConfig.USERID);

@@ -1,6 +1,28 @@
 package my.b1701.SB.ChatService;
 
-import android.app.*;
+import java.util.List;
+
+import my.b1701.SB.R;
+import my.b1701.SB.ChatClient.ChatWindow;
+import my.b1701.SB.HelperClasses.SBConnectivity;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.Server.ServerConstants;
+import my.b1701.SB.Users.CurrentNearbyUsers;
+import my.b1701.SB.Users.NearbyUser;
+
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.ConnectionListener;
+import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.Roster.SubscriptionMode;
+import org.jivesoftware.smack.XMPPConnection;
+
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,19 +32,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
-import my.b1701.SB.ChatClient.ChatWindow;
-import my.b1701.SB.HelperClasses.SBConnectivity;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.R;
-import my.b1701.SB.Server.ServerConstants;
-import my.b1701.SB.Users.CurrentNearbyUsers;
-import my.b1701.SB.Users.NearbyUser;
-import my.b1701.SB.Users.ThisUserNew;
-import org.jivesoftware.smack.*;
-import org.jivesoftware.smack.Roster.SubscriptionMode;
-
-import java.util.List;
 
 public class SBChatService extends Service {
 
@@ -60,7 +69,7 @@ public class SBChatService extends Service {
 		Toast.makeText(this, "started service", Toast.LENGTH_SHORT).show();		
 		registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		registerReceiver(mReceiver, new IntentFilter(SBLOGIN_TO_CHAT));
-				
+		registerReceiver(mReceiver, new IntentFilter(ServerConstants.NEARBY_USER_UPDATED));		
 		mPort = DEFAULT_XMPP_PORT;
 		
 		initializeConfigration();
@@ -185,14 +194,21 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 		mConnectionAdapter.loginAsync(login, password);
 	} else if(intentAction.equals(ServerConstants.NEARBY_USER_UPDATED))
 	{
+		Log.i(TAG,"update intent in chat rece ,might broadcast");
 		//send broad chat msg to all fb loggeged in nearby users
+		if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBINFOSENTTOSERVER))
+			return;
+		
+		Log.i(TAG,"Starting broadcast");
 		List <NearbyUser>nearbyUserList = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
+		if(nearbyUserList!=null)
 		for (NearbyUser n:nearbyUserList)
 		{
 			String fbid = n.getUserFBInfo().getFbid();
 			if(fbid!="")
 				try {
-					mConnectionAdapter.getChatManager().createChat(fbid, null).sendBroadCastMessage(ThisUserNew.getInstance().get_Daily_Instant_Type());
+					Log.i(TAG,"broadcasting to fbid:"+fbid);
+					mConnectionAdapter.getChatManager().createChat(fbid, null).sendBroadCastMessage();
 				} catch (RemoteException e) {
 					Log.i(TAG,"Unable to send broadcast msg");
 					e.printStackTrace();

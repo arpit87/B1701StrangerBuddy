@@ -74,7 +74,7 @@ public class SmsDialogFragment extends DialogFragment{
 				}
 				else
 				{
-					String user_id = toNearbyUser.getUserLocInfo().getUserID();
+					String user_id = toNearbyUser.getUserOtherInfo().getUserID();
 					String smstext = smsTextView.getText().toString();
 					if(smstext == "")
 						ToastTracker.showToast("Cant send empty message");

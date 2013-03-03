@@ -11,6 +11,7 @@ public class ServerConstants {
 	public static String USERDETAILSSERVICE="/UserDetailsService";
 	public static String REQUESTSERVICE="/RequestService";
 	public static String CHATSERVICE= "/ChatService";
+	public static String CHATSERVERIP= "54.243.171.212";
 	
 
 }

@@ -37,7 +37,7 @@ public class AddThisUserSrcDstCarPoolResponse extends ServerResponseBase{
 		Log.i(TAG,"processing AddUsersResponse response.status:"+this.getStatus());	
 		
 		//jobj = JSONHandler.getInstance().GetJSONObjectFromHttp(serverResponse);
-		
+		Log.i(TAG,"got json "+jobj.toString());
 		try {
 			body = jobj.getJSONObject("body");
 			ToastTracker.showToast("added this user src,dst for car pool,fetching match");

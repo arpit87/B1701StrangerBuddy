@@ -1,11 +1,10 @@
 package my.b1701.SB.Users;
 
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.Util.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.google.android.maps.GeoPoint;
 
 
 /**
@@ -27,69 +26,67 @@ public class UserLocInfo {
 	private String srclocality = "";
 	private String dstaddress = "";
 	private String dstlocality = "";
+	private String time = "";
+	private String formattedTraveDetails = "";
 	
 	
 	
 	private JSONObject srcLocjObj = null;
-	private JSONObject dstLocjObj = null;
+	private JSONObject dstLocjObj = null;	
 		
 	
 	public UserLocInfo(JSONObject thisUserJobj)
 	{
 		try {
 			srcLocjObj = thisUserJobj.getJSONObject(UserAttributes.SRCINFO);
+			
+			try {									
+				srclatitude=srcLocjObj.getString(UserAttributes.SRCLATITUDE);			
+			} catch (JSONException e) {}
+			
+			try {									
+				srclongitude=srcLocjObj.getString(UserAttributes.SRCLONGITUDE);			
+			} catch (JSONException e) {}
+			
+			try {									
+				srcaddress = srcLocjObj.getString(UserAttributes.SRCADDRESS);			
+			} catch (JSONException e) {}
+			
+			try {									
+				srclocality = srcLocjObj.getString(UserAttributes.SRCLOCALITY);			
+			} catch (JSONException e) {}
+			
 		} catch (JSONException e) {}
 		
 		try {
-			dstLocjObj = thisUserJobj.getJSONObject(UserAttributes.DSTINFO);
-		} catch (JSONException e) {}
-				
-		try {									
-			userID=thisUserJobj.getString(UserAttributes.USERID);			
-		} catch (JSONException e) {}
-		
-		try {									
-			firstName=thisUserJobj.getString(UserAttributes.FIRSTNAME);			
-		} catch (JSONException e) {}
-		
-		try {									
-			lastName=thisUserJobj.getString(UserAttributes.LASTNAME);			
-		} catch (JSONException e) {}
-		
-		try {									
-			srclatitude=srcLocjObj.getString(UserAttributes.SRCLATITUDE);			
-		} catch (JSONException e) {}
-		
-		try {									
-			srclongitude=srcLocjObj.getString(UserAttributes.SRCLONGITUDE);			
+			dstLocjObj = thisUserJobj.getJSONObject(UserAttributes.DSTINFO);			
+
+			try {									
+				dstlatitude=dstLocjObj.getString(UserAttributes.DSTLATITUDE);			
+			} catch (JSONException e) {}
+			
+			try {									
+				dstlongitude=dstLocjObj.getString(UserAttributes.DSTLONGITUDE);			
+			} catch (JSONException e) {}
+			
+			try {									
+				dstaddress = dstLocjObj.getString(UserAttributes.DSTADDRESS);
+			} catch (JSONException e) {}
+			
+			try {									
+				dstlocality = dstLocjObj.getString(UserAttributes.DSTLOCALITY);
+			} catch (JSONException e) {}
+			
 		} catch (JSONException e) {}
 		
-		try {									
-			srcaddress = srcLocjObj.getString(UserAttributes.SRCADDRESS);			
-		} catch (JSONException e) {}
 		
-		try {									
-			srclocality = srcLocjObj.getString(UserAttributes.SRCLOCALITY);			
+		try {
+			time = thisUserJobj.getString(UserAttributes.TIMEINFO);			
 		} catch (JSONException e) {}
 			
 		
-		try {									
-			dstlatitude=dstLocjObj.getString(UserAttributes.DSTLATITUDE);			
-		} catch (JSONException e) {}
-		
-		try {									
-			dstlongitude=dstLocjObj.getString(UserAttributes.DSTLONGITUDE);			
-		} catch (JSONException e) {}
-		
-		try {									
-			dstaddress = dstLocjObj.getString(UserAttributes.DSTADDRESS);
-		} catch (JSONException e) {}
-		
-		try {									
-			dstlocality = dstLocjObj.getString(UserAttributes.DSTLOCALITY);
-		} catch (JSONException e) {}
-		
-		getUserGeopoint();
+		calcUserGeopoint();
+		calcFormattedTravelDetails();
 		
 	}
 
@@ -97,12 +94,6 @@ public class UserLocInfo {
 	public UserLocInfo() {
 		// TODO Auto-generated constructor stub
 	}
-
-
-	public String getUserID()
-	{
-		return userID;
-	}	
 
 
 	public String getUserSrcLocality()
@@ -148,12 +139,33 @@ public class UserLocInfo {
 	public SBGeoPoint getGeoPoint() {
 		return geoPoint;
 	}
+	
+	public String getTimeOfTravel() {
+		return time;
+	}
+	
+	public String getFormattedTravelDetails()
+	{		 
+			return formattedTraveDetails;
+	}
 
 
-	private void getUserGeopoint()
+
+	private void calcUserGeopoint()
 	{
 		if(srclatitude != "" && srclongitude != "")
 			geoPoint =  new SBGeoPoint((int)(Double.parseDouble(srclatitude)*1E6),(int)(Double.parseDouble(srclongitude)*1E6));
+	}
+	
+	private void calcFormattedTravelDetails()
+	{
+		String travelInfo = getUserSrcLocality() + " to " + getUserDstLocality();
+		String travelTimeInfo = getTimeOfTravel();			
+		if(ThisUserNew.getInstance().get_Daily_Instant_Type() == 0)
+			formattedTraveDetails = travelInfo + " Daily@"+StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "hh:mm a", travelTimeInfo);
+		
+		else
+			formattedTraveDetails = travelInfo +","+ StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "d MMM hh:mm a", travelTimeInfo);
 	}
 
 

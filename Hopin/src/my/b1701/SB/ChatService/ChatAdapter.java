@@ -3,10 +3,15 @@ package my.b1701.SB.ChatService;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import my.b1701.SB.ChatClient.IMessageListener;
 import my.b1701.SB.ChatClient.SBChatMessage;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.HttpClient.GetFBInfoForUserIDAndShowPopup;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.Users.CurrentNearbyUsers;
+import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.ThisUserNew;
 import my.b1701.SB.Util.StringUtils;
 
 import org.jivesoftware.smack.Chat;
@@ -121,7 +126,15 @@ import android.util.Log;
 		    //if broadcast message from new user then do getMatch req
 		    if(msg.getType() == Message.MSG_TYPE_NEWUSER_BROADCAST)
 		    {
-		        
+		        //caution..call back listener to chatwindow might not be registered yet for this chat
+		    	//listener get registered only when chat window opens		
+		    	
+		    	String thisNearbyUserUSERID = (String) message.getProperty(Message.USERID);
+		    	int daily_insta_type = (Integer) message.getProperty(Message.DAILYINSTATYPE);
+		    	ToastTracker.showToast("got broadcast from userid:"+thisNearbyUserUSERID);
+		    	GetFBInfoForUserIDAndShowPopup req = new GetFBInfoForUserIDAndShowPopup(thisNearbyUserUSERID,daily_insta_type);
+		    	SBHttpClient.getInstance().executeRequest(req);
+		    	
 		    	return;
 		    }
 
@@ -189,6 +202,7 @@ import android.util.Log;
 		//msgToSend.setType(org.jivesoftware.smack.packet.Message.Type.headline);	
 		msgToSend.setProperty(Message.UNIQUEID, uniqueID);
 		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_ACK);
+		
 		try { 
 			mSmackChat.sendMessage(msgToSend);
 		} catch (XMPPException e) {
@@ -199,11 +213,14 @@ import android.util.Log;
 	}
 	
 	@Override
-	public void sendBroadCastMessage(int daily_insta_type)
+	public void sendBroadCastMessage()
 	{		
+		//every msg should have sb_msg_type n uniqueid
 		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();
 		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_NEWUSER_BROADCAST);
-		msgToSend.setProperty(Message.DAILYINSTABROADCASTTYPE, daily_insta_type);
+		msgToSend.setProperty(Message.DAILYINSTATYPE, ThisUserNew.getInstance().get_Daily_Instant_Type());
+		msgToSend.setProperty(Message.USERID, ThisUserNew.getInstance().getUserID());
+		msgToSend.setProperty(Message.UNIQUEID, System.currentTimeMillis());
 		try { 
 			mSmackChat.sendMessage(msgToSend);
 		} catch (XMPPException e) {

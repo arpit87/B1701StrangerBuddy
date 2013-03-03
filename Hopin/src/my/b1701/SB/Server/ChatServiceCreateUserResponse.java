@@ -26,7 +26,7 @@ public class ChatServiceCreateUserResponse extends ServerResponseBase{
 			Log.i(TAG,"processing ChatServiceCreateUserResponse response.status:"+this.getStatus());	
 			
 			//jobj = JSONHandler.getInstance().GetJSONObjectFromHttp(serverResponse);
-			
+			Log.i(TAG,"got json "+jobj.toString());
 			try {
 				Log.i(TAG, "json:"+jobj.toString());
 				body = jobj.getJSONObject("body");

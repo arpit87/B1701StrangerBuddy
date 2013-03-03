@@ -6,7 +6,7 @@ import my.b1701.SB.ChatClient.IMessageListener;
 interface IChatAdapter {
 
 void sendMessage(in Message message);
-void sendBroadCastMessage(in int dailyinstatype);
+void sendBroadCastMessage();
 void setOpen(in boolean value);
 void addMessageListener(in IMessageListener listener);
 void removeMessageListener(IMessageListener listener) ;

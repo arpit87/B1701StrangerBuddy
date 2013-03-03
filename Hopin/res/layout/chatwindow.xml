@@ -2,13 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical">
-	<RelativeLayout android:id="@+id/chat_header"
+	<TextView android:id="@+id/chat_contact_name"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:lines="1" android:singleLine="true" android:textSize="16sp"
+				android:textStyle="bold" android:textColor="@color/white"
+				android:background="@drawable/transparent_black"
+				android:text="Arpit Mishra" />	
+	<TextView android:id="@+id/chat_contact_destination"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:lines="1" android:singleLine="true" android:textSize="12sp"
+				android:textStyle="bold" android:textColor="@color/white"
+				android:background="@drawable/transparent_black"
+				android:text="Powai->Andheri" />
+	<!--  <RelativeLayout android:id="@+id/chat_header"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"		
 		android:background="@drawable/transparent_black" 
 		android:padding="4dip"
 		>
 				    
-		<!--   <ImageView
+		   <ImageView
             android:id="@+id/chat_contact_pic"
             android:layout_width="30.0dip"
             android:layout_height="30.0dip"
@@ -22,7 +34,7 @@
             android:layout_height="34.0dip"
             android:layout_marginLeft="3dip"
             android:src="@drawable/icon_frame" 
-            android:layout_centerVertical="true"/> -->
+            android:layout_centerVertical="true"/> 
         
 		<LinearLayout android:orientation="vertical"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
@@ -35,13 +47,13 @@
 				android:lines="1" android:singleLine="true" android:textSize="16sp"
 				android:textStyle="bold" android:textColor="@color/white"
 				android:text="Arpit Mishra" />			
-			<TextView android:id="@+id/chat_contact_destination"
+			  <TextView android:id="@+id/chat_contact_destination"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:lines="1" android:singleLine="true" android:textSize="12sp"
 				android:textStyle="bold" android:textColor="@color/white"
 				android:text="Powai->Andheri" />
 		</LinearLayout>
-	</RelativeLayout>
+	</RelativeLayout> -->
 	<View android:layout_width="fill_parent" android:layout_height="1dp"
 		 android:background="@color/gray"
 		 android:padding="2dip"

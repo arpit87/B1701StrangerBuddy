@@ -13,6 +13,7 @@ import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.R;
 import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.ThisUserNew;
 import my.b1701.SB.Users.UserFBInfo;
 import my.b1701.SB.Users.UserLocInfo;
 import my.b1701.SB.Users.UserOtherInfo;
@@ -78,11 +79,11 @@ public class NearbyUsersListViewAdapter extends BaseAdapter{
         	name = thisUserOtherInfo.getUserName();
         String source = thisUserLocInfo.getUserSrcAddress();
         String destination = thisUserLocInfo.getUserDstAddress();
-        String time = thisUserOtherInfo.getTime();
+        String formattedTravelInfo = thisUserLocInfo.getFormattedTravelDetails();
         userName.setText(name);
         userSource.setText(source);
         userDestination.setText(destination);
-        userTime.setText(time);
+        userTime.setText(formattedTravelInfo);
         
         fbProfileView.setOnClickListener(new OnClickListener() {				
 			@Override

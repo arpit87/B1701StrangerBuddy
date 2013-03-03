@@ -58,6 +58,11 @@
             android:screenOrientation="portrait" >
 			  
         </activity>
+        
+        <activity android:name=".Activities.NewUserPopupActivity" 
+            android:theme="@style/Theme.Transparent" 
+            android:screenOrientation="portrait" >			  
+        </activity>
          
         <activity android:name=".Activities.MapListViewTabActivity"
             android:screenOrientation="portrait"

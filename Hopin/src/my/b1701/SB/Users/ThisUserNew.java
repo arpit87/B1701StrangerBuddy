@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import android.util.Log;
 import my.b1701.SB.Adapter.HistoryAdapter;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.Util.StringUtils;
 /***
  * This class has latest data to set all current req data of this user
  * any activity to be updated like list map picks from this location
@@ -31,11 +32,7 @@ public class ThisUserNew {
 	private static ThisUserNew instance=new ThisUserNew();
 	private LinkedList<HistoryAdapter.HistoryItem> historyItemList = new LinkedList<HistoryAdapter.HistoryItem>();
 	private String userID;	
-	//these will 
-	private String sourceForHistory ="";
-	private String destinationForHistory = "";
-	private String timeForHistory = "";
-			
+				
 	
 	public void setUserID(String userID) {
 		Log.i(TAG,"set user id");
@@ -125,6 +122,15 @@ public class ThisUserNew {
 		this.selected_radio_button_id = selected_radio_button_id;
 	}
 
+	public String getDetailsOfTravel()
+	{
+		String time = StringUtils.formatDate("HH:mm", "hh:mm a", getTimeOfTravel());
+		if(get_Daily_Instant_Type() == 0)
+			return "Daily@"+time;
+		else
+			return StringUtils.formatDate("yyyy-MM-dd","d MMM",getDateOfTravel()) +"," + time;
+	}
+	
 	public String getDateAndTimeOfTravel() {
 		return dateOfRequest + " " + timeOfRequest;
 	}

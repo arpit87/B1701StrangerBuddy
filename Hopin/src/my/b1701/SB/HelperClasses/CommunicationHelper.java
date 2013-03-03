@@ -12,6 +12,7 @@ import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.HttpClient.SaveFBInfoRequest;
 import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.Users.NearbyUser;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +37,7 @@ public class CommunicationHelper {
 		return instance;
 	}
 	
-	public void onChatClickWithUser(String userFBID)
+	public void onChatClickWithUser(NearbyUser n)
 	{
 		//chat username and id are set only after successful addition to chat server
 		//if these missing =?not yet added on chat server
@@ -68,12 +69,17 @@ public class CommunicationHelper {
 			//Intent fbLoginIntent = new Intent(context,LoginActivity.class);			
 			//MapListActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
 		}	
-		else if(userFBID != "")
+		else if(n.getUserFBInfo().FBInfoAvailable())
 		{
 			Intent startChatIntent = new Intent(Platform.getInstance().getContext(),ChatWindow.class);					
 			startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
 		 			| Intent.FLAG_ACTIVITY_NEW_TASK);
-			startChatIntent.putExtra("participant", userFBID);
+			String userFBID = n.getUserFBInfo().getFbid();
+			String imageURL = n.getUserFBInfo().getImageURL();
+			String travelDetailInfo = n.getUserLocInfo().getFormattedTravelDetails();
+			startChatIntent.putExtra(ChatWindow.PARTICIPANT, userFBID);
+			startChatIntent.putExtra(ChatWindow.IMAGEURL, imageURL);
+			startChatIntent.putExtra(ChatWindow.TRAVELINFO, travelDetailInfo);			
 			context.startActivity(startChatIntent);
 		}
 		else

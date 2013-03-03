@@ -45,12 +45,15 @@ import android.widget.Toast;
 
 public class ChatWindow extends Activity{
 	
-	private static final String CHAT_SERVER_IP = "54.243.171.212";
 	private static String TAG = "my.b1701.SB.ChatClient.ChatWindow";
+	public static String PARTICIPANT = "participant";
+	public static String TRAVELINFO = "travel_info";
+	public static String IMAGEURL = "imageurl";
+	public static String PARTICIPANT_NAME = "name";
 	private IXMPPAPIs xmppApis = null;
 	private TextView mContactNameTextView;
    // private ImageView mContactPicFrame;	 
-    private TextView mContactDestination;	
+    private TextView mTraveLDetails;	
     //private ImageView mContactPic;   
     private ListView mMessagesListView;
     private EditText mInputField;
@@ -61,7 +64,11 @@ public class ChatWindow extends Activity{
     private IMessageListener mMessageListener = new SBOnChatMessageListener();
     private ISBChatConnAndMiscListener mCharServiceConnMiscListener = new SBChatServiceConnAndMiscListener();
     private final ChatServiceConnection mChatServiceConnection = new ChatServiceConnection();
-    private String mParticipantFBID = "";    
+    private String mParticipantFBID = "";  
+    private String mParticipantName = "";  
+    private String mParticipantTravelDetails = "";
+    private String mParticipantImageURL = "";
+    private int mDailyInstaType = 1; //1 insta,0 daily
     private SBChatBroadcastReceiver mSBBroadcastReceiver = new SBChatBroadcastReceiver();
     Handler mHandler = new Handler();
     private SBChatListViewAdapter mMessagesListAdapter = new SBChatListViewAdapter();
@@ -80,7 +87,7 @@ public class ChatWindow extends Activity{
 		//this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(SBBroadcastReceiver.SBCHAT_CONNECTION_CLOSED));
 	    mContactNameTextView = (TextView) findViewById(R.id.chat_contact_name);
 	   // mContactPicFrame = (ImageView) findViewById(R.id.chat_contact_pic_frame);
-	    mContactDestination = (TextView) findViewById(R.id.chat_contact_destination);	    
+	    mTraveLDetails = (TextView) findViewById(R.id.chat_contact_destination);	    
 	   // mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
 	    mMessagesListView = (ListView) findViewById(R.id.chat_messages);
 	    mMessagesListView.setAdapter(mMessagesListAdapter);
@@ -105,16 +112,20 @@ public void onResume() {
 	super.onResume();
 	//set participant before binding
 	String oldParticipant = mParticipantFBID;
-	mParticipantFBID = getIntent().getStringExtra("participant");
+	mParticipantFBID = getIntent().getStringExtra(PARTICIPANT);	
+	mParticipantName = getIntent().getStringExtra(PARTICIPANT_NAME);
+	mParticipantTravelDetails = getIntent().getStringExtra(TRAVELINFO);	
+	mParticipantImageURL = getIntent().getStringExtra(IMAGEURL);	
 	if(mParticipantFBID == "")
 		mParticipantFBID = oldParticipant;	
+	mTraveLDetails.setText(mParticipantTravelDetails);
 	//mContactNameTextView.setText(mReceiver);
-	getParticipantInfoFromFBID(mParticipantFBID);
+	//getParticipantInfoFromFBID(mParticipantFBID);
 	if (!mBinded) 
 		bindToService();
 	else
 		try {
-			changeCurrentChat(mParticipantFBID);
+			changeCurrentChat();
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -190,7 +201,7 @@ public void onResume() {
     		}
 	    }
 	    
-	    public void getParticipantInfoFromFBID(String fbid)
+	 /*   public void getParticipantInfoFromFBID(String fbid)
 	    {
 	    	NearbyUser thisNearbyUser = CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(fbid);
 	    	if(thisNearbyUser != null)
@@ -198,8 +209,8 @@ public void onResume() {
 	    		String travelInfo = "";
 		    	mContactNameTextView.setText(thisNearbyUser.getUserFBInfo().getFullName());
 		    	//SBImageLoader.getInstance().displayImageElseStub(thisNearbyUser.getUserFBInfo().getImageURL(), mContactPic,R.drawable.userpicicon);
-		    	travelInfo = thisNearbyUser.getUserLocInfo().getUserSrcLocality() +" to "+thisNearbyUser.getUserLocInfo().getUserDstLocality() ;
-		    	mContactDestination.setText(travelInfo);
+		    	//travelInfo = thisNearbyUser.getUserLocInfo().getUserSrcLocality() +" to "+thisNearbyUser.getUserLocInfo().getUserDstLocality() ;
+		    	//mContactDestination.setText(travelInfo);
 		    	//if(thisNearbyUser.getUserOtherInfo().isOfferingRide())
 		    	//	mContactPicFrame.setImageResource(R.drawable.list_frame_green_new);
 		    	//else
@@ -210,12 +221,14 @@ public void onResume() {
 	    	{
 	    		//some new user not yet visible to this user has initiated chat
 	    		//so we call server to get nearby user which should have this user
-	    		ProgressHandler.showInfiniteProgressDialoge(this, "Please wait..", "");
-	    		this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(ServerConstants.NEARBY_USER_UPDATED));
+	    		ProgressHandler.showInfiniteProgressDialoge(this, "Please wait..", "Fetching your info");
 	    		SBHttpRequest getNearbyUsersRequest = new GetMatchingNearbyUsersRequest();
-	    	    SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);	    		
+	    	    SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
+	    		//this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(ServerConstants.NEARBY_USER_UPDATED));
+	    		//SBHttpRequest getNearbyUsersRequest = new GetMatchingNearbyUsersRequest();
+	    	    //SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);	    		
 	    	}
-	    }
+	    }*/
 	    
 	    public String getParticipantFBID() {
 			return mParticipantFBID;
@@ -228,7 +241,7 @@ public void onResume() {
 		{
 			Message newMessage = new Message(mParticipantFBID,Message.MSG_TYPE_CHAT);
 			newMessage.setBody(inputContent);
-			newMessage.setFrom(mThiUserChatUserName+"@"+CHAT_SERVER_IP);
+			newMessage.setFrom(mThiUserChatUserName+"@"+ServerConstants.CHATSERVERIP);
 			newMessage.setSubject(mThisUserChatFullName);			
 			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());		 
 				 				
@@ -279,16 +292,17 @@ public void onResume() {
 			}
 	    }
 	    //in already open chatWindow this function switches chats
-	    private void changeCurrentChat(String participant) throws RemoteException {
+	    private void changeCurrentChat() throws RemoteException {
 	    	
-	    	chatAdapter = mChatManager.getChat(participant);
+	    	chatAdapter = mChatManager.getChat(mParticipantFBID);
 	    	if (chatAdapter != null) {
 	    		chatAdapter.setOpen(true);
 	    		chatAdapter.addMessageListener(mMessageListener);
 	    	    
 	    	}
-	    	getParticipantInfoFromFBID(participant);
-	    	//mContactNameTextView.setText(participant);
+	    	//getParticipantInfoFromFBID(participant);
+	    	mContactNameTextView.setText(mParticipantName);
+	    	mTraveLDetails.setText(mParticipantTravelDetails);
 	    	fetchPastMsgsIfAny();
 	        }
 	    

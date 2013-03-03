@@ -58,7 +58,7 @@ public class SBListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
 		NearbyUser userAtthisPosition = CurrentNearbyUsers.getInstance().getNearbyUserAtPosition(position);
 		if(userAtthisPosition != null)
-			CommunicationHelper.getInstance().onChatClickWithUser(userAtthisPosition.getUserFBInfo().getFbid());
+			CommunicationHelper.getInstance().onChatClickWithUser(userAtthisPosition);
 		else
 			ToastTracker.showToast("Unable to chat,user not in current list");
         ToastTracker.showToast("Chat with user at: " + position);
