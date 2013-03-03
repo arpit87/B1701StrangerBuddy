@@ -92,6 +92,10 @@
            android:name="my.b1701.SB.provider.HistoryContentProvider"
            android:authorities="my.b1701.SB.provider.HistoryContentProvider" />
 
+       <provider
+               android:name="my.b1701.SB.provider.BlockedUsersProvider"
+               android:authorities="my.b1701.SB.provider.BlockedUsersProvider" />
+
         <receiver android:name=".LocationHelpers.LocationUpdaterFromIntent"
             android:exported="false">
              </receiver> 
