@@ -1,7 +1,6 @@
 package my.b1701.SB.Server;
 
 import my.b1701.SB.Activities.NewUserDialogActivity;
-import my.b1701.SB.Activities.NewUserPopupActivity;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.UserFBInfo;
