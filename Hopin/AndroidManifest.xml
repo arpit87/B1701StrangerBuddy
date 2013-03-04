@@ -76,7 +76,13 @@
         <activity android:name=".ChatClient.ChatWindow" 
             android:theme="@android:style/Theme.NoTitleBar" 
             android:screenOrientation="portrait" 
-            android:launchMode="singleTask" />            
+            android:launchMode="singleTask" />   
+            
+        
+        <activity android:name=".ChatClient.NewUserDialogActivity" 
+            android:theme="@android:style/Theme.Dialog" 
+            android:screenOrientation="portrait" 
+             />
         
         
            <activity android:name=".Activities.SearchInputActivityNew" 

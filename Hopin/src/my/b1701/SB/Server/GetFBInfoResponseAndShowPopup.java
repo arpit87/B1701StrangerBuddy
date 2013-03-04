@@ -1,5 +1,6 @@
 package my.b1701.SB.Server;
 
+import my.b1701.SB.Activities.NewUserDialogActivity;
 import my.b1701.SB.Activities.NewUserPopupActivity;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
@@ -37,7 +38,7 @@ public class GetFBInfoResponseAndShowPopup extends ServerResponseBase{
 			body = jobj.getJSONObject("body");
 			JSONArray nearbyUSers =  body.getJSONArray("NearbyUsers");
 			JSONObject thisNEarbyUSerjobj = nearbyUSers.getJSONObject(0);
-			Intent i = new Intent(Platform.getInstance().getContext(),NewUserPopupActivity.class);
+			Intent i = new Intent(Platform.getInstance().getContext(),NewUserDialogActivity.class);
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			i.putExtra("nearbyuserjsonstr", thisNEarbyUSerjobj.toString());
 			Platform.getInstance().getContext().startActivity(i);
