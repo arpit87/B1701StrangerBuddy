@@ -40,7 +40,20 @@
             android:layout_centerVertical="true"                    
             android:scaleType="centerCrop" />
                     
-     </RelativeLayout>       
+     </RelativeLayout>  
+     
+    
+    
+  <TextView
+        android:id="@+id/disclaimer"
+        android:textColor="@color/black"        
+        android:layout_marginTop="10dip"
+        android:textSize="12dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:padding="10dip"           
+        android:text="On application close," />  
+    
      
     <RadioGroup 
     android:id="@+id/settings_activereq_radio_group"   
@@ -49,32 +62,35 @@
     android:orientation="vertical"
     android:layout_marginLeft="12dip"      
     >
-    <RadioButton
-        android:id="@+id/settings_activereq_radiobutton_5min" 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Prompt on exit"
-        android:textColor="@color/black"
-        android:button="@drawable/radio_button" 
-        
-        />
+    
     <RadioButton 
         android:id="@+id/settings_activereq_radiobutton_15min" 
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Keep alive on exit"
+        android:text="Keep last search alive"
         android:textColor="@color/black"
-        android:button="@drawable/radio_button"
+        android:drawableRight="@drawable/radio_button"
+        android:padding="15dip"
         
         />
     <RadioButton
         android:id="@+id/settings_activereq_radiobutton_30min"  
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Delete on exit"
+        android:text="Delete last search"
         android:textColor="@color/black"
-        android:button="@drawable/radio_button"       
-       
+        android:drawableRight="@drawable/radio_button"
+        android:padding="15dip"
+        />
+    
+    <RadioButton
+        android:id="@+id/settings_activereq_radiobutton_5min" 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Promt to keep alive/delete"
+        android:textColor="@color/black"        
+       	android:drawableRight="@drawable/radio_button"
+        android:padding="15dip"
         />
     
 </RadioGroup>

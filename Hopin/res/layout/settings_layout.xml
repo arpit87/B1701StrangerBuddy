@@ -36,7 +36,7 @@
          android:layout_marginTop="5dip"
          android:layout_marginLeft="5dip" />
 
-         <CheckedTextView
+         <CheckBox
              android:id="@+id/settings_newuser_showpopup"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
          	 android:text="New match found"  
              android:layout_marginLeft="5dip" />
          
-          <CheckedTextView
+          <CheckBox
              android:id="@+id/settings_showincomingchat"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
