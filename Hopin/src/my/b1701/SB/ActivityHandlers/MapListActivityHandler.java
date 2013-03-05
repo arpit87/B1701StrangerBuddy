@@ -115,6 +115,8 @@ public class MapListActivityHandler  extends BroadcastReceiver{
 
 	public void setMapView(SBMapView mapView) {
 		this.mapView = mapView;
+		 mapcontroller = mapView.getController();
+		 mapView.setBuiltInZoomControls(true);
 	}	
 	
 	
@@ -228,8 +230,6 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 	private void putInitialOverlay()
 	{
 		Log.i(TAG,"initializing this user location");
-	    mapView.setBuiltInZoomControls(true);
-	    mapcontroller = mapView.getController();
 	    mapcontroller.setZoom(14);
 	    Log.i(TAG,"setting myoverlay");        
 	    thisUserOverlay = new ThisUserItemizedOverlay(mapView); 
@@ -374,23 +374,27 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 	{		
 		//be careful here..do we have location yet?
 		Log.i(TAG,"update this user called");	
-		if(thisUserOverlay != null)	
+		if(thisUserOverlay == null)	
 		{			
-		    thisUserOverlay.updateThisUser();
-		    Log.i(TAG,"this user map overlay updated");
-		    mapView.postInvalidate();	    
-		    //dont centre here else on every automatic update it centres
-		    //mapcontroller.animateTo(ThisUser.getInstance().getSourceGeoPoint());
+			thisUserOverlay = new ThisUserItemizedOverlay(mapView);
+			thisUserOverlay.updateThisUser();	    
+		    mapView.getOverlays().add(thisUserOverlay);		   
 		}
 		else
-			Log.i(TAG,"but thisUSeroverlay empty!how?shldnt be..we initialixed it in init");
+		{
+		    thisUserOverlay.updateThisUser();
+		    Log.i(TAG,"this user map overlay updated");
+		}
+	    mapView.postInvalidate();	    
+	    //dont centre here else on every automatic update it centres
+	    //mapcontroller.animateTo(ThisUser.getInstance().getSourceGeoPoint());		
 	}	
 	
 		
 	private void centerMap() {
 
-		int mylat = ThisUserNew.getInstance().getCurrentGeoPoint().getLatitudeE6();
-		int mylon = ThisUserNew.getInstance().getCurrentGeoPoint().getLongitudeE6();
+		int mylat = ThisUserNew.getInstance().getSourceGeoPoint().getLatitudeE6();
+		int mylon = ThisUserNew.getInstance().getSourceGeoPoint().getLongitudeE6();
         int minLat = mylat;
         int maxLat = mylat;
         int minLon = mylon;
