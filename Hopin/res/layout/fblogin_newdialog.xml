@@ -3,7 +3,7 @@
     android:id="@+id/balloon_main_layout"
     android:layout_width="260dip"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialoge_background"    
+    android:background="@color/white"    
     android:orientation="vertical" 
     android:paddingBottom="5dip"   
     android:paddingLeft="5dip"
@@ -11,7 +11,7 @@
     android:paddingTop="5dip" >
     
     <RelativeLayout
-        android:id="@+id/expanded_balloon_header"
+        android:id="@+id/fb_login_header"
         android:layout_height="wrap_content"
         android:layout_width="250dip"
         android:paddingLeft="5dip"
@@ -19,7 +19,7 @@
     	android:background="@color/fb_blue">
 
             <TextView
-            android:id="@+id/expanded_balloon_header_text"
+            android:id="@+id/fb_login_header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" 
             android:text="Facebook Login"   
@@ -39,14 +39,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"                    
             android:scaleType="centerCrop" />
-        <View            
-            android:layout_width="fill_parent"
-            android:layout_below="@id/expanded_balloon_header_text"
-            android:layout_height="2dip"
-            android:background="@color/gray"
-            android:visibility="visible"
-            />
-            
+                    
      </RelativeLayout>       
   <RelativeLayout 
     android:layout_width="fill_parent"

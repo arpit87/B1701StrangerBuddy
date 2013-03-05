@@ -8,6 +8,10 @@ public class ThisAppConfig extends ConfigBase{
 	public static final String NETWORKFREQ = "network_freq";
 	public static final String USERPOSCHECKFREQ = "user_pos_chk_freq";
 	public static final String APPUUID = "uuid";
+	public static final String NEWUSERPOPUP = "new_user_popup";
+	public static final String CHATPOPUP = "chat_popup";
+	public static final String ACTIVEREQUEST = "active_request";
+	
 	
 	
 	private ThisAppConfig(){super(Constants.APP_CONF_FILE);}

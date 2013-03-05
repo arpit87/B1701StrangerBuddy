@@ -37,7 +37,8 @@ public static final String USERID = "user_id";
 public static final String UNIQUEID = "unique_id";
 public static final String SBMSGTYPE = "sb_msg_type";
 public static final String DAILYINSTATYPE = "daily_insta_type"; //0 daily,1 insta..we need to know what type of broadcast
-
+public static final String IMAGEURL = "image_url";
+public static final String TRAVELINFO = "travel_info";
 
 /** Parcelable.Creator needs by Android. */
 public static final Parcelable.Creator<Message> CREATOR = new Parcelable.Creator<Message>() {

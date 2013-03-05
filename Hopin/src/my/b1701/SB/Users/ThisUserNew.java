@@ -31,7 +31,8 @@ public class ThisUserNew {
 	private static final String TAG = "my.b1701.SB.Users.ThisUserNew";
 	private static ThisUserNew instance=new ThisUserNew();
 	private LinkedList<HistoryAdapter.HistoryItem> historyItemList = new LinkedList<HistoryAdapter.HistoryItem>();
-	private String userID;	
+	private String userID;
+	private String formattedTraveDetails;	
 				
 	
 	public void setUserID(String userID) {
@@ -183,6 +184,18 @@ public class ThisUserNew {
     public void setHistoryItemList(LinkedList<HistoryAdapter.HistoryItem> historyItemList){
         this.historyItemList = historyItemList;
     }
+    
+    public String getFormattedTravelDetails()
+	{
+		String travelInfo = getSourceLocality() + " to " + getDestiantionLocality();
+		String travelTimeInfo = getTimeOfTravel();			
+		if(ThisUserNew.getInstance().get_Daily_Instant_Type() == 0)
+			formattedTraveDetails = travelInfo + " Daily@"+StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "hh:mm a", travelTimeInfo);
+		
+		else
+			formattedTraveDetails = travelInfo +","+ StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "d MMM hh:mm a", travelTimeInfo);
+		return formattedTraveDetails;
+	}
 	
 
 }

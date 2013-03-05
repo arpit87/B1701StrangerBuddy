@@ -1,46 +1,25 @@
 package my.b1701.SB.Activities;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
+import my.b1701.SB.R;
+import my.b1701.SB.Fragments.HistoryInstaShareFragment;
+import my.b1701.SB.Fragments.HistoryPlanFragment;
+import my.b1701.SB.Fragments.SearchUserInstaFrag;
+import my.b1701.SB.Fragments.SearchUserPlanFrag;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
-import com.google.analytics.tracking.android.EasyTracker;
-import my.b1701.SB.Adapter.HistoryAdapter;
-import my.b1701.SB.Fragments.HistoryInstaShareFragment;
-import my.b1701.SB.Fragments.HistoryPlanFragment;
-import my.b1701.SB.Fragments.SearchUserInstaFrag;
-import my.b1701.SB.Fragments.SearchUserPlanFrag;
-import my.b1701.SB.R;
-import my.b1701.SB.Users.ThisUserNew;
-import my.b1701.SB.provider.HistoryContentProvider;
 
-import java.util.LinkedList;
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class SearchInputActivityNew extends FragmentActivity{
-    public static final String TAG = "my.b1701.SB.Activites.SearchInputActivity";   
-    private static Uri mHistoryUri = Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/db_fetch_only");
-    private static String[] columns = new String[]{ 
-    	"sourceAddress",
-        "destinationAddress",
-        "timeOfTravel",
-        "dateOfTravel",        
-        "dailyInstantType",
-        "planInstantType",
-        "takeOffer",
-        "reqDate",	      
-        "radioButtonId",
-        "date"
-};
+    public static final String TAG = "my.b1701.SB.Activites.SearchInputActivity";      
 
 	FragmentManager fm = this.getSupportFragmentManager();
 	ToggleButton BtnGotoPastSearch;
@@ -51,7 +30,7 @@ public class SearchInputActivityNew extends FragmentActivity{
 	    public void onStart(){
 	        super.onStart();
 	        EasyTracker.getInstance().activityStart(this);
-	        loadHistoryFromDB() ;
+	        
 	    }
 
 	    @Override
@@ -162,40 +141,7 @@ public class SearchInputActivityNew extends FragmentActivity{
 	        }
 	    }
 	    
-	    private void loadHistoryFromDB() {
-	        LinkedList<HistoryAdapter.HistoryItem> historyItemList = null;
-	        Log.e(TAG, "Fetching searches");
-	        ContentResolver cr = getContentResolver();
-	        Cursor cursor = cr.query(mHistoryUri, columns, null, null, null);
-
-	        if (cursor == null || cursor.getCount() == 0) {
-	            Log.e(TAG, "Empty result");
-	        } else {
-	            LinkedList<HistoryAdapter.HistoryItem> historyItems = new LinkedList<HistoryAdapter.HistoryItem>();
-	            if (cursor.moveToFirst()) {
-	                do {
-	                    HistoryAdapter.HistoryItem historyItem = new HistoryAdapter.HistoryItem(cursor.getString(0),
-	                            cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4),cursor.getInt(5),
-	                            cursor.getInt(6), cursor.getString(7),cursor.getInt(8));
-	                    historyItems.add(historyItem);
-	                } while (cursor.moveToNext());
-	                
-	            }
-	            if(historyItems.size()>0)
-	                historyItemList = historyItems;
-	        }
-
-            if (cursor!= null) {
-                cursor.close();
-            }
-
-	        if (historyItemList == null) {
-	            historyItemList = new LinkedList<HistoryAdapter.HistoryItem>();
-	        }
-
-	        ThisUserNew.getInstance().setHistoryItemList(historyItemList);
-	    }
-
+	   
    
 
 }

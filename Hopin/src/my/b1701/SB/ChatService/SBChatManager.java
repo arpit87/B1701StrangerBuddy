@@ -11,13 +11,11 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
-import android.text.InputFilter.AllCaps;
 import android.util.Log;
 
 public class SBChatManager extends IChatManager.Stub {
@@ -104,9 +102,9 @@ public class SBChatManager extends IChatManager.Stub {
 		return mAllChats.size();
 	}
 	
-	public void notifyChat(int id,String participant,String participant_name) { 	   			
+	public void notifyChat(int id,String participant_fbid,String participant_name,String travel_info,String imageurl) { 	   			
 			Log.i(TAG, "Sending notification") ;
-	    	mService.sendNotification(id,participant,participant_name);
+	    	mService.sendNotification(id,participant_fbid,participant_name,travel_info,imageurl);
 	   
 	}
 	

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:gravity="center_horizontal" >
+ 
+      <TextView
+         android:id="@+id/search_users_header_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"         
+         android:paddingBottom="2.0dip"
+         android:paddingTop="2.0dip"
+         android:text="Settings"         
+         android:textColor="@color/black"
+         android:textSize="20dip"
+         android:textStyle="bold" />
+      
+      <LinearLayout 
+          android:layout_width="match_parent"
+         android:layout_height="match_parent" 
+         android:background="@drawable/rounded_rectangle_background_gray"
+          android:layout_marginLeft="5dip"
+    	android:layout_marginRight="5dip"
+    	android:layout_marginBottom="2dip"
+    	android:orientation="vertical">      
+        
+          
+         <TextView         
+          android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textColor="@color/black"
+         android:textSize="20dip"
+         android:text="Popup notifications" 
+         android:layout_marginTop="5dip"
+         android:layout_marginLeft="5dip" />
+
+         <CheckedTextView
+             android:id="@+id/settings_newuser_showpopup"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:textColor="@color/gray"
+        	 android:textSize="15dip"
+         	 android:text="New match found"  
+             android:layout_marginLeft="5dip" />
+         
+          <CheckedTextView
+             android:id="@+id/settings_showincomingchat"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:textColor="@color/gray"
+        	 android:textSize="15dip"
+         	 android:text="Incoming chat"  
+             android:layout_marginLeft="5dip" />
+                         
+          <View 
+             android:layout_width="match_parent"
+             android:layout_height="1dip"
+             android:background="@color/gray"
+             android:layout_marginTop="5dip"
+         	 android:layout_marginLeft="5dip"/>
+      <LinearLayout 
+          android:id="@+id/settings_activerequset_layout"
+          android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="vertical">   
+            
+         <TextView
+         android:id="@+id/settings_activerequset_header"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textColor="@color/black"
+         android:textSize="20dip"
+         android:text="Active request" 
+         android:layout_marginTop="5dip"
+         android:layout_marginLeft="5dip" />
+         
+         <TextView
+         android:id="@+id/settings_activerequset"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textColor="@color/gray"
+         android:textSize="15dip"
+         android:text="Prompt on app close"         
+         android:layout_marginLeft="5dip" />
+      
+         </LinearLayout> 
+         
+         <View 
+             android:layout_width="match_parent"
+             android:layout_height="1dip"
+             android:background="@color/gray"
+             android:layout_marginTop="5dip"
+         	 android:layout_marginLeft="5dip"/>
+          
+      </LinearLayout>
+
+</LinearLayout>

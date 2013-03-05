@@ -250,15 +250,16 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         	fbconnect.logoutFromFB();
         	break;
         case R.id.settings_menuitem:
+        	Intent i = new Intent(this,SettingsActivity.class);
+        	i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        	startActivity(i);
         	break;
         case R.id.exit_app_menuitem:
         	//delete user request,close service
         	Platform.getInstance().stopChatService();
         	finish();
-        	break;   
-   	 case R.id.btn_listview:   		
-      	toggleMapListView(menuItem);
-      	break; 	
+        	break;  
+   	 
    	 case R.id.test_app_menuitem:
    		//GetNearbyUserDialogFragment test_dialog = new GetNearbyUserDialogFragment();
    		//test_dialog.show(getSupportFragmentManager(), "test_dialog");

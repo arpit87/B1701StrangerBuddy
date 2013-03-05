@@ -103,7 +103,7 @@ public class ChatWindow extends Activity{
 		
 		mThiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
 		mThisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
-		mThisUserChatFullName = ThisUserConfig.getInstance().getString(ThisUserConfig.FB_FIRSTNAME);
+		mThisUserChatFullName = ThisUserConfig.getInstance().getString(ThisUserConfig.FBUSERNAME);
 		
 }
 

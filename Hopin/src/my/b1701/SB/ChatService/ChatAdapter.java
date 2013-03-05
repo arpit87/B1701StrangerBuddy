@@ -6,6 +6,7 @@ import java.util.List;
 
 import my.b1701.SB.ChatClient.IMessageListener;
 import my.b1701.SB.ChatClient.SBChatMessage;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetFBInfoForUserIDAndShowPopup;
 import my.b1701.SB.HttpClient.SBHttpClient;
@@ -42,8 +43,10 @@ import android.util.Log;
     private final HashMap<Long,Message> mSentNotDeliveredMsgHashSet;
     private SBChatManager mChatManager;
     SBMsgListener mMsgListener = new SBMsgListener();
+    int notificationid = 0;
+    String mTravelinfo = "";
+    String mImageURL = "";
     private final RemoteCallbackList<IMessageListener> mRemoteListeners = new RemoteCallbackList<IMessageListener>();
-    private int participantID = 0; //for notification
     
     //small chat participant should be complete as to is overridden inside sendMsg by smack to participant
     public ChatAdapter(final Chat chat,SBChatManager chatManager ) {
@@ -51,9 +54,9 @@ import android.util.Log;
     	mParticipant = chat.getParticipant();
     	mMessages = new LinkedList<Message>();
     	mSmackChat.addMessageListener(mMsgListener);
-    	mChatManager = chatManager; 
-    	participantID = mChatManager.numChats()+1;
+    	mChatManager = chatManager;    	    	
     	mSentNotDeliveredMsgHashSet = new HashMap<Long,Message>();
+    	notificationid = mChatManager.numChats()+1;
         }
     
 	@Override
@@ -65,6 +68,8 @@ import android.util.Log;
 		msgToSend.setSubject(msg.getSubject());
 		msgToSend.setProperty(Message.UNIQUEID, msg.getUniqueMsgIdentifier());		
 		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_CHAT);
+		msgToSend.setProperty(Message.IMAGEURL, mImageURL);
+		msgToSend.setProperty(Message.TRAVELINFO, mTravelinfo);
 		try { 
 			mSmackChat.sendMessage(msgToSend);
 			msg.setStatus(SBChatMessage.SENT);
@@ -183,10 +188,12 @@ import android.util.Log;
 			    else
 			    {
 			    	Log.i(TAG, "chat not open,Sending notification") ;
-			    	String sub = msg.getSubject();
-			    	if(sub == "")
-			    		sub = "Unknown";		    		
-			    	mChatManager.notifyChat(participantID,msg.getInitiator(),sub);
+			    	String participant_name = msg.getSubject();
+			    	if(participant_name == "")
+			    		participant_name = "Unknown";	
+			    	String image_url = (String) message.getProperty(Message.IMAGEURL);
+			    	String travel_info = (String) message.getProperty(Message.TRAVELINFO);
+			    	mChatManager.notifyChat(notificationid,msg.getInitiator(),participant_name,travel_info,image_url);
 			    	
 			    }
 		    	

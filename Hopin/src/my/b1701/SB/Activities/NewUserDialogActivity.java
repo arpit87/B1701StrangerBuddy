@@ -21,13 +21,11 @@ public class NewUserDialogActivity extends Activity{
 	
 	String source = "";
 	String destination = "";
-	String daily_insta_type = "";
-	String detailsOfTravel = "";
+	String daily_insta_type = "";	
 	String userid = "";
 	
 	private TextView dialogHeaderName = null;
-	private TextView dialogHeaderTravelInfo = null;
-	private ImageView picViewSmall = null;
+	private TextView dialogHeaderTravelInfo = null;	
 	private ImageView picViewExpanded = null;
 	private ImageView chatIcon = null;
 	private ImageView smsIcon = null;
@@ -70,7 +68,7 @@ public class NewUserDialogActivity extends Activity{
 			
 				
 		dialogHeaderName.setText(thisNearbyUserFBInfo.getFullName());
-		dialogHeaderTravelInfo.setText(detailsOfTravel);
+		dialogHeaderTravelInfo.setText(thisNearbyUser.getUserLocInfo().getFormattedTravelDetails());
 				
 		works_at = (TextView)findViewById(R.id.newuserarrive_popup_expanded_work);
 		studied_at = (TextView)findViewById(R.id.newuserarrive_popup_expanded_education);
@@ -81,7 +79,6 @@ public class NewUserDialogActivity extends Activity{
 		studied_at.setText("Studied at " +thisNearbyUserFBInfo.getStudiedAt());
 		hometown.setText("HomeTown " + thisNearbyUserFBInfo.getHometown());
 		gender.setText("Gender "+thisNearbyUserFBInfo.getGender());
-		
 		
 	}
 	
@@ -117,9 +114,7 @@ public class NewUserDialogActivity extends Activity{
 					CommunicationHelper.getInstance().onSmsClickWithUser(userid);
 				}
 				});
-			//SBImageLoader.getInstance().displayImageElseStub(mImageURL, picView, R.drawable.userpicicon);
-			
-			//set balloon info						
+						
 			
 			SBImageLoader.getInstance().displayImage(thisNearbyUserFBInfo.getImageURL(), picViewExpanded);
 			
