@@ -254,6 +254,9 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         	i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         	startActivity(i);
         	break;
+        case R.id.btn_listview:   		
+          	toggleMapListView(menuItem);
+          	break;
         case R.id.exit_app_menuitem:
         	//delete user request,close service
         	Platform.getInstance().stopChatService();
