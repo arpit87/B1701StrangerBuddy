@@ -332,8 +332,6 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
             ft.commit();
         }
     }
-    
-    
    
 	public ViewGroup getThisMapContainerWithMapView()
     {
