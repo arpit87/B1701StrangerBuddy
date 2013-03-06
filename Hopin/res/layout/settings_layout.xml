@@ -24,9 +24,8 @@
           android:layout_marginLeft="5dip"
     	android:layout_marginRight="5dip"
     	android:layout_marginBottom="2dip"
-    	android:orientation="vertical">      
-        
-          
+    	android:orientation="vertical"> 
+    	
          <TextView         
           android:layout_width="wrap_content"
          android:layout_height="wrap_content"
@@ -35,31 +34,66 @@
          android:text="Popup notifications" 
          android:layout_marginTop="5dip"
          android:layout_marginLeft="5dip" />
-
-         <CheckBox
-             android:id="@+id/settings_newuser_showpopup"
-             android:layout_width="match_parent"
+<TableLayout 
+    android:layout_width="match_parent"
              android:layout_height="wrap_content"
+            >
+             <TableRow android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+         <TextView
+             android:id="@+id/settings_newuser_showpopup_text"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
              android:textColor="@color/gray"
         	 android:textSize="15dip"
-         	 android:text="New match found"  
-             android:layout_marginLeft="5dip" />
+         	 android:text="New matching user found"
+         	 android:paddingLeft="10dip"
+         	 android:paddingRight="10dip"
+         	 android:layout_weight="1"   
+         	 android:gravity="center_vertical"      	 
+              />
          
           <CheckBox
-             android:id="@+id/settings_showincomingchat"
-             android:layout_width="match_parent"
+             android:id="@+id/settings_newuser_showpopup_checkbox"
+             android:layout_width="wrap_content"
              android:layout_height="wrap_content"
+             android:button="@drawable/checkbox_selector"
+              android:layout_weight=".8"         
+            />
+          </TableRow>
+          
+                 <TableRow android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+         <TextView
+             android:id="@+id/settings_newuser_showpopup_text"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
              android:textColor="@color/gray"
         	 android:textSize="15dip"
-         	 android:text="Incoming chat"  
-             android:layout_marginLeft="5dip" />
+         	 android:text="Incoming chat"
+         	 android:paddingLeft="10dip"
+         	 android:paddingRight="10dip"  
+         	 android:layout_weight="1"
+         	 android:gravity="center_vertical"       	        	 
+              />
+         
+          <CheckBox
+             android:id="@+id/settings_newuser_showpopup_checkbox"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:button="@drawable/checkbox_selector"
+             android:layout_weight=".8"          
+            />
+          </TableRow>
+          </TableLayout>
                          
-          <View 
+         
+         <View 
              android:layout_width="match_parent"
              android:layout_height="1dip"
              android:background="@color/gray"
              android:layout_marginTop="5dip"
-         	 android:layout_marginLeft="5dip"/>
+         	 android:layout_marginLeft="5dip"/>    
       <LinearLayout 
           android:id="@+id/settings_activerequset_layout"
           android:layout_width="wrap_content"

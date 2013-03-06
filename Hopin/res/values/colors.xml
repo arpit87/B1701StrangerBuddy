@@ -46,6 +46,8 @@
      <color name="frame_red">#fff0022f</color>
      <color name="background_transparent_black">#de000000</color>
      <color name="background_transparent_green">#de2ebc00</color>
-     <color name="dark_red">#ffd40404</color>	
+     <color name="dark_red">#ffd40404</color>
+     <color name="light_gray">#ff636363</color>
+     <color name="very_dark_gray">#ff494949</color>	
 
 </resources>
