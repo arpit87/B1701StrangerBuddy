@@ -83,7 +83,9 @@ public class StartStrangerBuddyActivity extends Activity {
         
         
         if(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID) == "")
+        { 	
 			firstRun();		
+        }
 		else	
 		{
 			ThisUserNew.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));
@@ -99,14 +101,18 @@ public class StartStrangerBuddyActivity extends Activity {
     }
     
     private void firstRun() {
-		//get user_id from the server
-		ToastTracker.showToast("Preparing for first run..");		
+		//get user_id from the server				
 		String uuid = ThisAppInstallation.id(this.getBaseContext());
 		ThisAppConfig.getInstance().putString(ThisAppConfig.APPUUID,uuid);
 		//with uuid means first time start
-		showSBMapViewActivity.putExtra("uuid", uuid);
-		startActivity(showSBMapViewActivity);			
-		finish();
+		final Intent show_tutorial = new Intent(this,Tutorial.class);
+		show_tutorial.putExtra("uuid", uuid);
+		Runnable r = new Runnable() {
+	          public void run() {	        		  
+	        	  startActivity(show_tutorial);
+	        	  finish();
+	          }};
+		Platform.getInstance().getHandler().postDelayed(r, 2000);
 	}
     
    

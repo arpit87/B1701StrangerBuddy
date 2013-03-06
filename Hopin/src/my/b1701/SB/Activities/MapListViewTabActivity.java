@@ -91,15 +91,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         this.registerReceiver(mapListActivityHandler,new IntentFilter(ServerConstants.NEARBY_USER_UPDATED));    
         fbconnect = new FacebookConnector(this);
         //checkIfGPSIsEnabled();
-        Intent i = getIntent();
-        if(i.hasExtra("uuid"))
-        {         	
-        	Bundle b = i.getExtras();
-        	String uuid = b.getString("uuid");
-        	Intent show_tutorial = new Intent(this,Tutorial.class);
-    		show_tutorial.putExtra("uuid", uuid);
-    		startActivity(show_tutorial);
-        }
+        
         
     }
     

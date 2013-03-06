@@ -5,19 +5,19 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.CheckedTextView;
+import android.widget.CheckBox;
 
 public class SettingsActivity extends Activity{
 	
-	CheckedTextView showNewUserPopup;
-	CheckedTextView showChatPopup;
+	CheckBox showNewUserPopup;
+	CheckBox showChatPopup;
 	View activeRequestView;
 	 @Override
 	    protected void onCreate(Bundle savedInstanceState){
 		 super.onCreate(savedInstanceState);
 		 setContentView(R.layout.settings_layout);
-		 showNewUserPopup = (CheckedTextView)findViewById(R.id.settings_newuser_showpopup);
-		 showChatPopup = (CheckedTextView)findViewById(R.id.settings_showincomingchat);
+		 showNewUserPopup = (CheckBox)findViewById(R.id.settings_newuser_showpopup_checkbox);
+		 showChatPopup = (CheckBox)findViewById(R.id.settings_newuser_showpopup_checkbox);
 		 activeRequestView = (View)findViewById(R.id.settings_activerequset_layout);
 		 
 		 activeRequestView.setOnClickListener(new OnClickListener() {

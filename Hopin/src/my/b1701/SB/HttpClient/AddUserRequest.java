@@ -1,8 +1,9 @@
 package my.b1701.SB.HttpClient;
 
-import android.util.Log;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import my.b1701.SB.HelperClasses.ThisAppConfig;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.Server.AddUserResponse;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Server.ServerResponseBase;
@@ -18,8 +19,8 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import android.app.Activity;
+import android.util.Log;
 
 public class AddUserRequest extends SBHttpRequest{
 	public static final String URL = ServerConstants.SERVER_ADDRESS+ServerConstants.USERSERVICE+"/addUser/";
@@ -30,13 +31,14 @@ public class AddUserRequest extends SBHttpRequest{
 	HttpClient httpclient = new DefaultHttpClient();
 	AddUserResponse addUserResponse;
 	String jsonStr;
+	Activity tutorial_activity;
 	
-	public AddUserRequest(String uuid,String username)
+	public AddUserRequest(String uuid,String username,Activity tutorial_activity)
 	{
 		super();
 		this.uuid=uuid;		
 		queryMethod = QueryMethod.Get;	
-
+		this.tutorial_activity = tutorial_activity;
 		jsonobj=new JSONObject();
 		httpQuery =  new HttpPost(URL);
 		
@@ -89,7 +91,7 @@ public class AddUserRequest extends SBHttpRequest{
 				e.printStackTrace();
 			}   
 					
-			addUserResponse =	new AddUserResponse(response,jsonStr);
+			addUserResponse =	new AddUserResponse(response,jsonStr,tutorial_activity);
 			return addUserResponse;
 		
 	}
