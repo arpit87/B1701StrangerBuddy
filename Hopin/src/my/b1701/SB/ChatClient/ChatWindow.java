@@ -337,19 +337,23 @@ public void onResume() {
 			
 			if (m.getBody() != null) {
 			    if (lastMessage == null ) {
-				lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp(),m.getStatus(),m.getUniqueMsgIdentifier());
-				result.add(lastMessage);
-			    } 
-			    else if(m.getInitiator().equals(lastMessage.getInitiator()) && m.getStatus() == lastMessage.getStatus())
-		    	{
-	    			lastMessage.setMessage(lastMessage.getMessage().concat("\n" + m.getBody()));			    			
-		    		lastMessage.setTimestamp(m.getTimestamp());
-		    		if(m.getStatus() == SBChatMessage.DELIVERED || m.getStatus()==SBChatMessage.RECEIVED)
+					lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp(),m.getStatus(),m.getUniqueMsgIdentifier());
+					if(m.getStatus() == SBChatMessage.DELIVERED || m.getStatus()==SBChatMessage.RECEIVED)
 		    			lastMessage.setStatus(SBChatMessage.OLD);
+					result.add(lastMessage);
+			    } 
+			    else if(m.getInitiator().equals(lastMessage.getInitiator()) && 
+			    		lastMessage.getStatus() == SBChatMessage.OLD &&
+			    		(m.getStatus() == SBChatMessage.DELIVERED || m.getStatus()==SBChatMessage.RECEIVED))
+		    	{			    	
+	    			lastMessage.setMessage(lastMessage.getMessage().concat("\n" + m.getBody()));	    			
+		    		lastMessage.setTimestamp(m.getTimestamp());
 		    	}
 		    	else
 		    	{			    		
 		    		lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp(),m.getStatus(),m.getUniqueMsgIdentifier());
+		    		if(m.getStatus() == SBChatMessage.DELIVERED || m.getStatus()==SBChatMessage.RECEIVED)
+		    			lastMessage.setStatus(SBChatMessage.OLD);
 		    		result.add(lastMessage);
 		    	}
 			    }			
