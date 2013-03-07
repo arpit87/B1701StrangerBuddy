@@ -62,6 +62,8 @@ private String mTo ="";
 private String mFrom ="";
 private String mThread = "";
 private String mTime = "";
+private String mTravelInfo = "";
+private String mImageURL = "";
 private int mStatus = SBChatMessage.UNKNOWN;
 private long mUniqueMsgIdentifier = 0;
 
@@ -97,25 +99,6 @@ this(to, MSG_TYPE_CHAT);
 public Message(final org.jivesoftware.smack.packet.Message smackMsg) {
 mTo = smackMsg.getTo();
 mType = (Integer) smackMsg.getProperty(SBMSGTYPE);
-/*switch (smackMsg.getType()) {
-    case chat:
-	mType = MSG_TYPE_CHAT;
-	break;
-    case groupchat:
-	mType = MSG_TYPE_NEWUSER_BROADCAST;
-	break;
-    case normal:
-	mType = MSG_TYPE_NORMAL;
-	break;
-    case headline:
-    mType = MSG_TYPE_ACK;
-    case error:
-	mType = MSG_TYPE_ERROR;
-	break;
-    default:
-	Log.w(TAG, "message type error" + smackMsg.getType());
-	break;
-}*/
 this.mFrom = smackMsg.getFrom();
 if (mType == MSG_TYPE_ERROR) {
     XMPPError er = smackMsg.getError();
@@ -146,6 +129,8 @@ mFrom = in.readString();
 mStatus = in.readInt();
 mUniqueMsgIdentifier = in.readLong();
 mTime = in.readString();
+mTravelInfo = in.readString();
+mImageURL = in.readString();
 }
 
 /**
@@ -163,6 +148,8 @@ dest.writeString(mFrom);
 dest.writeInt(mStatus);
 dest.writeLong(mUniqueMsgIdentifier);
 dest.writeString(mTime);
+dest.writeString(mTravelInfo);
+dest.writeString(mImageURL);
 }
 
 /**
@@ -337,6 +324,22 @@ public void setUniqueMsgIdentifier(long l) {
 
 public void setTimeStamp(String mTime) {
 	this.mTime = mTime;
+}
+
+public String getTravelInfo() {
+	return mTravelInfo;
+}
+
+public String getImageURL() {
+	return mImageURL;
+}
+
+public void setTravelInfo(String mTravelInfo) {
+	this.mTravelInfo = mTravelInfo;
+}
+
+public void setImageURL(String mImageURL) {
+	this.mImageURL = mImageURL;
 }
 
 }

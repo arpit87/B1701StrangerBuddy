@@ -53,7 +53,7 @@ public class ChatWindow extends Activity{
 	private IXMPPAPIs xmppApis = null;
 	private TextView mContactNameTextView;
    // private ImageView mContactPicFrame;	 
-    private TextView mTraveLDetails;	
+    private TextView mTravelDetails;	
     //private ImageView mContactPic;   
     private ListView mMessagesListView;
     private EditText mInputField;
@@ -87,7 +87,7 @@ public class ChatWindow extends Activity{
 		//this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(SBBroadcastReceiver.SBCHAT_CONNECTION_CLOSED));
 	    mContactNameTextView = (TextView) findViewById(R.id.chat_contact_name);
 	   // mContactPicFrame = (ImageView) findViewById(R.id.chat_contact_pic_frame);
-	    mTraveLDetails = (TextView) findViewById(R.id.chat_contact_destination);	    
+	    mTravelDetails = (TextView) findViewById(R.id.chat_contact_destination);	    
 	   // mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
 	    mMessagesListView = (ListView) findViewById(R.id.chat_messages);
 	    mMessagesListView.setAdapter(mMessagesListAdapter);
@@ -103,7 +103,7 @@ public class ChatWindow extends Activity{
 		
 		mThiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
 		mThisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
-		mThisUserChatFullName = ThisUserConfig.getInstance().getString(ThisUserConfig.FBUSERNAME);
+		mThisUserChatFullName = ThisUserConfig.getInstance().getString(ThisUserConfig.FB_FULLNAME);
 		
 }
 
@@ -118,7 +118,9 @@ public void onResume() {
 	mParticipantImageURL = getIntent().getStringExtra(IMAGEURL);	
 	if(mParticipantFBID == "")
 		mParticipantFBID = oldParticipant;	
-	mTraveLDetails.setText(mParticipantTravelDetails);
+	mContactNameTextView.setText(mParticipantName);
+	mTravelDetails.setText(mParticipantTravelDetails);
+	mMessagesListAdapter.setParticipantFBURL(mParticipantImageURL);
 	//mContactNameTextView.setText(mReceiver);
 	//getParticipantInfoFromFBID(mParticipantFBID);
 	if (!mBinded) 
@@ -300,9 +302,7 @@ public void onResume() {
 	    		chatAdapter.addMessageListener(mMessageListener);
 	    	    
 	    	}
-	    	//getParticipantInfoFromFBID(participant);
-	    	mContactNameTextView.setText(mParticipantName);
-	    	mTraveLDetails.setText(mParticipantTravelDetails);
+	    	//getParticipantInfoFromFBID(participant);	    	
 	    	fetchPastMsgsIfAny();
 	        }
 	    
@@ -339,20 +339,20 @@ public void onResume() {
 			    if (lastMessage == null ) {
 				lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp(),m.getStatus(),m.getUniqueMsgIdentifier());
 				result.add(lastMessage);
-			    } else {
-			    	if(m.getInitiator().equals(lastMessage.getInitiator()))
-			    	{
-			    		lastMessage.setMessage(lastMessage.getMessage().concat("\n" + m.getBody()));
-			    		lastMessage.setStatus(SBChatMessage.OLD);
-			    		lastMessage.setTimestamp(m.getTimestamp());
-			    	}
-			    	else
-			    	{			    		
-			    		lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp(),m.getStatus(),m.getUniqueMsgIdentifier());
-			    		result.add(lastMessage);
-			    	}
-			    }
-			}
+			    } 
+			    else if(m.getInitiator().equals(lastMessage.getInitiator()) && m.getStatus() == lastMessage.getStatus())
+		    	{
+	    			lastMessage.setMessage(lastMessage.getMessage().concat("\n" + m.getBody()));			    			
+		    		lastMessage.setTimestamp(m.getTimestamp());
+		    		if(m.getStatus() == SBChatMessage.DELIVERED || m.getStatus()==SBChatMessage.RECEIVED)
+		    			lastMessage.setStatus(SBChatMessage.OLD);
+		    	}
+		    	else
+		    	{			    		
+		    		lastMessage = new SBChatMessage(m.getInitiator(), m.getReceiver(), m.getBody(), false, m.getTimestamp(),m.getStatus(),m.getUniqueMsgIdentifier());
+		    		result.add(lastMessage);
+		    	}
+			    }			
 		    }
 		    
 		}

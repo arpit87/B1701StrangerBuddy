@@ -47,7 +47,7 @@ public class Tutorial extends Activity{
                ThisUserConfig.getInstance().putString(ThisUserConfig.MOBILE, mobile);
                SBHttpRequest request = new AddUserRequest(uuid,userNameText,Tutorial.this);		
        		   SBHttpClient.getInstance().executeRequest(request);
-       		   ProgressHandler.showInfiniteProgressDialoge(Tutorial.this, "Welcome!", "preparing for first run");       		  
+       		   ProgressHandler.showInfiniteProgressDialoge(Tutorial.this, "Welcome "+userNameText+"!", "Preparing for first run");       		  
 				
 			}
 		});        

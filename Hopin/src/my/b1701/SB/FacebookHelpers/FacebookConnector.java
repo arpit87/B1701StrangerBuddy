@@ -158,6 +158,7 @@ public class FacebookConnector {
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FB_FIRSTNAME, first_name);
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FB_LASTNAME, last_name);
                 ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, first_name+" "+last_name);
+                ThisUserConfig.getInstance().putString(ThisUserConfig.FB_FULLNAME, first_name+" "+last_name);
                 if(!StringUtils.isBlank(id))
                 {
                 	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBLOGGEDIN, true);

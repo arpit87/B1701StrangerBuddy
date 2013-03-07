@@ -122,7 +122,7 @@ public class SBChatService extends Service {
     }
 	
 
-	public void sendNotification(int id,String participant,String participant_name,String imageurl,String travelInfo) {
+	public void sendNotification(int id,String participant,String participant_name,String travelInfo,String imageurl) {
 
 		 Intent chatIntent = new Intent(this,ChatWindow.class);
 		 	chatIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

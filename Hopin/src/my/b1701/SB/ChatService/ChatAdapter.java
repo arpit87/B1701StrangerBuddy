@@ -57,6 +57,7 @@ import android.util.Log;
     	mChatManager = chatManager;    	    	
     	mSentNotDeliveredMsgHashSet = new HashMap<Long,Message>();
     	notificationid = mChatManager.numChats()+1;
+    	mImageURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
         }
     
 	@Override
@@ -138,8 +139,7 @@ import android.util.Log;
 		    	int daily_insta_type = (Integer) message.getProperty(Message.DAILYINSTATYPE);
 		    	ToastTracker.showToast("got broadcast from userid:"+thisNearbyUserUSERID);
 		    	GetFBInfoForUserIDAndShowPopup req = new GetFBInfoForUserIDAndShowPopup(thisNearbyUserUSERID,daily_insta_type);
-		    	SBHttpClient.getInstance().executeRequest(req);
-		    	
+		    	SBHttpClient.getInstance().executeRequest(req);		    	
 		    	return;
 		    }
 
@@ -179,6 +179,8 @@ import android.util.Log;
 				    mMessages.remove(0);
 			    msg.setStatus(SBChatMessage.RECEIVED);
 			    msg.setTimeStamp(StringUtils.gettodayDateInFormat("hh:mm"));
+			    msg.setImageURL((String)message.getProperty(Message.IMAGEURL));
+			    msg.setTravelInfo((String)message.getProperty(Message.TRAVELINFO));
 		    	mMessages.add(msg);
 			    if(mIsOpen)
 			    {
