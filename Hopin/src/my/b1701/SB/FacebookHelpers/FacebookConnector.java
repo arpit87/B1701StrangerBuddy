@@ -131,7 +131,7 @@ public class FacebookConnector {
 	}
 		
 	private void requestUserData() {
-        ToastTracker.showToast("Fetching user name, profile pic...");
+       
         Bundle params = new Bundle();
         params.putString("fields", "username,first_name,last_name, picture, email");
         mAsyncRunner.request("me", params, new FBUserRequestListener());
