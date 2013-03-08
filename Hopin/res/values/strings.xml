@@ -66,5 +66,6 @@
     <string name="cancel">Cancel</string>
     <string name="source_listview">Search users to same destination</string>
     <string name="destination_listview">Tap on search icon on bar</string>
+    <string name="maplistviewtoggletext">MapView&lt;&gt;ListView</string>
 
 </resources>
