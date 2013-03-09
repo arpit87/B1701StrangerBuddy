@@ -4,11 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import my.b1701.SB.Activities.Tutorial;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.Store;
+import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.HttpClient.AddUserRequest;
 import my.b1701.SB.HttpClient.ChatServiceCreateUser;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
@@ -162,21 +165,34 @@ public class FacebookConnector {
                 if(!StringUtils.isBlank(id))
                 {
                 	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBLOGGEDIN, true);
-                	sendAddFBAndChatInfoToServer(id);                	
+                	String userId = ThisUserConfig.getInstance().getString(ThisUserConfig.USERID);
+                	if(userId == "")
+                	{
+                		//this happens on fb login from tutorial page.
+                		ProgressHandler.showInfiniteProgressDialoge(underlying_activity, "Welcome "+first_name+" "+last_name+"!", "Preparing for first run");
+                		String uuid = ThisAppConfig.getInstance().getString(ThisAppConfig.APPUUID);
+                		SBHttpRequest request = new AddUserRequest(uuid,username,underlying_activity);		
+                  		SBHttpClient.getInstance().executeRequest(request);
+                	}
+                	else
+                	{
+                		sendAddFBAndChatInfoToServer(id);
+                		Platform.getInstance().getHandler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                MapListActivityHandler.getInstance().updateUserNameInListView();
+                                MapListActivityHandler.getInstance().updateUserPicInListView();
+                                MapListActivityHandler.getInstance().updateThisUserMapOverlay();
+                            }
+                        });
+                	}
                 }
 	            //id getting delayed in writing to file and not getting picked in call to server so pass as argument	           
 	            
-	            Log.i(TAG,"fbpicurl:"+jsonObject.getString("picture"));	           
+	            	           
 	            //Bitmap bmp = FBUtility.getBitmap(ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL));
 	            //Store.getInstance().saveBitmapToFile(bmp,ThisUserConfig.FBPICFILENAME);
-                Platform.getInstance().getHandler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        MapListActivityHandler.getInstance().updateUserNameInListView();
-                        MapListActivityHandler.getInstance().updateUserPicInListView();
-                        MapListActivityHandler.getInstance().updateThisUserMapOverlay();
-                    }
-                });
+                
 	        } catch (JSONException e) {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();

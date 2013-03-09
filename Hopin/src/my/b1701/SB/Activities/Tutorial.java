@@ -12,7 +12,6 @@ import my.b1701.SB.Util.StringUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
@@ -58,7 +57,7 @@ public class Tutorial extends Activity{
 			@Override
 			public void onClick(View arg0) {
 				anim.cancel();
-				tapFrameTextView.setVisibility(View.GONE);
+				tapFrameTextView.setVisibility(View.INVISIBLE);
 				map1View.setVisibility(View.GONE);
 				map2View.setVisibility(View.VISIBLE);				
 			}
@@ -91,8 +90,8 @@ public class Tutorial extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				//fbconnect = new FacebookConnector(Tutorial.this);
-				//fbconnect.loginToFB();
+				fbconnect = new FacebookConnector(Tutorial.this);
+				fbconnect.loginToFB();
 			}
 		});
         
