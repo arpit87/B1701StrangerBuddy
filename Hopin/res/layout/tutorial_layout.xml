@@ -300,8 +300,8 @@
                   android:id="@+id/tutorial_maptaptextview"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:paddingLeft="60dip"
-                  android:paddingTop="120dip"                  
+                  android:gravity="center_horizontal"
+                  android:paddingTop="170dip"                  
                   android:text="Tap frame"
                   android:textStyle="bold"
                   android:textColor="@color/black" />
@@ -354,7 +354,7 @@
                  android:layout_marginTop="5dip" 
                  android:layout_gravity="left"      
                  android:gravity="left"          
-                 android:text="-Visibility limited to FB friends"
+                 android:text="-Limit visibility to FB friends"
                  android:textSize="15dip"
                  android:textColor="@color/very_dark_gray" />
               <TextView
