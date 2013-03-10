@@ -28,6 +28,7 @@ import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
+import my.b1701.SB.Fragments.ShowActiveReqPrompt;
 import my.b1701.SB.HelperClasses.BroadCastConstants;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
@@ -92,6 +93,16 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         ab.setDisplayShowTitleEnabled(true);
         this.registerReceiver(mapListActivityHandler,new IntentFilter(BroadCastConstants.NEARBY_USER_UPDATED));    
         fbconnect = new FacebookConnector(this);
+        
+        //show prompt if any of req active
+        
+        String instaReqJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_INSTA);
+        String carpoolReqJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_CARPOOL); 
+        if(instaReqJson != "" || carpoolReqJson != "")
+        {
+        	ShowActiveReqPrompt activereq_dialog = new ShowActiveReqPrompt();
+       		activereq_dialog.show(getSupportFragmentManager(), "active_req_prompt");
+        }
         //checkIfGPSIsEnabled();
         
         
@@ -140,12 +151,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     	super.onResume();
     	//we update realtime when on map activity
     	SBLocationManager.getInstance().StartListeningtoNetwork(); 
-    	//if(CurrentNearbyUsers.getInstance().getAllNearbyUsers()!=null)
-    	//	ToastTracker.showToast("current nearby user not null");
-    	//MapListActivityHandler.getInstance().setUpdateMap(true);
-    	//if(MapListActivityHandler.getInstance().isMapInitialized())
-    	//	MapListActivityHandler.getInstance().updateThisUserMapOverlay();
-        //updateDestinationInListView();
+    	
     }
 
     //test
@@ -177,13 +183,10 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
             MenuItem menuItem = menu.findItem(R.id.btn_listview);
             menuItem.setIcon(R.drawable.maptolist);
         } else {
-            if (ThisUserConfig.getInstance().getInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE) != -1){
-                buildExitMessageDialog();
-            } else {
-                ThisUserConfig.getInstance().putInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE, -1);
+                
                 MapListViewTabActivity.super.onBackPressed();
-            }
         }
+        
 	}
 
     private void buildExitMessageDialog() {
@@ -260,14 +263,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         	break;  
    	 
    	 case R.id.test_app_menuitem:
-   		//GetNearbyUserDialogFragment test_dialog = new GetNearbyUserDialogFragment();
-   		//test_dialog.show(getSupportFragmentManager(), "test_dialog");
-   		//FragmentTransaction ft = fm.beginTransaction();
-        //ft.replace(R.id.tabcontent, new GetNearbyUserFragment());
-        //ft.commit();
-   		 Intent searchInputIntent1 = new Intent(this,SearchInputActivityNew.class);
-   		 searchInputIntent1.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-   		 startActivity(searchInputIntent1);
+   		ShowActiveReqPrompt activereq_dialog = new ShowActiveReqPrompt();
+   		activereq_dialog.show(getSupportFragmentManager(), "fblogin_dialog");
    		 break;
      case R.id.my_requests:
          Intent myRequestIntent = new Intent(this, MyRequestsActivity.class);
