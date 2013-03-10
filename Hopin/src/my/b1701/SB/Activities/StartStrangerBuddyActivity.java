@@ -35,6 +35,7 @@ public class StartStrangerBuddyActivity extends Activity {
 	private Context platformContext;
 	
 	
+	
     /** Called when the activity is first created. */
    
 	@Override
@@ -70,7 +71,7 @@ public class StartStrangerBuddyActivity extends Activity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         Log.e(TAG, "clicked yes..");
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS),0);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -88,45 +89,44 @@ public class StartStrangerBuddyActivity extends Activity {
     	super.onResume();
         Log.e(TAG, "onresume");
         if (!isLocationProviderEnabled()){
-            buildAlertMessageForLocationProvider();
-            return;
-        }
-
-        SBLocationManager.getInstance().StartListeningtoNetwork();
-        Log.i(TAG,"started network listening ");
-        platformContext = Platform.getInstance().getContext();
-
-        if(!SBConnectivity.isConnected())
-        {
-            Toast.makeText(platformContext, "No network connection", Toast.LENGTH_SHORT);
-            finish();
-            return;
-        }
-
-        //this might only connect to xmpp server and not login if new user and not yet fb login
-        //  startChatService();
-
-        //map activity can get started from 3 places, timer task if location found instantly
-        //else this new runnable posted after 3 seconds
-        //else on first run
-        showSBMapViewActivity = new Intent(platformContext, MapListViewTabActivity.class);
-        showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        startMapActivity = new Runnable() {
-            public void run() {
-                platformContext.startActivity(showSBMapViewActivity);
-            }};
-
-
-        if(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID) == "")
-        {
-            firstRun();
+            buildAlertMessageForLocationProvider();           
         }
         else
         {
-            ThisUserNew.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));
-            timer = new Timer();
-            timer.scheduleAtFixedRate(new GetNetworkLocationFixTask(), 500, 500);
+	
+	        Log.i(TAG,"started network listening ");
+	        SBLocationManager.getInstance().StartListeningtoNetwork();        
+	        platformContext = Platform.getInstance().getContext();
+	
+	        if(!SBConnectivity.isConnected())
+	        {
+	            Toast.makeText(platformContext, "No network connection", Toast.LENGTH_SHORT);
+	            finish();
+	        }
+	
+	        //map activity can get started from 3 places, timer task if location found instantly
+	        //else this new runnable posted after 3 seconds
+	        //else on first run
+	        showSBMapViewActivity = new Intent(platformContext, MapListViewTabActivity.class);
+	        showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	
+	        startMapActivity = new Runnable() {
+	            public void run() {	            	
+	                platformContext.startActivity(showSBMapViewActivity);
+	                finish();
+	            }};
+	
+	
+	        if(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID) == "")
+	        {
+	            firstRun();
+	        }
+	        else
+	        {
+	            ThisUserNew.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));
+	            timer = new Timer();
+	            timer.scheduleAtFixedRate(new GetNetworkLocationFixTask(), 500, 500);
+	        }
         }
     }
     
@@ -143,8 +143,7 @@ public class StartStrangerBuddyActivity extends Activity {
     public void onStop()
     {   	
     	super.onStop();
-        EasyTracker.getInstance().activityStop(this);
-    	finish();
+        EasyTracker.getInstance().activityStop(this);    	
     }
     
     private class GetNetworkLocationFixTask extends TimerTask
@@ -179,14 +178,6 @@ public class StartStrangerBuddyActivity extends Activity {
 	        	  }
         	 }
           }
-     }
-    
-   /* public void startChatService(){
-     
-          Intent i = new Intent("my.b1701.SB.ChatService.SBChatService");                  
-          Log.d( TAG, "Service starting" );
-          platformContext.startService(i);
-         
-         }*/
-                    
+     }   
+                       
 }

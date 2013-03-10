@@ -128,7 +128,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    	startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
