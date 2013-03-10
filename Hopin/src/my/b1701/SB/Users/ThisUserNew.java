@@ -129,7 +129,7 @@ public class ThisUserNew {
 		return dateOfRequest;
 	}
 
-	public void setTimeOfTravelt(String timeOfRequest) {
+	public void setTimeOfTravel(String timeOfRequest) {
 		this.timeOfRequest = timeOfRequest;
 	}
 	

@@ -3,23 +3,29 @@ package my.b1701.SB.Activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.analytics.tracking.android.EasyTracker;
+import my.b1701.SB.Adapter.HistoryAdapter;
 import my.b1701.SB.HelperClasses.*;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.R;
 import my.b1701.SB.Users.ThisUserNew;
+import my.b1701.SB.provider.HistoryContentProvider;
 
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,6 +39,20 @@ public class StartStrangerBuddyActivity extends Activity {
 	Timer timer;
 	AtomicBoolean mapActivityStarted = new AtomicBoolean(false);	
 	private Context platformContext;
+
+    private static Uri mHistoryUri = Uri.parse("content://" + HistoryContentProvider.AUTHORITY + "/db_fetch_only");
+    private static String[] columns = new String[]{
+            "sourceAddress",
+            "destinationAddress",
+            "timeOfTravel",
+            "dateOfTravel",
+            "dailyInstantType",
+            "planInstantType",
+            "takeOffer",
+            "reqDate",
+            "radioButtonId",
+            "date"
+    };
 	
 	
 	
@@ -95,7 +115,8 @@ public class StartStrangerBuddyActivity extends Activity {
         {
 	
 	        Log.i(TAG,"started network listening ");
-	        SBLocationManager.getInstance().StartListeningtoNetwork();        
+	        SBLocationManager.getInstance().StartListeningtoNetwork();
+            loadHistoryFromDB();
 	        platformContext = Platform.getInstance().getContext();
 	
 	        if(!SBConnectivity.isConnected())
@@ -178,6 +199,40 @@ public class StartStrangerBuddyActivity extends Activity {
 	        	  }
         	 }
           }
-     }   
-                       
+     }
+
+    private void loadHistoryFromDB() {
+        LinkedList<HistoryAdapter.HistoryItem> historyItemList = null;
+        Log.e(TAG, "Fetching searches");
+        ContentResolver cr = getContentResolver();
+        Cursor cursor = cr.query(mHistoryUri, columns, null, null, null);
+
+        if (cursor == null || cursor.getCount() == 0) {
+            Log.e(TAG, "Empty result");
+        } else {
+            LinkedList<HistoryAdapter.HistoryItem> historyItems = new LinkedList<HistoryAdapter.HistoryItem>();
+            if (cursor.moveToFirst()) {
+                do {
+                    HistoryAdapter.HistoryItem historyItem = new HistoryAdapter.HistoryItem(cursor.getString(0),
+                            cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4),cursor.getInt(5),
+                            cursor.getInt(6), cursor.getString(7),cursor.getInt(8));
+                    historyItems.add(historyItem);
+                } while (cursor.moveToNext());
+
+            }
+            if(historyItems.size()>0)
+                historyItemList = historyItems;
+        }
+
+        if (cursor!= null) {
+            cursor.close();
+        }
+
+        if (historyItemList == null) {
+            historyItemList = new LinkedList<HistoryAdapter.HistoryItem>();
+        }
+
+        ThisUserNew.getInstance().setHistoryItemList(historyItemList);
+    }
+
 }

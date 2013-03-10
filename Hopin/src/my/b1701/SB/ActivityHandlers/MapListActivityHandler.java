@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.util.Log;
 import android.view.Gravity;
@@ -497,33 +496,29 @@ public void updateUserNameInListView() {
 }
 
 public void updateSrcDstTimeInListView() {
-	
-	if (mListViewContainer == null) {
+
+    if (mListViewContainer == null) {
         mListViewContainer = (ViewGroup) underlyingActivity.getLayoutInflater().inflate(R.layout.nearbyuserlistview, null, false);
         mListImageView = (ImageView) mListViewContainer.findViewById(R.id.selfthumbnail);
         mUserName = (TextView) mListViewContainer.findViewById(R.id.my_name_listview);
         mDestination = (TextView) mListViewContainer.findViewById(R.id.my_destination_listview);
-        mSource =  (TextView) mListViewContainer.findViewById(R.id.my_source_listview);
-        mtime = (TextView) mListViewContainer.findViewById(R.id.my_time_listview); 
-	}
-	else
-	{
-		String destination = ThisUserNew.getInstance().getDestinationFullAddress();
-		if(destination != "")
-		{
-			mDestination.setText(destination);
-		    String source = ThisUserNew.getInstance().getSourceFullAddress();
-		    if(source == "")
-		    	source = "My Location";
-		    mSource.setText(source);	       
-		    	    
-		    String date_time = ThisUserNew.getInstance().getDateAndTimeOfTravel();
-		    if(!StringUtils.isBlank(date_time))
-		    {
-		    	mtime.setText("Time: "+StringUtils.formatDate("yyyy-MM-dd HH:mm", "h:mm a, EEE, MMM d", date_time));
-		    }
-		}
-	}
+        mSource = (TextView) mListViewContainer.findViewById(R.id.my_source_listview);
+        mtime = (TextView) mListViewContainer.findViewById(R.id.my_time_listview);
+    }
+
+    String destination = ThisUserNew.getInstance().getDestinationFullAddress();
+    if (!StringUtils.isBlank(destination)) {
+        mDestination.setText(destination);
+        String source = ThisUserNew.getInstance().getSourceFullAddress();
+        if (StringUtils.isBlank(source))
+            source = "My Location";
+        mSource.setText(source);
+
+        String date_time = ThisUserNew.getInstance().getDateAndTimeOfTravel();
+        if (!StringUtils.isBlank(date_time)) {
+            mtime.setText("Time: " + StringUtils.formatDate("yyyy-MM-dd HH:mm", "h:mm a, EEE, MMM d", date_time));
+        }
+    }
 }
 
     public void closeExpandedViews(){
@@ -537,8 +532,21 @@ public void updateSrcDstTimeInListView() {
         double srcLong = Double.parseDouble(jsonObject.getString(UserAttributes.SRCLONGITUDE));
         double destLat = Double.parseDouble(jsonObject.getString(UserAttributes.DSTLATITUDE));
         double destLong = Double.parseDouble(jsonObject.getString(UserAttributes.DSTLONGITUDE));
+        String srcAddress = jsonObject.getString(UserAttributes.SRCADDRESS);
+        String srcLocality = jsonObject.getString(UserAttributes.SRCLOCALITY);
+        String dstAddress = jsonObject.getString(UserAttributes.DSTADDRESS);
+        String dstLocality = jsonObject.getString(UserAttributes.DSTLOCALITY);
+        String dateTime = jsonObject.getString(UserAttributes.DATETIME);
+
         ThisUserNew.getInstance().setSourceGeoPoint(new SBGeoPoint((int)(srcLat*1e6),(int)(srcLong*1e6)));
-        ThisUserNew.getInstance().setDestinationGeoPoint(new SBGeoPoint((int)(destLat*1e6),(int)(destLong*1e6)));
+        ThisUserNew.getInstance().setDestinationGeoPoint(new SBGeoPoint((int) (destLat * 1e6), (int) (destLong * 1e6)));
+        ThisUserNew.getInstance().setSourceFullAddress(srcAddress);
+        ThisUserNew.getInstance().setSourceLocality(srcLocality);
+        ThisUserNew.getInstance().setDestinationFullAddress(dstAddress);
+        ThisUserNew.getInstance().setDestiantionLocality(dstLocality);
+        ThisUserNew.getInstance().setDateOfTravel(StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd", dateTime));
+        ThisUserNew.getInstance().setTimeOfTravel(StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "HH:mm", dateTime));
+
         MapListActivityHandler.getInstance().updateThisUserMapOverlay();
         MapListActivityHandler.getInstance().centreMapTo(ThisUserNew.getInstance().getSourceGeoPoint());
     }

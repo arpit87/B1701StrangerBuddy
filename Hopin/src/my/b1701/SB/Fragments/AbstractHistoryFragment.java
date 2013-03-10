@@ -16,7 +16,6 @@ import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.ThisUserNew;
-import my.b1701.SB.Util.StringUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -117,7 +116,7 @@ public abstract class AbstractHistoryFragment extends ListFragment {
             ThisUserNew.getInstance().setDestinationGeoPoint(null);
             ThisUserNew.getInstance().setSourceFullAddress(source);
             ThisUserNew.getInstance().setDestinationFullAddress(destination);
-            ThisUserNew.getInstance().setTimeOfTravelt(historyItem.getTimeOfTravel());
+            ThisUserNew.getInstance().setTimeOfTravel(historyItem.getTimeOfTravel());
             ThisUserNew.getInstance().setDateOfTravel(historyItem.getDateOfTravel());            
             ThisUserNew.getInstance().set_Daily_Instant_Type(daily_inta_type);//0 daily pool,1 instant share
             ThisUserNew.getInstance().set_Take_Offer_Type(takeride);//0 take ,1 offer

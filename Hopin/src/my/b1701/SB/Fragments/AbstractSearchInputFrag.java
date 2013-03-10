@@ -208,7 +208,7 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 		ThisUserNew.getInstance().setDestinationGeoPoint(getDestinationGeopoint());  //this could be null
 		ThisUserNew.getInstance().setSourceFullAddress(getSource());
 		ThisUserNew.getInstance().setDestinationFullAddress(getDestination());
-		ThisUserNew.getInstance().setTimeOfTravelt(getTime());
+		ThisUserNew.getInstance().setTimeOfTravel(getTime());
 		ThisUserNew.getInstance().set_Plan_Instant_Type(getPlanInstaTabType());
 		ThisUserNew.getInstance().setDateOfTravel(getDate());
 		ThisUserNew.getInstance().set_Daily_Instant_Type(getDailyInstaType());//0 daily pool,1 instant share
