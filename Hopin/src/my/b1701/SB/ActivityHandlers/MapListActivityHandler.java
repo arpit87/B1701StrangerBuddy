@@ -446,10 +446,6 @@ public void clearAllData()
     }
 	if(mtime!=null)
 		mtime.setText("");
-
-    if (ThisUserConfig.getInstance().getInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE) == -1){
-        ThisUserNew.getInstance().reset();
-    }
 }
 
 

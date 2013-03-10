@@ -3,6 +3,7 @@ package my.b1701.SB.Server;
 import android.util.Log;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetMatchingNearbyUsersRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
@@ -33,6 +34,10 @@ public class AddThisUserSrcDstResponse extends ServerResponseBase{
 		try {
 			body = jobj.getJSONObject("body");
 			ToastTracker.showToast("added this user src,dst");
+
+            ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_INSTA, body.toString());
+            ThisUserConfig.getInstance().putInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE, 1);
+
 			MapListActivityHandler.getInstance().setSourceAndDestination(body);
             //Context context = Platform.getInstance().getContext();
             Log.i(TAG, "Fetching nearby users..");

@@ -1,30 +1,28 @@
 package my.b1701.SB.Activities;
 
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import my.b1701.SB.R;
-import my.b1701.SB.HelperClasses.SBConnectivity;
-import my.b1701.SB.HelperClasses.ThisAppConfig;
-import my.b1701.SB.HelperClasses.ThisAppInstallation;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.LocationHelpers.SBGeoPoint;
-import my.b1701.SB.LocationHelpers.SBLocationManager;
-import my.b1701.SB.Platform.Platform;
-import my.b1701.SB.Users.ThisUserNew;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.google.analytics.tracking.android.EasyTracker;
+import my.b1701.SB.HelperClasses.*;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.LocationHelpers.SBLocationManager;
+import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.R;
+import my.b1701.SB.Users.ThisUserNew;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StartStrangerBuddyActivity extends Activity {
 	
@@ -42,62 +40,7 @@ public class StartStrangerBuddyActivity extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main); 
-        
-        
-        /*ThisAppConfig.getInstance().putLong(ThisAppConfig.NETWORKFREQ, 30*1000); //.5 min
-        ThisAppConfig.getInstance().putLong(ThisAppConfig.GPSFREQ, 2*60*1000);	 //2 min
-        ThisAppConfig.getInstance().putLong(ThisAppConfig.USERCUTOFFDIST,1000);  //1000 meter
-        ThisAppConfig.getInstance().putLong(ThisAppConfig.USERPOSCHECKFREQ,2*60*1000);  //2min*/
-        SBLocationManager.getInstance().StartListeningtoNetwork();      
-        
-        /*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO)
-        {
-        	Log.d(TAG, "requested for single loc intent");
-        	SBLocationManager.getInstance().requestSingleLocationUpdate();
-        }*/
-        //SBLocationManager.getInstance().StartListeningtoGPS(ThisAppConfig.getInstance().getLong("gpsfreq"),100);
-        Log.i(TAG,"started network listening "); 
-        platformContext = Platform.getInstance().getContext();
-        
-        if(!SBConnectivity.isConnected())
-        {
-			Toast.makeText(platformContext, "No network connection", Toast.LENGTH_SHORT);
-			finish();
-			return;
-        }
-        
-      //this might only connect to xmpp server and not login if new user and not yet fb login
-      //  startChatService();
-               
-        //map activity can get started from 3 places, timer task if location found instantly
-        //else this new runnable posted after 3 seconds
-        //else on first run
-        showSBMapViewActivity = new Intent(platformContext, MapListViewTabActivity.class);
-        showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        
-        startMapActivity = new Runnable() {
-	          public void run() {	        		  
-	        	  platformContext.startActivity(showSBMapViewActivity);
-	          }};
-        
-        
-        if(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID) == "")
-        { 	
-			firstRun();		
-        }
-		else	
-		{
-			ThisUserNew.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));
-			//showSBMapViewActivity = new Intent(this, MapListViewTabActivity.class);
-	        //showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			//startActivity(showSBMapViewActivity);			
-			timer = new Timer();
-			timer.scheduleAtFixedRate(new GetNetworkLocationFixTask(), 500, 500);		
-	        
-	       // Platform.getInstance().getHandler().postDelayed(startMapActivity,1000 * 3); 
-		}   
-        
+        setContentView(R.layout.main);
     }
     
     private void firstRun() {
@@ -114,19 +57,82 @@ public class StartStrangerBuddyActivity extends Activity {
 	          }};
 		Platform.getInstance().getHandler().postDelayed(r, 2000);
 	}
-    
-   
-    
+
+    private boolean isLocationProviderEnabled() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    private void buildAlertMessageForLocationProvider() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Location access is required to run the application, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        Log.e(TAG, "clicked yes..");
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                        finish();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     public void onResume()
     {   	
-    	super.onResume();    	
+    	super.onResume();
+        Log.e(TAG, "onresume");
+        if (!isLocationProviderEnabled()){
+            buildAlertMessageForLocationProvider();
+            return;
+        }
+
+        SBLocationManager.getInstance().StartListeningtoNetwork();
+        Log.i(TAG,"started network listening ");
+        platformContext = Platform.getInstance().getContext();
+
+        if(!SBConnectivity.isConnected())
+        {
+            Toast.makeText(platformContext, "No network connection", Toast.LENGTH_SHORT);
+            finish();
+            return;
+        }
+
+        //this might only connect to xmpp server and not login if new user and not yet fb login
+        //  startChatService();
+
+        //map activity can get started from 3 places, timer task if location found instantly
+        //else this new runnable posted after 3 seconds
+        //else on first run
+        showSBMapViewActivity = new Intent(platformContext, MapListViewTabActivity.class);
+        showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        startMapActivity = new Runnable() {
+            public void run() {
+                platformContext.startActivity(showSBMapViewActivity);
+            }};
+
+
+        if(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID) == "")
+        {
+            firstRun();
+        }
+        else
+        {
+            ThisUserNew.getInstance().setUserID(ThisUserConfig.getInstance().getString(ThisUserConfig.USERID));
+            timer = new Timer();
+            timer.scheduleAtFixedRate(new GetNetworkLocationFixTask(), 500, 500);
+        }
     }
     
     public void onPause()
     {
     	super.onPause();
-    	//SBLocationManager.getInstance().StopListeningtoGPS();    	
-    	//SBLocationManager.getInstance().StopListeningtoNetwork();
     }
 
     public void onStart(){

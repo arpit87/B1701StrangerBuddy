@@ -3,6 +3,9 @@ package my.b1701.SB.Fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import my.b1701.SB.HelperClasses.SBConnectivity;
 import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.Adapter.HistoryAdapter;
@@ -46,6 +49,10 @@ public abstract class AbstractHistoryFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         if(adapter!=null)
         {
+            if (!SBConnectivity.isConnected()){
+                showErrorDialog("No Network found!", "Please check your network connection.");
+                return;
+            }
             HistoryAdapter.HistoryItem historyItem = adapter.getItem(position);
             CreateRequestFromHistory asyncReq = new CreateRequestFromHistory();
             asyncReq.execute(historyItem);
@@ -74,6 +81,19 @@ public abstract class AbstractHistoryFragment extends ListFragment {
             }
         }
         return historyItems;
+    }
+
+
+    private void showErrorDialog(final String title, final String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title).setMessage(message);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                return;
+            }
+        });
+        builder.create().show();
     }
     
     protected class CreateRequestFromHistory extends AsyncTask<HistoryAdapter.HistoryItem, Void, Void> {

@@ -1,7 +1,6 @@
 package my.b1701.SB.HttpClient;
 
 import android.util.Log;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Server.AddThisUserSrcDstResponse;
 import my.b1701.SB.Server.ServerConstants;
@@ -86,10 +85,6 @@ public class AddThisUserSrcDstRequest extends SBHttpRequest {
             Log.e(TAG, e.getMessage());
         }
 
-        if (response.getStatusLine().getStatusCode() == 200) {
-            ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_INSTA, jsonStr);
-            ThisUserConfig.getInstance().putInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE, 1);
-        }
         addThisUserResponse = new AddThisUserSrcDstResponse(response, jsonStr);
         return addThisUserResponse;
     }

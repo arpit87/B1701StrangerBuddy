@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.b1701.SB.HelperClasses.SBConnectivity;
 import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.Adapter.HistoryAdapter;
@@ -193,6 +194,11 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 			return;
 		}		
 		
+        if (!SBConnectivity.isConnected()){
+            showErrorDialog("No Network found!", "Please check your network connection.");
+            return;        
+        }
+        
 		//here in abstract type we are setting all..its responsibility of individual class to 
 		// implement these methods and return "" is its not required
 		//we use ThisUSer as intermediate storage place of current state of req of this user

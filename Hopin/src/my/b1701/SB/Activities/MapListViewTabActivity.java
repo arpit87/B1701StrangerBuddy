@@ -358,12 +358,12 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
                 try {
                     if (lastActiveReqType == 0){
                         String responseJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_CARPOOL);
-                        MapListActivityHandler.getInstance().setSourceAndDestination(new JSONObject(responseJson).getJSONObject("body"));
+                        MapListActivityHandler.getInstance().setSourceAndDestination(new JSONObject(responseJson));
                         SBHttpRequest getNearbyUsersRequest = new GetMatchingCarPoolUsersRequest();
                         SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
                     } else {
                         String responseJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_INSTA);
-                        MapListActivityHandler.getInstance().setSourceAndDestination(new JSONObject(responseJson).getJSONObject("body"));
+                        MapListActivityHandler.getInstance().setSourceAndDestination(new JSONObject(responseJson));
                         SBHttpRequest getNearbyUsersRequest = new GetMatchingNearbyUsersRequest();
                         SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
                     }

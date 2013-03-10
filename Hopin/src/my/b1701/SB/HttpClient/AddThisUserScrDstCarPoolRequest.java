@@ -1,7 +1,6 @@
 package my.b1701.SB.HttpClient;
 
 import android.util.Log;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Server.AddThisUserSrcDstCarPoolResponse;
 import my.b1701.SB.Server.ServerConstants;
@@ -84,10 +83,6 @@ public class AddThisUserScrDstCarPoolRequest extends SBHttpRequest {
             Log.e(TAG, e.getMessage());
         }
 
-        if (response.getStatusLine().getStatusCode() == 200) {
-            ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_CARPOOL, jsonStr);
-            ThisUserConfig.getInstance().putInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE, 0);
-        }
         addThisUserResponse = new AddThisUserSrcDstCarPoolResponse(response, jsonStr);
         return addThisUserResponse;
     }

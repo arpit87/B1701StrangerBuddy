@@ -3,6 +3,7 @@ package my.b1701.SB.Server;
 import android.util.Log;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetMatchingCarPoolUsersRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
@@ -33,7 +34,10 @@ public class AddThisUserSrcDstCarPoolResponse extends ServerResponseBase{
 		try {
 			body = jobj.getJSONObject("body");
 			ToastTracker.showToast("added this user src,dst for car pool,fetching match");
-			MapListActivityHandler.getInstance().setSourceAndDestination(body);
+            ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_CARPOOL, body.toString());
+            ThisUserConfig.getInstance().putInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE, 0);
+
+            MapListActivityHandler.getInstance().setSourceAndDestination(body);
 			SBHttpRequest getNearbyUsersRequest = new GetMatchingCarPoolUsersRequest();
 	        SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
 			
