@@ -35,8 +35,6 @@ public class AddThisUserSrcDstCarPoolResponse extends ServerResponseBase{
 			body = jobj.getJSONObject("body");
 			ToastTracker.showToast("added this user src,dst for car pool,fetching match");
             ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_CARPOOL, body.toString());
-            ThisUserConfig.getInstance().putInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE, 0);
-
             MapListActivityHandler.getInstance().setSourceAndDestination(body);
 			SBHttpRequest getNearbyUsersRequest = new GetMatchingCarPoolUsersRequest();
 	        SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);

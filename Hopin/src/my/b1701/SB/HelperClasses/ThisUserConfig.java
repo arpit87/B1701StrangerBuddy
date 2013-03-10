@@ -27,8 +27,6 @@ public class ThisUserConfig extends ConfigBase{
 	public static final String MOBILE = "mobile";
     public static final String ACTIVE_REQ_INSTA = "active_req_insta";
     public static final String ACTIVE_REQ_CARPOOL = "active_req_carpool";
-    public static final String LAST_ACTIVE_REQ_TYPE = "last_active_req_typecarpool";
-
 	
 	private ThisUserConfig(){super(Constants.USER_CONF_FILE);}
 	

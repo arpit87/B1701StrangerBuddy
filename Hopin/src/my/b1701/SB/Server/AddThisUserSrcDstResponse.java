@@ -36,7 +36,6 @@ public class AddThisUserSrcDstResponse extends ServerResponseBase{
 			ToastTracker.showToast("added this user src,dst");
 
             ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_INSTA, body.toString());
-            ThisUserConfig.getInstance().putInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE, 1);
 
 			MapListActivityHandler.getInstance().setSourceAndDestination(body);
             //Context context = Platform.getInstance().getContext();

@@ -38,6 +38,7 @@ import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.R;
 import my.b1701.SB.Users.ThisUserNew;
+import my.b1701.SB.Util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -97,8 +98,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         //show prompt if any of req active
         
         String instaReqJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_INSTA);
-        String carpoolReqJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_CARPOOL); 
-        if(instaReqJson != "" || carpoolReqJson != "")
+        String carpoolReqJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_CARPOOL);
+        if(!StringUtils.isBlank(instaReqJson) || !StringUtils.isBlank(carpoolReqJson))
         {
         	ShowActiveReqPrompt activereq_dialog = new ShowActiveReqPrompt();
        		activereq_dialog.show(getSupportFragmentManager(), "active_req_prompt");
@@ -348,31 +349,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     		MapListActivityHandler.getInstance().setMapView(mMapView);
             MapListActivityHandler.getInstance().setUnderlyingActivity(this);
             Log.i(TAG,"initialize handler");
-
-            int lastActiveReqType = ThisUserConfig.getInstance().getInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE);
-            if(lastActiveReqType == -1){
-                Log.i(TAG,"initialize mylocation");
-                MapListActivityHandler.getInstance().initMyLocation();
-            } else {
-                ProgressHandler.showInfiniteProgressDialoge(this, "Updating nearby users from last active request", "Please wait...");
-                try {
-                    if (lastActiveReqType == 0){
-                        String responseJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_CARPOOL);
-                        MapListActivityHandler.getInstance().setSourceAndDestination(new JSONObject(responseJson));
-                        SBHttpRequest getNearbyUsersRequest = new GetMatchingCarPoolUsersRequest();
-                        SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
-                    } else {
-                        String responseJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_INSTA);
-                        MapListActivityHandler.getInstance().setSourceAndDestination(new JSONObject(responseJson));
-                        SBHttpRequest getNearbyUsersRequest = new GetMatchingNearbyUsersRequest();
-                        SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
-                    }
-                } catch (JSONException e){
-                    Log.e(TAG, "Unable to parse response object", e);
-                    ProgressHandler.dismissDialoge();
-                }
-            }
-            
+            Log.i(TAG,"initialize mylocation");
+            MapListActivityHandler.getInstance().initMyLocation();
     		//mMapViewContainer.removeView(mMapView);
     	}
     	else

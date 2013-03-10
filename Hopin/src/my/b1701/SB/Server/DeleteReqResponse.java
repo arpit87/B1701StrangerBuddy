@@ -1,17 +1,14 @@
 package my.b1701.SB.Server;
 
-import my.b1701.SB.HelperClasses.BroadCastConstants;
-import my.b1701.SB.HelperClasses.ProgressHandler;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.Platform.Platform;
-import my.b1701.SB.Server.ServerResponseBase.ResponseStatus;
-
-import org.apache.http.HttpResponse;
-import org.json.JSONException;
-
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
+import my.b1701.SB.HelperClasses.BroadCastConstants;
+import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.Platform.Platform;
+import org.apache.http.HttpResponse;
+import org.json.JSONException;
 
 public class DeleteReqResponse extends ServerResponseBase{
 	
@@ -33,10 +30,14 @@ public class DeleteReqResponse extends ServerResponseBase{
 			String body = jobj.getString("body");
 			ToastTracker.showToast("Request deleted successfully");
 			Intent notifyUpdateintent = new Intent();
-			if(daily_insta_type == 1)
+			if(daily_insta_type == 1) {
+                ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_INSTA, "");
 				notifyUpdateintent.setAction(BroadCastConstants.INSTAREQ_DELETED);
-			else
+            }
+			else {
+                ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_CARPOOL, "");
 				notifyUpdateintent.setAction(BroadCastConstants.CARPOOLREQ_DELETED);
+            }
 			//this broadcast is for my active req page to update itself to no active req
 			Platform.getInstance().getContext().sendBroadcast(notifyUpdateintent);
 		} catch (JSONException e) {

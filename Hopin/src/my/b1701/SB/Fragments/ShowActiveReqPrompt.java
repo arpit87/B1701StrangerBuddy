@@ -1,34 +1,27 @@
 package my.b1701.SB.Fragments;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import my.b1701.SB.R;
-import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
-import my.b1701.SB.HelperClasses.ProgressHandler;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.HttpClient.GetMatchingCarPoolUsersRequest;
-import my.b1701.SB.HttpClient.GetMatchingNearbyUsersRequest;
-import my.b1701.SB.HttpClient.SBHttpClient;
-import my.b1701.SB.HttpClient.SBHttpRequest;
-import my.b1701.SB.Users.UserAttributes;
-import my.b1701.SB.Util.StringUtils;
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HttpClient.GetMatchingCarPoolUsersRequest;
+import my.b1701.SB.HttpClient.GetMatchingNearbyUsersRequest;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.R;
+import my.b1701.SB.Users.UserAttributes;
+import my.b1701.SB.Util.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class ShowActiveReqPrompt extends DialogFragment{
@@ -54,11 +47,10 @@ public class ShowActiveReqPrompt extends DialogFragment{
         if(!StringUtils.isBlank(carpoolReqJson))
         { 
         	try {
-				JSONObject responseJsonObj = new JSONObject(carpoolReqJson);
-				final JSONObject body = responseJsonObj.getJSONObject("body");
-				String source = body.getString(UserAttributes.SRCLOCALITY);
-				String destination = body.getString(UserAttributes.DSTLOCALITY);
-				String datetime = body.getString(UserAttributes.DATETIME);
+				final JSONObject responseJsonObj = new JSONObject(carpoolReqJson);
+				String source = responseJsonObj.getString(UserAttributes.SRCLOCALITY);
+				String destination = responseJsonObj.getString(UserAttributes.DSTLOCALITY);
+				String datetime = responseJsonObj.getString(UserAttributes.DATETIME);
 				String formatteddate = StringUtils.formatDate("yyyy-MM-dd HH:mm", "hh:mm a", datetime);
 				carpooldetails.setTextColor(getResources().getColor(R.color.black));
 				carpooldetails.setTextSize(15);
@@ -69,7 +61,7 @@ public class ShowActiveReqPrompt extends DialogFragment{
 						@Override
 						public void onClick(View paramView) {
 							try {
-								MapListActivityHandler.getInstance().setSourceAndDestination(body);
+								MapListActivityHandler.getInstance().setSourceAndDestination(responseJsonObj);
 								ProgressHandler.showInfiniteProgressDialoge(getActivity(), "Fetching carpool matches", "Please wait");
 								SBHttpRequest getNearbyUsersRequest = new GetMatchingCarPoolUsersRequest();
 						        SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
@@ -93,11 +85,10 @@ public class ShowActiveReqPrompt extends DialogFragment{
         {  
         
         	try {
-				JSONObject responseJsonObj = new JSONObject(instaReqJson);
-				final JSONObject body = responseJsonObj.getJSONObject("body");
-				String source = body.getString(UserAttributes.SRCLOCALITY);
-				String destination = body.getString(UserAttributes.DSTLOCALITY);
-				String datetime = body.getString(UserAttributes.DATETIME);
+				final JSONObject responseJsonObj = new JSONObject(instaReqJson);
+				String source = responseJsonObj.getString(UserAttributes.SRCLOCALITY);
+				String destination = responseJsonObj.getString(UserAttributes.DSTLOCALITY);
+				String datetime = responseJsonObj.getString(UserAttributes.DATETIME);
 				String formatteddate = StringUtils.formatDate("yyyy-MM-dd HH:mm", "d MMM, hh:mm a", datetime);
 				instadetails.setTextColor(getResources().getColor(R.color.black));
 				instadetails.setTextSize(15);
@@ -108,8 +99,8 @@ public class ShowActiveReqPrompt extends DialogFragment{
 						@Override
 						public void onClick(View paramView) {
 							try {
-								MapListActivityHandler.getInstance().setSourceAndDestination(body);
-								ProgressHandler.showInfiniteProgressDialoge(getActivity(), "Fetching carpool matches", "Please wait");
+								MapListActivityHandler.getInstance().setSourceAndDestination(responseJsonObj);
+								ProgressHandler.showInfiniteProgressDialoge(getActivity(), "Fetching  matches", "Please wait");
 								SBHttpRequest getNearbyUsersRequest = new GetMatchingNearbyUsersRequest();
 						        SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
 						        dismiss(); 
