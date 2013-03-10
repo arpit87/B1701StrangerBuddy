@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 public class MyRequestsActivity extends Activity {
 	
-	private final String TAG = "my.B1701.SB.Avtivity.MyRequestActivity";
+	private final String TAG = "my.b1701.SB.Avtivity.MyRequestActivity";
 	TextView carpoolsource;
 	TextView carpooldestination;
 	TextView carpooltime;
