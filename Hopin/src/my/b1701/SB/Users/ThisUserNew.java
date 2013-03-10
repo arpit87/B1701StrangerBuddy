@@ -29,7 +29,7 @@ public class ThisUserNew {
 	private int plan_instant_type = 0;//sent by plan tab 0.instant tab 1
 	private int selected_radio_button_id = 0;//used in history to store which radio button was selected
 	private static final String TAG = "my.b1701.SB.Users.ThisUserNew";
-	private static ThisUserNew instance=new ThisUserNew();
+	private static ThisUserNew instance = null;
 	private LinkedList<HistoryAdapter.HistoryItem> historyItemList = new LinkedList<HistoryAdapter.HistoryItem>();
 	private String userID;
 	private String formattedTraveDetails;	
@@ -61,6 +61,8 @@ public class ThisUserNew {
 		return this.userID;
 	}
 	public static ThisUserNew getInstance() {
+		if(instance == null)
+			instance = new ThisUserNew();
 		 return instance;
 	}
 	
@@ -212,6 +214,10 @@ public class ThisUserNew {
 			formattedTraveDetails = travelInfo +","+ StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "d MMM hh:mm a", travelTimeInfo);
 		return formattedTraveDetails;
 	}
-	
+    
+    public static void clearAllData()
+    {
+    	instance = new ThisUserNew();
+    }	
 
 }

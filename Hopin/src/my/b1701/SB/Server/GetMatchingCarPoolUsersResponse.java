@@ -1,5 +1,6 @@
 package my.b1701.SB.Server;
 
+import my.b1701.SB.HelperClasses.BroadCastConstants;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.CurrentNearbyUsers;
@@ -41,7 +42,7 @@ public class GetMatchingCarPoolUsersResponse extends ServerResponseBase{
 		{
 			Log.i(TAG,"updating changed nearby carpool users");
 			Intent notifyUpdateintent = new Intent();
-			notifyUpdateintent.setAction(ServerConstants.NEARBY_USER_UPDATED);		
+			notifyUpdateintent.setAction(BroadCastConstants.NEARBY_USER_UPDATED);		
 			
 			//this broadcast is for chat window which queries for nearby users in case of incoming chat 
 			//from user which has not yet been fetched by getmatch request

@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
+import my.b1701.SB.HelperClasses.BroadCastConstants;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
@@ -36,7 +39,6 @@ import my.b1701.SB.MapHelpers.NearbyUsersItemizedOverlay;
 import my.b1701.SB.MapHelpers.ThisUserItemizedOverlay;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.R;
-import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.ThisUserNew;
@@ -358,9 +360,12 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 			else
 			{
 				//will flicker prompt here if already showing
-				TransitionDrawable transition = (TransitionDrawable) popUpView.getBackground();
-				transition.startTransition(300);				
-				transition.reverseTransition(300);				
+				Animation anim = new AlphaAnimation(0.0f, 1.0f);
+		        anim.setDuration(100); //You can manage the time of the blink with this parameter
+		        anim.setStartOffset(20);
+		        anim.setRepeatMode(Animation.REVERSE);
+		        anim.setRepeatCount(1500);
+		        popUpView.startAnimation(anim);				
 			}
 			//popUpView.setBackgroundResource(R.drawable.transparent_black);
 		}
@@ -451,7 +456,7 @@ public void clearAllData()
 @Override
 public void onReceive(Context context, Intent intent) {
 	String intentAction = intent.getAction();
-	if(intentAction.equals(ServerConstants.NEARBY_USER_UPDATED))
+	if(intentAction.equals(BroadCastConstants.NEARBY_USER_UPDATED))
 	{
 		ToastTracker.showToast("update intent received");
 		updateNearbyUsers();
@@ -507,18 +512,21 @@ public void updateSrcDstTimeInListView() {
 	}
 	else
 	{
-	    String source = ThisUserNew.getInstance().getSourceFullAddress();
-	    if(source == "")
-	    	source = "My Location";
-	    mSource.setText(source);
-	       
-	    mDestination.setText(ThisUserNew.getInstance().getDestinationFullAddress());
-	    
-	    String date_time = ThisUserNew.getInstance().getDateAndTimeOfTravel();
-	    if(!StringUtils.isBlank(date_time))
-	    {
-	    	mtime.setText("Time: "+StringUtils.formatDate("yyyy-MM-dd HH:mm", "h:mm a, EEE, MMM d", date_time));
-	    }
+		String destination = ThisUserNew.getInstance().getDestinationFullAddress();
+		if(destination != "")
+		{
+			mDestination.setText(destination);
+		    String source = ThisUserNew.getInstance().getSourceFullAddress();
+		    if(source == "")
+		    	source = "My Location";
+		    mSource.setText(source);	       
+		    	    
+		    String date_time = ThisUserNew.getInstance().getDateAndTimeOfTravel();
+		    if(!StringUtils.isBlank(date_time))
+		    {
+		    	mtime.setText("Time: "+StringUtils.formatDate("yyyy-MM-dd HH:mm", "h:mm a, EEE, MMM d", date_time));
+		    }
+		}
 	}
 }
 

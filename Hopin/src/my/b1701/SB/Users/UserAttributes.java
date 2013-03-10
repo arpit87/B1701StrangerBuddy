@@ -62,4 +62,7 @@ public class UserAttributes {
 	public static String  CHATUSERID = "user_id";
 	public static String  CHATUSERNAME = "username";
 	
+	//delete
+	public static String  DELETEDAILYINSTATYPE = "insta";
+	
 }

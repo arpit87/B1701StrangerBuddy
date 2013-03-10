@@ -4,10 +4,10 @@ import java.util.List;
 
 import my.b1701.SB.R;
 import my.b1701.SB.ChatClient.ChatWindow;
+import my.b1701.SB.HelperClasses.BroadCastConstants;
 import my.b1701.SB.HelperClasses.SBConnectivity;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
 
@@ -69,7 +69,7 @@ public class SBChatService extends Service {
 		Toast.makeText(this, "started service", Toast.LENGTH_SHORT).show();		
 		registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		registerReceiver(mReceiver, new IntentFilter(SBLOGIN_TO_CHAT));
-		registerReceiver(mReceiver, new IntentFilter(ServerConstants.NEARBY_USER_UPDATED));		
+		registerReceiver(mReceiver, new IntentFilter(BroadCastConstants.NEARBY_USER_UPDATED));		
 		mPort = DEFAULT_XMPP_PORT;
 		
 		initializeConfigration();
@@ -194,7 +194,7 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 		Toast.makeText(context, "tryin loggin from intent",
 			    Toast.LENGTH_SHORT).show();
 		mConnectionAdapter.loginAsync(login, password);
-	} else if(intentAction.equals(ServerConstants.NEARBY_USER_UPDATED))
+	} else if(intentAction.equals(BroadCastConstants.NEARBY_USER_UPDATED))
 	{
 		Log.i(TAG,"update intent in chat rece ,might broadcast");
 		//send broad chat msg to all fb loggeged in nearby users

@@ -28,6 +28,7 @@ import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
+import my.b1701.SB.HelperClasses.BroadCastConstants;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
@@ -35,7 +36,6 @@ import my.b1701.SB.HttpClient.*;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.R;
-import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.ThisUserNew;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,7 +90,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);       
         ab.setDisplayHomeAsUpEnabled(false);
         ab.setDisplayShowTitleEnabled(true);
-        this.registerReceiver(mapListActivityHandler,new IntentFilter(ServerConstants.NEARBY_USER_UPDATED));    
+        this.registerReceiver(mapListActivityHandler,new IntentFilter(BroadCastConstants.NEARBY_USER_UPDATED));    
         fbconnect = new FacebookConnector(this);
         //checkIfGPSIsEnabled();
         
@@ -164,7 +164,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     {    
     	super.onDestroy();    	
     	this.unregisterReceiver(mapListActivityHandler);
-    	mapListActivityHandler.clearAllData();    	
+    	mapListActivityHandler.clearAllData();  
+    	ThisUserNew.clearAllData();
     }
 	
 		
@@ -187,7 +188,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
 
     private void buildExitMessageDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to keep you request active? You will be notified if any new users are available.")
+        builder.setMessage("Do you want to keep you request active?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
@@ -196,9 +197,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
-                        SBHttpClient.getInstance().executeRequest(deleteUserRequest);
-                        ThisUserConfig.getInstance().putInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE, -1);
+                        DeleteRequest deleteRequest = new DeleteRequest(1);
+                        SBHttpClient.getInstance().executeRequest(deleteRequest);                        
                         MapListViewTabActivity.super.onBackPressed();
                     }
                 });
