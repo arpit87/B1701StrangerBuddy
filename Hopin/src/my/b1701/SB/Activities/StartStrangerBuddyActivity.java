@@ -103,6 +103,20 @@ public class StartStrangerBuddyActivity extends Activity {
         final AlertDialog alert = builder.create();
         alert.show();
     }
+    
+    private void buildAlertMessageForNoNetwork() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Network connection not detected. Please check network connecton and reopen Hopin")
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        finish();
+                    }
+                })           
+                ;
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
 
     public void onResume()
     {   	
@@ -111,19 +125,18 @@ public class StartStrangerBuddyActivity extends Activity {
         if (!isLocationProviderEnabled()){
             buildAlertMessageForLocationProvider();           
         }
-        else
+        else  if(!SBConnectivity.isConnected())
+        {
+        	buildAlertMessageForNoNetwork();	           
+        }
+        else        	
         {
 	
 	        Log.i(TAG,"started network listening ");
 	        SBLocationManager.getInstance().StartListeningtoNetwork();
             loadHistoryFromDB();
 	        platformContext = Platform.getInstance().getContext();
-	
-	        if(!SBConnectivity.isConnected())
-	        {
-	            Toast.makeText(platformContext, "No network connection", Toast.LENGTH_SHORT);
-	            finish();
-	        }
+	       
 	
 	        //map activity can get started from 3 places, timer task if location found instantly
 	        //else this new runnable posted after 3 seconds
