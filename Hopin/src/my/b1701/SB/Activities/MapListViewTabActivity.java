@@ -1,4 +1,4 @@
-                     package my.b1701.SB.Activities;
+package my.b1701.SB.Activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -28,15 +28,17 @@ import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
+import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.HttpClient.DeleteUserRequest;
-import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.HttpClient.*;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.R;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.ThisUserNew;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MapListViewTabActivity extends SherlockFragmentActivity  {
@@ -174,9 +176,10 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
             MenuItem menuItem = menu.findItem(R.id.btn_listview);
             menuItem.setIcon(R.drawable.maptolist);
         } else {
-            if (ThisUserNew.getInstance().getDestinationGeoPoint() != null){
+            if (ThisUserConfig.getInstance().getInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE) != -1){
                 buildExitMessageDialog();
             } else {
+                ThisUserConfig.getInstance().putInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE, -1);
                 MapListViewTabActivity.super.onBackPressed();
             }
         }
@@ -195,6 +198,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
                     public void onClick(final DialogInterface dialog, final int id) {
                         DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
                         SBHttpClient.getInstance().executeRequest(deleteUserRequest);
+                        ThisUserConfig.getInstance().putInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE, -1);
                         MapListViewTabActivity.super.onBackPressed();
                     }
                 });
@@ -265,6 +269,11 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
    		 searchInputIntent1.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
    		 startActivity(searchInputIntent1);
    		 break;
+     case R.id.my_requests:
+         Intent myRequestIntent = new Intent(this, MyRequestsActivity.class);
+         myRequestIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+         startActivity(myRequestIntent);
+         break;
      
         } 
         return super.onOptionsItemSelected(menuItem);
@@ -342,8 +351,30 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     		MapListActivityHandler.getInstance().setMapView(mMapView);
             MapListActivityHandler.getInstance().setUnderlyingActivity(this);
             Log.i(TAG,"initialize handler");
-            Log.i(TAG,"initialize mylocation");           
-            MapListActivityHandler.getInstance().initMyLocation();  
+
+            int lastActiveReqType = ThisUserConfig.getInstance().getInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE);
+            if(lastActiveReqType == -1){
+                Log.i(TAG,"initialize mylocation");
+                MapListActivityHandler.getInstance().initMyLocation();
+            } else {
+                ProgressHandler.showInfiniteProgressDialoge(this, "Updating nearby users from last active request", "Please wait...");
+                try {
+                    if (lastActiveReqType == 0){
+                        String responseJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_CARPOOL);
+                        MapListActivityHandler.getInstance().setSourceAndDestination(new JSONObject(responseJson).getJSONObject("body"));
+                        SBHttpRequest getNearbyUsersRequest = new GetMatchingCarPoolUsersRequest();
+                        SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
+                    } else {
+                        String responseJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_INSTA);
+                        MapListActivityHandler.getInstance().setSourceAndDestination(new JSONObject(responseJson).getJSONObject("body"));
+                        SBHttpRequest getNearbyUsersRequest = new GetMatchingNearbyUsersRequest();
+                        SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
+                    }
+                } catch (JSONException e){
+                    Log.e(TAG, "Unable to parse response object", e);
+                    ProgressHandler.dismissDialoge();
+                }
+            }
             
     		//mMapViewContainer.removeView(mMapView);
     	}

@@ -38,7 +38,7 @@ public  class ConfigBase {
 	
 	public int getInt(String key)
 	{
-		return settings.getInt(key, 0);
+		return settings.getInt(key, -1);
 	}
 	
 	public void putInt(String key,int value){

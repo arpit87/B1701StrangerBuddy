@@ -1,11 +1,11 @@
 package my.b1701.SB.Users;
 
-import java.util.LinkedList;
-
 import android.util.Log;
 import my.b1701.SB.Adapter.HistoryAdapter;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Util.StringUtils;
+
+import java.util.LinkedList;
 /***
  * This class has latest data to set all current req data of this user
  * any activity to be updated like list map picks from this location
@@ -34,7 +34,23 @@ public class ThisUserNew {
 	private String userID;
 	private String formattedTraveDetails;	
 				
-	
+    public void reset(){
+        currentGeoPoint = null;
+        sourceGeoPoint = null;
+        destinationGeoPoint = null;
+        sourceFullAddress = "";
+        destinationFullAddress = "";
+        sourceLocality = "";
+        destiantionLocality = "";
+        timeOfRequest = "";
+        dateOfRequest = "";
+        take_offer_type = 0;
+        daily_instant_type = 0;
+        plan_instant_type = 0;
+        selected_radio_button_id = 0;
+        formattedTraveDetails  = "";
+    }
+
 	public void setUserID(String userID) {
 		Log.i(TAG,"set user id");
 		this.userID = userID;

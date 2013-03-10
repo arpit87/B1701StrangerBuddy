@@ -1,30 +1,5 @@
 package my.b1701.SB.ActivityHandlers;
 
-import java.util.Collections;
-import java.util.List;
-
-import my.b1701.SB.R;
-import my.b1701.SB.Activities.MapListViewTabActivity;
-import my.b1701.SB.Adapter.NearbyUsersListViewAdapter;
-import my.b1701.SB.CustomViewsAndListeners.SBMapView;
-import my.b1701.SB.Fragments.FBLoginDialogFragment;
-import my.b1701.SB.Fragments.SBListFragment;
-import my.b1701.SB.Fragments.SBMapFragment;
-import my.b1701.SB.HelperClasses.ProgressHandler;
-import my.b1701.SB.HelperClasses.SBImageLoader;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.LocationHelpers.SBGeoPoint;
-import my.b1701.SB.LocationHelpers.SBLocationManager;
-import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
-import my.b1701.SB.MapHelpers.NearbyUsersItemizedOverlay;
-import my.b1701.SB.MapHelpers.ThisUserItemizedOverlay;
-import my.b1701.SB.Platform.Platform;
-import my.b1701.SB.Server.ServerConstants;
-import my.b1701.SB.Users.CurrentNearbyUsers;
-import my.b1701.SB.Users.NearbyUser;
-import my.b1701.SB.Users.ThisUserNew;
-import my.b1701.SB.Util.StringUtils;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -42,9 +17,36 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
+import my.b1701.SB.Activities.MapListViewTabActivity;
+import my.b1701.SB.Adapter.NearbyUsersListViewAdapter;
+import my.b1701.SB.CustomViewsAndListeners.SBMapView;
+import my.b1701.SB.Fragments.FBLoginDialogFragment;
+import my.b1701.SB.Fragments.SBListFragment;
+import my.b1701.SB.Fragments.SBMapFragment;
+import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HelperClasses.SBImageLoader;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.LocationHelpers.SBGeoPoint;
+import my.b1701.SB.LocationHelpers.SBLocationManager;
+import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
+import my.b1701.SB.MapHelpers.NearbyUsersItemizedOverlay;
+import my.b1701.SB.MapHelpers.ThisUserItemizedOverlay;
+import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.R;
+import my.b1701.SB.Server.ServerConstants;
+import my.b1701.SB.Users.CurrentNearbyUsers;
+import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.ThisUserNew;
+import my.b1701.SB.Users.UserAttributes;
+import my.b1701.SB.Util.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Collections;
+import java.util.List;
 
 public class MapListActivityHandler  extends BroadcastReceiver{
 	
@@ -418,6 +420,10 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 	
 public void clearAllData()
 {
+    Log.d(TAG, "clearing all data");
+    thisUserOverlay = null;
+    nearbyUserItemizedOverlay = null;
+    mListViewContainer = null;
 	if(mapView!=null)
 	{
 		mapView.removeAllViews();
@@ -427,12 +433,18 @@ public void clearAllData()
 	{		
 		((NearbyUsersListViewAdapter)listFrag.getListAdapter()).clear();
 	}
-	if(mSource!=null)
-		mSource.setText(R.string.source_listview);
-	if(mDestination!=null)
+	if(mSource!=null) {
+        mSource.setText(R.string.source_listview);
+    }
+	if(mDestination!=null) {
 		mDestination.setText(R.string.destination_listview);
+    }
 	if(mtime!=null)
-		mtime.setText("");	
+		mtime.setText("");
+
+    if (ThisUserConfig.getInstance().getInt(ThisUserConfig.LAST_ACTIVE_REQ_TYPE) == -1){
+        ThisUserNew.getInstance().reset();
+    }
 }
 
 
@@ -515,4 +527,16 @@ public void updateSrcDstTimeInListView() {
         if(nearbyUserOverlay!=null)
             nearbyUserOverlay.removeExpandedShowSmallViews();
     }
+
+    public void setSourceAndDestination(JSONObject jsonObject) throws JSONException {
+        double srcLat = Double.parseDouble(jsonObject.getString(UserAttributes.SRCLATITUDE));
+        double srcLong = Double.parseDouble(jsonObject.getString(UserAttributes.SRCLONGITUDE));
+        double destLat = Double.parseDouble(jsonObject.getString(UserAttributes.DSTLATITUDE));
+        double destLong = Double.parseDouble(jsonObject.getString(UserAttributes.DSTLONGITUDE));
+        ThisUserNew.getInstance().setSourceGeoPoint(new SBGeoPoint((int)(srcLat*1e6),(int)(srcLong*1e6)));
+        ThisUserNew.getInstance().setDestinationGeoPoint(new SBGeoPoint((int)(destLat*1e6),(int)(destLong*1e6)));
+        MapListActivityHandler.getInstance().updateThisUserMapOverlay();
+        MapListActivityHandler.getInstance().centreMapTo(ThisUserNew.getInstance().getSourceGeoPoint());
+    }
+
 }
