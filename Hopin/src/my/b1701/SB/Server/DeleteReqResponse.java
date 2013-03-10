@@ -29,7 +29,8 @@ public class DeleteReqResponse extends ServerResponseBase{
 		Log.i(TAG,"processing PostUserReqDataResponse");
 		Log.i(TAG,"server response:"+jobj.toString());
 		try {
-			body = jobj.getJSONObject("body");
+			//body = jobj.getJSONObject("body");
+			String body = jobj.getString("body");
 			ToastTracker.showToast("Request deleted successfully");
 			Intent notifyUpdateintent = new Intent();
 			if(daily_insta_type == 1)
