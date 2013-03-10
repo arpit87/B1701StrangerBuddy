@@ -42,23 +42,25 @@
              android:layout_height="wrap_content">
          <TextView
              android:id="@+id/settings_newuser_showpopup_text"
-             android:layout_width="wrap_content"
+             android:layout_width="0dip"
              android:layout_height="match_parent"
              android:textColor="@color/gray"
         	 android:textSize="15dip"
          	 android:text="New matching user found"
          	 android:paddingLeft="10dip"
-         	 android:paddingRight="10dip"
-         	 android:layout_weight="1"   
-         	 android:gravity="center_vertical"      	 
+         	 android:paddingRight="40dip"
+         	 android:layout_weight="4"   
+         	 android:gravity="center_vertical"
+         	 android:layout_gravity="center_vertical"      	 
               />
          
           <CheckBox
              android:id="@+id/settings_newuser_showpopup_checkbox"
-             android:layout_width="wrap_content"
+             android:layout_width="0dip"
              android:layout_height="wrap_content"
              android:button="@drawable/checkbox_selector"
-              android:layout_weight=".8"         
+             android:layout_weight="1"  
+             android:layout_gravity="center_vertical"         
             />
           </TableRow>
           
@@ -66,23 +68,25 @@
              android:layout_height="wrap_content">
          <TextView
              android:id="@+id/settings_newuser_showpopup_text"
-             android:layout_width="wrap_content"
+             android:layout_width="0dip"
              android:layout_height="match_parent"
              android:textColor="@color/gray"
         	 android:textSize="15dip"
          	 android:text="Incoming chat"
          	 android:paddingLeft="10dip"
-         	 android:paddingRight="10dip"  
-         	 android:layout_weight="1"
+         	 android:paddingRight="40dip"  
+         	 android:layout_weight="4"
+         	 android:layout_gravity="center_vertical"
          	 android:gravity="center_vertical"       	        	 
               />
          
           <CheckBox
              android:id="@+id/settings_newuser_showpopup_checkbox"
-             android:layout_width="wrap_content"
+             android:layout_width="0dip"
              android:layout_height="wrap_content"
              android:button="@drawable/checkbox_selector"
-             android:layout_weight=".8"          
+             android:layout_weight="1"  
+             android:layout_gravity="center_vertical"         
             />
           </TableRow>
           </TableLayout>
@@ -107,7 +111,7 @@
          android:textColor="@color/black"
          android:textSize="20dip"
          android:text="Active request" 
-         android:layout_marginTop="5dip"
+         android:layout_marginTop="10dip"
          android:layout_marginLeft="5dip" />
          
          <TextView
@@ -117,7 +121,8 @@
          android:textColor="@color/gray"
          android:textSize="15dip"
          android:text="Prompt on app close"         
-         android:layout_marginLeft="5dip" />
+         android:layout_marginLeft="5dip"
+         android:layout_marginBottom="10dip" />
       
          </LinearLayout> 
          
@@ -127,6 +132,81 @@
              android:background="@color/gray"
              android:layout_marginTop="5dip"
          	 android:layout_marginLeft="5dip"/>
+         
+        <TextView         
+          android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textColor="@color/black"
+         android:textSize="20dip"
+         android:text="Privacy" 
+         android:layout_marginTop="5dip"
+         android:layout_marginLeft="5dip" />
+<TableLayout 
+    android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+            >
+             <TableRow android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="5dip">
+         <TextView
+             android:id="@+id/settings_newuser_showpopup_text"
+             android:layout_width="0dip"
+             android:layout_height="match_parent"
+             android:textColor="@color/gray"
+        	 android:textSize="15dip"
+         	 android:text="Visible only to FB friends and FOF"
+         	 android:paddingLeft="10dip"
+         	 android:paddingRight="40dip"
+         	 android:layout_weight="4"   
+         	 android:gravity="center_vertical"    
+         	 android:layout_gravity="center_vertical"   	 
+              />
+         
+          <CheckBox
+             android:id="@+id/settings_newuser_showpopup_checkbox"
+             android:layout_width="0dip"
+             android:layout_height="wrap_content"
+             android:button="@drawable/checkbox_selector"
+              android:layout_weight="1"  
+              android:layout_gravity="center_vertical"        
+            />
+          </TableRow>
+          
+                 <TableRow android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="5dip">
+         <TextView
+             android:id="@+id/settings_newuser_showpopup_text"
+             android:layout_width="0dip"
+             android:layout_height="match_parent"
+             android:textColor="@color/gray"
+        	 android:textSize="15dip"
+         	 android:text="Visible only to girls and vice versa"
+         	 android:paddingLeft="10dip"
+         	 android:paddingRight="40dip"  
+         	 android:layout_weight="4"
+         	 android:gravity="center_vertical" 
+         	 android:layout_gravity="center_vertical"      	        	 
+              />
+         
+          <CheckBox
+             android:id="@+id/settings_newuser_showpopup_checkbox"
+             android:layout_width="0dip"
+             android:layout_height="wrap_content"
+             android:button="@drawable/checkbox_selector"
+             android:layout_weight="1"     
+             android:layout_gravity="center_vertical"     
+            />
+          </TableRow>
+          </TableLayout>
+                         
+         
+         <View 
+             android:layout_width="match_parent"
+             android:layout_height="1dip"
+             android:background="@color/gray"
+             android:layout_marginTop="5dip"
+         	 android:layout_marginLeft="5dip"/>   
           
       </LinearLayout>
 
