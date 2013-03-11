@@ -65,11 +65,11 @@ public class SearchUserPlanFrag extends AbstractSearchInputFrag implements SeekB
         
         //find current time and set seekbar to just after current
         Calendar now = Calendar.getInstance();
-        int hour = now.get(Calendar.HOUR);        
-        int min = now.get(Calendar.MINUTE);        
+        hour = now.get(Calendar.HOUR);        
+        minutes = now.get(Calendar.MINUTE);        
         if(hour == 12)
         	hour = 0;
-        int progress  = hour*4 + (int)(min/15);
+        int progress  = hour*4 + (int)(minutes/15);
         if(now.get(Calendar.AM_PM) == 0)
         	am_pm_toggle.setChecked(true);
         else
