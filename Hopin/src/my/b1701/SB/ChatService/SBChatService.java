@@ -8,6 +8,7 @@ import my.b1701.SB.HelperClasses.BroadCastConstants;
 import my.b1701.SB.HelperClasses.SBConnectivity;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
 
@@ -44,7 +45,7 @@ public class SBChatService extends Service {
 	private int DEFAULT_XMPP_PORT = 5222;	
 	int mPort;
 	private SBChatBroadcastReceiver mReceiver = new SBChatBroadcastReceiver();
-	private String mHost = "hopin.co.in";
+	private String mHost = ServerConstants.CHATSERVERIP;
 	String mErrorMsg = "";
 	private Roster mRoster = null;
 	private ConnectionListener connectionListener = null;
@@ -112,7 +113,7 @@ public class SBChatService extends Service {
 		mConnectionConfiguration = new ConnectionConfiguration(mHost, mPort);		
 		mConnectionConfiguration.setReconnectionAllowed(true);
 		mConnectionConfiguration.setDebuggerEnabled(true);
-		mConnectionConfiguration.setSendPresence(false);
+		mConnectionConfiguration.setSendPresence(true);
 	}
 	
 	@Override
