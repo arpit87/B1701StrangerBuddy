@@ -123,7 +123,7 @@ public class SearchUserPlanFrag extends AbstractSearchInputFrag implements SeekB
 
 	@Override
 	public String getDate() {
-		String date ="";
+		String date = StringUtils.gettodayDateInFormat("yyyy-MM-dd");
 		int checkedButton = radio_group_daily_onetime.getCheckedRadioButtonId();
 		if(checkedButton == R.id.search_user_plan_radiobutton_enterdate)
 		{
