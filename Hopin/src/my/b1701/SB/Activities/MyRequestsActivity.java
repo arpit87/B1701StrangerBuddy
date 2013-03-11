@@ -98,10 +98,9 @@ public class MyRequestsActivity extends Activity {
         	
         	try {
 				JSONObject responseJsonObj = new JSONObject(carpoolReqJson);
-				JSONObject body = responseJsonObj.getJSONObject("body");
-				String source = body.getString(UserAttributes.SRCADDRESS);
-				String destination = body.getString(UserAttributes.DSTADDRESS);
-				String datetime = body.getString(UserAttributes.DATETIME);				
+				String source = responseJsonObj.getString(UserAttributes.SRCADDRESS);
+				String destination = responseJsonObj.getString(UserAttributes.DSTADDRESS);
+				String datetime = responseJsonObj.getString(UserAttributes.DATETIME);
 				carpoolsource.setText(source);
 				carpooldestination.setText(destination);
 				carpooltime.setText(StringUtils.formatDate("yyyy-MM-dd HH:mm", "hh:mm a", datetime));
@@ -117,10 +116,9 @@ public class MyRequestsActivity extends Activity {
         	instaNoActiveReq.setVisibility(View.GONE);
         	try {
 				JSONObject responseJsonObj = new JSONObject(instaReqJson);
-				JSONObject body = responseJsonObj.getJSONObject("body");
-				String source = body.getString(UserAttributes.SRCADDRESS);
-				String destination = body.getString(UserAttributes.DSTADDRESS);
-				String datetime = body.getString(UserAttributes.DATETIME);
+				String source = responseJsonObj.getString(UserAttributes.SRCADDRESS);
+				String destination = responseJsonObj.getString(UserAttributes.DSTADDRESS);
+				String datetime = responseJsonObj.getString(UserAttributes.DATETIME);
 				instasource.setText(source);
 				instadestination.setText(destination);
 				instatime.setText(StringUtils.formatDate("yyyy-MM-dd HH:mm", "d MMM, hh:mm a", datetime));
