@@ -58,13 +58,14 @@ import android.util.Log;
     	mSentNotDeliveredMsgHashSet = new HashMap<Long,Message>();
     	notificationid = mChatManager.numChats()+1;
     	mImageURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
+    	
         }
     
 	@Override
 	public void sendMessage(Message msg) throws RemoteException{
 		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();		
 		String msgBody = msg.getBody();		
-		Log.w(TAG, "message sending to " + msg.getTo());
+		Log.i(TAG, "message sending to " + msg.getTo());
 		msgToSend.setBody(msgBody);
 		msgToSend.setSubject(msg.getSubject());
 		msgToSend.setProperty(Message.UNIQUEID, msg.getUniqueMsgIdentifier());		
@@ -73,11 +74,19 @@ import android.util.Log;
 		msgToSend.setProperty(Message.TRAVELINFO, mTravelinfo);
 		try { 
 			mSmackChat.sendMessage(msgToSend);
+			Log.i(TAG, "message sent to " + msg.getTo());
 			msg.setStatus(SBChatMessage.SENT);
 			mMessages.add(msg);			
 			mSentNotDeliveredMsgHashSet.put(msg.getUniqueMsgIdentifier(), msg);
 		} catch (XMPPException e) {
 			//TODO retry sending msg?
+			Log.i(TAG, "message sending to had xmpp exception" + msg.getTo());
+			msg.setStatus(SBChatMessage.SENDING_FAILED);
+			mMessages.add(msg);						
+		    e.printStackTrace();
+		} catch (IllegalStateException e)
+		{
+			Log.i(TAG, "message sending to had illegal state exception" + msg.getTo());
 			msg.setStatus(SBChatMessage.SENDING_FAILED);
 			mMessages.add(msg);						
 		    e.printStackTrace();

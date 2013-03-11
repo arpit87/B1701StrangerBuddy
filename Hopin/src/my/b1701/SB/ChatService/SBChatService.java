@@ -171,11 +171,13 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 		// The service will be unbinded in the destroy of the activity.
 	    }
 	} else if (intentAction.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+		Log.d(TAG,"connectivity changed");
 	    if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {		
 		//network may be temporarily lost..check if android trying to connect to other network like wifi/gprs switch(failover)
 		 String reason = intent.getStringExtra(ConnectivityManager.EXTRA_REASON);		 
          boolean isFailover = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER, false);
          Toast.makeText(context, "network lost:( "+reason+",failover:"+isFailover,  Toast.LENGTH_SHORT).show();
+         Log.d(TAG,"connectivity changed ,network lost:( "+reason+",failover:"+isFailover);
         //need a reconnection mechanism        	 
 		//context.stopService(new Intent(context, SBChatService.class));
 	    }

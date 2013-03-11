@@ -28,7 +28,7 @@ public class SBChatManager extends IChatManager.Stub {
     private final SBChatManagerAndInitialMsgListener mChatAndInitialMsgListener = new SBChatManagerAndInitialMsgListener();
     private final RemoteCallbackList<IChatManagerListener> mRemoteChatCreationListeners = new RemoteCallbackList<IChatManagerListener>();	
     private SBChatService mService = null;
-    private final SBChatRosterListener mChatRosterListener = new SBChatRosterListener();   
+      
     
 
 	public SBChatManager(XMPPConnection xmppConnection, SBChatService service) {

@@ -153,10 +153,14 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 	
 	//this should be called in separate thread
 	    private boolean login() throws RemoteException {
+	    	Log.d(TAG, "login called ");
 	    if(mLogin == "" || mPassword == "")
 	    		return false;	    
 		if (mXMPPConnection.isAuthenticated())
+		{
+			Log.d(TAG, "login called and is already authenticated");
 			return true;
+		}
 	    	//ToastTracker.showToast("tryin login but xmppconnected?"+mXMPPConnection.isConnected(), Toast.LENGTH_SHORT);
 		if (!mXMPPConnection.isConnected())
 		{			
@@ -165,6 +169,7 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 		    connect(); //blocking
 		}		
 		try {
+			Log.d(TAG, "login called and willl login");
 			mXMPPConnection.login(mLogin, mPassword);		    
 		} catch (XMPPException e) {
 		    Log.e(TAG, "Error while log in", e);
@@ -278,10 +283,11 @@ private class ConnectToChatServerTask extends AsyncTask<XMPPConnectionListenersA
 			loginToServer = new LoginToChatServerTask();
 			loginToServer.execute(adapter);
 			Toast.makeText(mService, "connected to xmpp,logging", Toast.LENGTH_SHORT).show();
-			
+			Log.d(TAG, "connected to xmpp,logging");
 		}
 		else
 		{
+			Log.d(TAG, "connected to xmpp,but not logging");
 			Toast.makeText(mService, "connected to xmpp but not logging", Toast.LENGTH_SHORT).show();
 			tryinLogging.set(false);
 		}
@@ -319,16 +325,19 @@ private class LoginToChatServerTask extends AsyncTask<XMPPConnectionListenersAda
 			tryinLogging.set(false);
 			if(!connected)
 			{
+				Log.d(TAG, "in login post exe but is not connected");
 				//TODO try relogin here for 2,3 times
 				//Toast.makeText(mService, "logged failed in postexecute,may be user not yet fb logged in,its ok", Toast.LENGTH_SHORT).show();
 				return;
 			}
+			Log.d(TAG, "logged in to xmpp");
 			Toast.makeText(mService, "logged in  to xmpp", Toast.LENGTH_SHORT).show();			
 		 	mChatManager = new SBChatManager(mXMPPConnection, mService);
 		 	Runnable sendPresence = new Runnable() {
 				
 				@Override
 				public void run() {
+					Log.d(TAG, "sending presence packet");
 					Presence presence = new Presence(Presence.Type.available);
 				 	mXMPPConnection.sendPacket(presence);					
 				}

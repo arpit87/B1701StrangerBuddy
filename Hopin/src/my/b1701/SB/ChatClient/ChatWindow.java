@@ -255,15 +255,19 @@ public void onResume() {
 			 try {
 				if (chatAdapter == null) {
 										
-					chatAdapter = mChatManager.createChat(mParticipantFBID, mMessageListener);
-					chatAdapter.setOpen(true);
+					chatAdapter = mChatManager.createChat(mParticipantFBID, mMessageListener);					
 				}
-				chatAdapter.sendMessage(newMessage);
+				if(chatAdapter != null)
+				{
+					chatAdapter.setOpen(true);
+					chatAdapter.sendMessage(newMessage);
+				}
+				else
+				{
+					sendingFailed(lastMessage);
+				}
 			    } catch (RemoteException e) {
-			    	lastMessage = (SBChatMessage) mMessagesListAdapter.getItem(mMessagesListAdapter.getCount() - 1);
-			    	lastMessage.setStatus(SBChatMessage.SENDING_FAILED); 
-			    	mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
-			    	mMessagesListAdapter.notifyDataSetChanged();
+			    	sendingFailed(lastMessage);
 				Log.e(TAG, e.getMessage());
 			    }
 		   
@@ -271,7 +275,13 @@ public void onResume() {
 		    mInputField.setText(null);
 		}
 	    
-	    
+	    private void sendingFailed(SBChatMessage lastMessage)
+	    {
+	    	lastMessage = (SBChatMessage) mMessagesListAdapter.getItem(mMessagesListAdapter.getCount() - 1);
+	    	lastMessage.setStatus(SBChatMessage.SENDING_FAILED); 
+	    	mMessagesListAdapter.setMessage(mMessagesListAdapter.getCount() - 1, lastMessage);
+	    	mMessagesListAdapter.notifyDataSetChanged();
+	    }
 	  	private void loginWithProgress() 
 	    {	    	
 	    	try {
