@@ -68,6 +68,8 @@ import android.util.Log;
 		//here we just put on queue
 		try {
 			mMsgqueue.put(msg);
+			if(msg.getType() == Message.MSG_TYPE_CHAT)
+				mMessages.add(msg);	
 		} catch (InterruptedException e) {
 			Log.e(TAG,"unable to put msg on queue of:"+mParticipant);
 			e.printStackTrace();
@@ -145,13 +147,15 @@ import android.util.Log;
 				else
 					m = null; //if sent put m = null so it picks next msg
 			}			
-		}
-		
+		}		
 	}
 	
 	public void notifyMsgQueue()
 	{
-		mMsgqueue.notify();
+		synchronized (mMsgqueue) {
+			mMsgqueue.notify();
+			}
+		
 	}
 	
 	private class SBMsgListener implements MessageListener {		
@@ -277,14 +281,12 @@ import android.util.Log;
 		try { 
 			mSmackChat.sendMessage(msgToSend);
 			Log.i(TAG, "chat message sent to " + msg.getTo());
-			msg.setStatus(SBChatMessage.SENT);
-			mMessages.add(msg);			
+			msg.setStatus(SBChatMessage.SENT);					
 			mSentNotDeliveredMsgHashSet.put(msg.getUniqueMsgIdentifier(), msg);
 		} catch (XMPPException e) {
 			//TODO retry sending msg?
 			Log.i(TAG, "message sending to had xmpp exception" + msg.getTo());
-			msg.setStatus(SBChatMessage.SENDING_FAILED);
-			mMessages.add(msg);						
+			msg.setStatus(SBChatMessage.SENDING_FAILED);								
 		    e.printStackTrace();
 		} catch (IllegalStateException e)
 		{						

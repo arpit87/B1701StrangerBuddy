@@ -338,8 +338,9 @@ private class LoginToChatServerTask extends AsyncTask<XMPPConnectionListenersAda
 				return;
 			}
 			Log.d(TAG, "logged in to xmpp");
-			Toast.makeText(mService, "logged in  to xmpp", Toast.LENGTH_SHORT).show();			
-		 	mChatManager = new SBChatManager(mXMPPConnection, mService);
+			Toast.makeText(mService, "logged in  to xmpp", Toast.LENGTH_SHORT).show();	
+			if(mChatManager==null)
+				mChatManager = new SBChatManager(mXMPPConnection, mService);
 		 	mChatManager.notifyAllPendingQueue();
 		 	Runnable sendPresence = new Runnable() {
 				

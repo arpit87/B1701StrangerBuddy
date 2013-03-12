@@ -109,13 +109,14 @@ public class SBChatManager extends IChatManager.Stub {
 	
 	public void notifyAllPendingQueue()
 	{
-		Collection<ChatAdapter> c = mAllChats.values();
-		
+		Log.i(TAG,"notifying all pending queue");
+		Collection<ChatAdapter> c = mAllChats.values();		
 		Iterator it = c.iterator();
 		while(it.hasNext())
-		{
+		{			
 			ChatAdapter ca = (ChatAdapter) it.next();
 			ca.notifyMsgQueue();
+			Log.i(TAG,"notified a queue");
 		}
 			
 		
