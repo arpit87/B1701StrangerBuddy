@@ -120,17 +120,36 @@
     </TableRow>
     </TableLayout>
 
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_height="wrap_content"
+                      android:layout_width="fill_parent" >
+        <Button
+                android:id="@+id/show_users_insta"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:layout_height="30dip"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingLeft="5dip"
+                android:paddingRight="5dip"
+                android:background="@drawable/green_gradient_btn_selector"
+                android:text="Show Users"
+                android:textColor="@color/white"
+                />
+
         <Button
             android:id="@+id/my_requests_insta_deletereq"
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
+            android:layout_weight="1"
             android:layout_height="30dip"
-            android:layout_gravity="center"
+            android:layout_gravity="center_horizontal"
             android:gravity="center_vertical|center_horizontal"
             android:paddingLeft="5dip"
             android:paddingRight="5dip"
             android:background="@drawable/red_gradient_btn"
-            android:text="Delete this request"           
-            android:textColor="@color/white" />        
+            android:text="Delete"
+            android:textColor="@color/white" />
+        </LinearLayout>
 
   </LinearLayout>
         <View
@@ -230,17 +249,36 @@
                  />
     </TableRow>
     </TableLayout>
+       <LinearLayout android:orientation="horizontal"
+                     android:layout_height="wrap_content"
+                     android:layout_width="fill_parent">
+       <Button
+               android:id="@+id/show_users_carpool"
+               android:layout_width="0dip"
+               android:layout_weight="1"
+               android:layout_height="30dip"
+               android:layout_gravity="center_horizontal"
+               android:gravity="center_horizontal|center_vertical"
+               android:paddingLeft="5dip"
+               android:paddingRight="5dip"
+               android:background="@drawable/green_gradient_btn_selector"
+               android:text="Show Users"
+               android:textColor="@color/white"
+               />
         <Button
             android:id="@+id/my_requests_carpool_deletereq"
-           	android:layout_width="wrap_content"
+           	android:layout_width="0dip"
+            android:layout_weight="1"
             android:layout_height="30dip"
-            android:layout_gravity="center"
+            android:layout_gravity="center_horizontal"
             android:gravity="center_vertical|center_horizontal"
             android:paddingLeft="5dip"
             android:paddingRight="5dip"
             android:background="@drawable/red_gradient_btn"
-            android:text="Delete this request"           
-            android:textColor="@color/white" />  />        
+            android:text="Delete"
+            android:textColor="@color/white" />
+       </LinearLayout>
+
  
   </LinearLayout>
         <View

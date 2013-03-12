@@ -1,12 +1,12 @@
 package my.b1701.SB.Activities;
 
+import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.HttpClient.*;
 import my.b1701.SB.R;
 import my.b1701.SB.ActivityHandlers.MyRequestActivityHandler;
 import my.b1701.SB.HelperClasses.BroadCastConstants;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HttpClient.DeleteRequest;
-import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.Users.UserAttributes;
 import my.b1701.SB.Util.StringUtils;
 
@@ -38,9 +38,10 @@ public class MyRequestsActivity extends Activity {
 	TextView carPoolNoActiveReq;
 	TextView instaNoActiveReq;
 	MyRequestActivityHandler reqHandler = null; // this receives broadcast on response post delete
-	
-	
-    
+    private Button showUsersInsta;
+    private Button showUsersCarpool;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +52,8 @@ public class MyRequestsActivity extends Activity {
         instasource = (TextView) findViewById(R.id.my_requests_insta_source);
         instadestination = (TextView) findViewById(R.id.my_requests_insta_destination);
         instatime = (TextView) findViewById(R.id.my_requests_insta_details);
+        showUsersInsta = (Button) findViewById(R.id.show_users_insta);
+        showUsersCarpool = (Button) findViewById(R.id.show_users_carpool);
         deleteCarpoolReq = (Button) findViewById(R.id.my_requests_carpool_deletereq);
         deleteInstaReq = (Button) findViewById(R.id.my_requests_insta_deletereq);      
         instaActiveLayout = (View)findViewById(R.id.my_requests_instareq_layout);
@@ -81,6 +84,40 @@ public class MyRequestsActivity extends Activity {
 		                
 					}
 				});
+
+        showUsersCarpool.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    String carpoolReqJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_CARPOOL);
+                    final JSONObject responseJsonObj = new JSONObject(carpoolReqJson);
+                    MapListActivityHandler.getInstance().setSourceAndDestination(responseJsonObj);
+                    ProgressHandler.showInfiniteProgressDialoge(MapListActivityHandler.getInstance().getUnderlyingActivity(), "Fetching carpool matches", "Please wait");
+                    SBHttpRequest getNearbyUsersRequest = new GetMatchingCarPoolUsersRequest();
+                    SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
+                    finish();
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        showUsersInsta.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    String instaReqJson = ThisUserConfig.getInstance().getString(ThisUserConfig.ACTIVE_REQ_INSTA);
+                    final JSONObject responseJsonObj = new JSONObject(instaReqJson);
+                    MapListActivityHandler.getInstance().setSourceAndDestination(responseJsonObj);
+                    ProgressHandler.showInfiniteProgressDialoge(MapListActivityHandler.getInstance().getUnderlyingActivity(), "Fetching matches", "Please wait");
+                    SBHttpRequest getNearbyUsersRequest = new GetMatchingNearbyUsersRequest();
+                    SBHttpClient.getInstance().executeRequest(getNearbyUsersRequest);
+                    finish();
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        });
        
     }
 

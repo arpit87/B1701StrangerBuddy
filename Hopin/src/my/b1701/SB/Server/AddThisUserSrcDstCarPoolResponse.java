@@ -8,6 +8,7 @@ import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetMatchingCarPoolUsersRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.HttpClient.SBHttpRequest;
+import my.b1701.SB.Users.UserAttributes;
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
 
@@ -34,6 +35,7 @@ public class AddThisUserSrcDstCarPoolResponse extends ServerResponseBase{
 		try {
 			body = jobj.getJSONObject("body");
 			ToastTracker.showToast("added this user src,dst for car pool,fetching match");
+            body.put(UserAttributes.DAILYINSTATYPE, 0);
             ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_CARPOOL, body.toString());
             MapListActivityHandler.getInstance().setSourceAndDestination(body);
 			SBHttpRequest getNearbyUsersRequest = new GetMatchingCarPoolUsersRequest();

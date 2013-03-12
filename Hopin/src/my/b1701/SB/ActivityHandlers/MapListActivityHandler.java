@@ -537,6 +537,8 @@ public void updateSrcDstTimeInListView() {
         String dstAddress = jsonObject.getString(UserAttributes.DSTADDRESS);
         String dstLocality = jsonObject.getString(UserAttributes.DSTLOCALITY);
         String dateTime = jsonObject.getString(UserAttributes.DATETIME);
+        int dailyInstaType = jsonObject.getInt(UserAttributes.DAILYINSTATYPE);
+        int shareOfferType = Integer.parseInt(jsonObject.getString(UserAttributes.SHAREOFFERTYPE));
 
         ThisUserNew.getInstance().setSourceGeoPoint(new SBGeoPoint((int)(srcLat*1e6),(int)(srcLong*1e6)));
         ThisUserNew.getInstance().setDestinationGeoPoint(new SBGeoPoint((int) (destLat * 1e6), (int) (destLong * 1e6)));
@@ -546,6 +548,8 @@ public void updateSrcDstTimeInListView() {
         ThisUserNew.getInstance().setDestiantionLocality(dstLocality);
         ThisUserNew.getInstance().setDateOfTravel(StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd", dateTime));
         ThisUserNew.getInstance().setTimeOfTravel(StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "HH:mm", dateTime));
+        ThisUserNew.getInstance().set_Daily_Instant_Type(dailyInstaType);
+        ThisUserNew.getInstance().set_Take_Offer_Type(shareOfferType);
 
         MapListActivityHandler.getInstance().updateThisUserMapOverlay();
         MapListActivityHandler.getInstance().centreMapTo(ThisUserNew.getInstance().getSourceGeoPoint());
