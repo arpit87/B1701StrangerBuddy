@@ -3,6 +3,7 @@ package my.b1701.SB.ChatService;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import my.b1701.SB.ChatClient.IMessageListener;
 import my.b1701.SB.ChatClient.SBChatMessage;
@@ -10,8 +11,6 @@ import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetFBInfoForUserIDAndShowPopup;
 import my.b1701.SB.HttpClient.SBHttpClient;
-import my.b1701.SB.Users.CurrentNearbyUsers;
-import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.ThisUserNew;
 import my.b1701.SB.Util.StringUtils;
 
@@ -47,6 +46,8 @@ import android.util.Log;
     String mTravelinfo = "";
     String mImageURL = "";
     private final RemoteCallbackList<IMessageListener> mRemoteListeners = new RemoteCallbackList<IMessageListener>();
+    private LinkedBlockingQueue<Message> mMsgqueue= new LinkedBlockingQueue<Message>();
+    SenderThread mSenderThread = null;
     
     //small chat participant should be complete as to is overridden inside sendMsg by smack to participant
     public ChatAdapter(final Chat chat,SBChatManager chatManager ) {
@@ -58,45 +59,19 @@ import android.util.Log;
     	mSentNotDeliveredMsgHashSet = new HashMap<Long,Message>();
     	notificationid = mChatManager.numChats()+1;
     	mImageURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
-    	
+    	mSenderThread = new SenderThread();
+    	mSenderThread.start();
         }
     
 	@Override
 	public void sendMessage(Message msg) throws RemoteException{
-		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();		
-		String msgBody = msg.getBody();		
-		Log.i(TAG, "message sending to " + msg.getTo());
-		msgToSend.setBody(msgBody);
-		msgToSend.setSubject(msg.getSubject());
-		msgToSend.setProperty(Message.UNIQUEID, msg.getUniqueMsgIdentifier());		
-		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_CHAT);
-		msgToSend.setProperty(Message.IMAGEURL, mImageURL);
-		msgToSend.setProperty(Message.TRAVELINFO, mTravelinfo);
-		try { 
-			mSmackChat.sendMessage(msgToSend);
-			Log.i(TAG, "message sent to " + msg.getTo());
-			msg.setStatus(SBChatMessage.SENT);
-			mMessages.add(msg);			
-			mSentNotDeliveredMsgHashSet.put(msg.getUniqueMsgIdentifier(), msg);
-		} catch (XMPPException e) {
-			//TODO retry sending msg?
-			Log.i(TAG, "message sending to had xmpp exception" + msg.getTo());
-			msg.setStatus(SBChatMessage.SENDING_FAILED);
-			mMessages.add(msg);						
-		    e.printStackTrace();
-		} catch (IllegalStateException e)
-		{
-			Log.i(TAG, "message sending to had illegal state exception" + msg.getTo());
-			msg.setStatus(SBChatMessage.SENDING_FAILED);
-			mMessages.add(msg);						
-		    e.printStackTrace();
-		}
-		//we do a callback to update this msg status to sent or sending failed
-		//no user might have switched chat after sending msg, in that case we wont get a 
-		//message in current chat window with this unique identifier. But later when it fetches all
-		// msgs it ll get status as sent/failed
-		if(isOpen())
-			callListeners(msg);
+		//here we just put on queue
+		try {
+			mMsgqueue.put(msg);
+		} catch (InterruptedException e) {
+			Log.e(TAG,"unable to put msg on queue of:"+mParticipant);
+			e.printStackTrace();
+		}			
 		
 	}
 	
@@ -127,6 +102,57 @@ import android.util.Log;
 			mRemoteListeners.unregister(listener);
 	}
     }
+	
+	private class SenderThread extends Thread{
+
+		@Override
+		public void run() {
+			Message m = null;
+			while(true)
+			{
+				boolean msgsent = false;
+			try {
+				if(m==null)
+					m = mMsgqueue.take();	
+				
+				switch(m.getType())
+				{
+				case Message.MSG_TYPE_CHAT:
+					msgsent = sendChatMessage(m);
+				    break;	
+				case Message.MSG_TYPE_ACK:
+					msgsent = sendChatMessage(m);
+				    break;
+				case Message.MSG_TYPE_NEWUSER_BROADCAST:
+					msgsent = sendBroadCastMessage(m);
+				    break;
+				    
+				}
+				} catch (InterruptedException e1) {
+					Log.e(TAG,"not able to take msg from queue");
+					e1.printStackTrace();
+				}
+				if(!msgsent)
+					try {
+						synchronized (mMsgqueue) {
+							mMsgqueue.wait();
+							}
+						
+					} catch (InterruptedException e) {
+						Log.e(TAG,"couldnt wait on msg queue after trying to send");
+						e.printStackTrace();
+					}	
+				else
+					m = null; //if sent put m = null so it picks next msg
+			}			
+		}
+		
+	}
+	
+	public void notifyMsgQueue()
+	{
+		mMsgqueue.notify();
+	}
 	
 	private class SBMsgListener implements MessageListener {		
 
@@ -183,7 +209,7 @@ import android.util.Log;
 		    //this is chat coming from outside,send ack to this msg
 		   if(msg.getType() == Message.MSG_TYPE_CHAT)
 		   {
-			    sendAck(msg.getUniqueMsgIdentifier());			    
+			    sendAck(msg);			    
 			    if (mMessages.size() == HISTORY_MAX_SIZE)
 				    mMessages.remove(0);
 			    msg.setStatus(SBChatMessage.RECEIVED);
@@ -213,39 +239,94 @@ import android.util.Log;
 		
 		    
 		}
-	private void sendAck(long uniqueID)
+	private boolean sendAck(Message msg)
 	{		
 		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();
 		//msg type is overritten by smack so add property so need to set as property
 		//msgToSend.setType(org.jivesoftware.smack.packet.Message.Type.headline);	
-		msgToSend.setProperty(Message.UNIQUEID, uniqueID);
+		msgToSend.setProperty(Message.UNIQUEID, msg.getUniqueMsgIdentifier());
 		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_ACK);
 		
 		try { 
 			mSmackChat.sendMessage(msgToSend);
+			Log.i(TAG, "ack message sent  ");
 		} catch (XMPPException e) {
 			//TODO retry sending msg?
 			Log.e(TAG, "couldnt send ack");					
 		    e.printStackTrace();
+		}catch (IllegalStateException e)
+		{						
+		    e.printStackTrace();
+		    return false;
 		}
+		return true;
 	}
 	
-	@Override
-	public void sendBroadCastMessage()
+	private boolean sendChatMessage(Message msg)
+	{
+		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();		
+		String msgBody = msg.getBody();		
+		Log.i(TAG, "message sending to " + msg.getTo());
+		msgToSend.setBody(msgBody);
+		msgToSend.setSubject(msg.getSubject());
+		msgToSend.setProperty(Message.UNIQUEID, msg.getUniqueMsgIdentifier());		
+		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_CHAT);
+		msgToSend.setProperty(Message.IMAGEURL, mImageURL);
+		msgToSend.setProperty(Message.TRAVELINFO, mTravelinfo);		
+		
+		try { 
+			mSmackChat.sendMessage(msgToSend);
+			Log.i(TAG, "chat message sent to " + msg.getTo());
+			msg.setStatus(SBChatMessage.SENT);
+			mMessages.add(msg);			
+			mSentNotDeliveredMsgHashSet.put(msg.getUniqueMsgIdentifier(), msg);
+		} catch (XMPPException e) {
+			//TODO retry sending msg?
+			Log.i(TAG, "message sending to had xmpp exception" + msg.getTo());
+			msg.setStatus(SBChatMessage.SENDING_FAILED);
+			mMessages.add(msg);						
+		    e.printStackTrace();
+		} catch (IllegalStateException e)
+		{						
+		    e.printStackTrace();
+		    return false;
+		}
+		//we do a callback to update this msg status to sent or sending failed
+		//no user might have switched chat after sending msg, in that case we wont get a 
+		//message in current chat window with this unique identifier. But later when it fetches all
+		// msgs it ll get status as sent/failed
+		try {
+			if(isOpen())
+				callListeners(msg);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	
+	private boolean sendBroadCastMessage(Message msg)
 	{		
 		//every msg should have sb_msg_type n uniqueid
 		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();
 		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_NEWUSER_BROADCAST);
-		msgToSend.setProperty(Message.DAILYINSTATYPE, ThisUserNew.getInstance().get_Daily_Instant_Type());
+		msgToSend.setProperty(Message.DAILYINSTATYPE, msg.getDailyInstaType());
 		msgToSend.setProperty(Message.USERID, ThisUserNew.getInstance().getUserID());
 		msgToSend.setProperty(Message.UNIQUEID, System.currentTimeMillis());
 		try { 
 			mSmackChat.sendMessage(msgToSend);
+			Log.i(TAG, "broadcast message sent to " + msg.getTo());
 		} catch (XMPPException e) {
 			//TODO retry sending msg?
 			Log.e(TAG, "couldnt send broadcast");					
 		    e.printStackTrace();
+		} catch (IllegalStateException e)
+		{						
+		    e.printStackTrace();
+		    return false;
 		}
+		return true;
 	}
 	
 	private void callListeners(Message msg)

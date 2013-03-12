@@ -1,5 +1,6 @@
 package my.b1701.SB.ChatService;
 
+import java.net.ConnectException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import my.b1701.SB.ChatClient.ISBChatConnAndMiscListener;
@@ -12,6 +13,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.RemoteCallbackList;
@@ -28,7 +30,8 @@ public class XMPPConnectionListenersAdapter {
     private String mPassword;
     private SBChatConnectionListener mConnectionListener = new SBChatConnectionListener();
     private String mErrorMsg = "";
-    public AtomicBoolean tryinLogging = new AtomicBoolean(false);    
+    public AtomicBoolean tryinLogging = new AtomicBoolean(false); 
+    public AtomicBoolean tryinConnecting = new AtomicBoolean(false); 
 	private ConnectToChatServerTask connectToServer = null;
 	private LoginToChatServerTask loginToServer = null;
 	private SBChatManager mChatManager = null;
@@ -110,9 +113,9 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 			Log.e(TAG, "Error while connecting", e);
 			mErrorMsg = e.getMessage();
 			return false;
-		    }
+		    } 
 		    return true;
-		    }
+		}		    
 	    }
 
 	
@@ -133,19 +136,22 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 	
 	public void loginAsync(String login,String password)
 	{		
-		if(tryinLogging.getAndSet(true))
-			return;
+		
 		mLogin = login;
 		mPassword = password;
 		
 		if(!mXMPPConnection.isConnected())
 		{
+			if(tryinConnecting.getAndSet(true))
+				return;
 			connectToServer = new ConnectToChatServerTask();
 			connectToServer.execute(this);
 			
 		}
 		else
-		{			
+		{	
+			if(tryinLogging.getAndSet(true))
+				return;
 			loginToServer = new LoginToChatServerTask();
 			loginToServer.execute(this);
 		}
@@ -277,9 +283,12 @@ private class ConnectToChatServerTask extends AsyncTask<XMPPConnectionListenersA
 	}	
 	
 	protected void onPostExecute(Boolean connected) {
+		tryinConnecting.set(false);
 	if(connected)
 	{		
 		if(mLogin != "" && mPassword != ""){
+			if(tryinLogging.getAndSet(true))
+				return;
 			loginToServer = new LoginToChatServerTask();
 			loginToServer.execute(adapter);
 			Toast.makeText(mService, "connected to xmpp,logging", Toast.LENGTH_SHORT).show();
@@ -291,8 +300,6 @@ private class ConnectToChatServerTask extends AsyncTask<XMPPConnectionListenersA
 			Toast.makeText(mService, "connected to xmpp but not logging", Toast.LENGTH_SHORT).show();
 			tryinLogging.set(false);
 		}
-		
-		
 		
 	}
 	}
@@ -333,6 +340,7 @@ private class LoginToChatServerTask extends AsyncTask<XMPPConnectionListenersAda
 			Log.d(TAG, "logged in to xmpp");
 			Toast.makeText(mService, "logged in  to xmpp", Toast.LENGTH_SHORT).show();			
 		 	mChatManager = new SBChatManager(mXMPPConnection, mService);
+		 	mChatManager.notifyAllPendingQueue();
 		 	Runnable sendPresence = new Runnable() {
 				
 				@Override

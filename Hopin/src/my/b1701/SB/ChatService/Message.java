@@ -66,6 +66,7 @@ private String mTravelInfo = "";
 private String mImageURL = "";
 private int mStatus = SBChatMessage.UNKNOWN;
 private long mUniqueMsgIdentifier = 0;
+private int mDailyInstaType = 1;
 
 // TODO ajouter l'erreur
 
@@ -131,6 +132,7 @@ mUniqueMsgIdentifier = in.readLong();
 mTime = in.readString();
 mTravelInfo = in.readString();
 mImageURL = in.readString();
+mDailyInstaType = in.readInt();
 }
 
 /**
@@ -150,6 +152,7 @@ dest.writeLong(mUniqueMsgIdentifier);
 dest.writeString(mTime);
 dest.writeString(mTravelInfo);
 dest.writeString(mImageURL);
+dest.writeInt(mDailyInstaType);
 }
 
 /**
@@ -161,36 +164,6 @@ public int getType() {
 return mType;
 }
 
-/**
- * there is a mapping to smack msg type to ours msg type
- * we have ACK msg as headline smack msg
- * @return
- */
-/*
-public Type getSmackType() {
-	Type smackMsgType = org.jivesoftware.smack.packet.Message.Type.normal;
-	switch (mType) {
-		case MSG_TYPE_CHAT:
-			smackMsgType = org.jivesoftware.smack.packet.Message.Type.chat;
-		break;
-		case MSG_TYPE_NEWUSER_BROADCAST:
-			smackMsgType = org.jivesoftware.smack.packet.Message.Type.groupchat ;
-		break;
-		case MSG_TYPE_NORMAL:
-			smackMsgType = org.jivesoftware.smack.packet.Message.Type.normal;
-		break;
-		case MSG_TYPE_ACK:
-			smackMsgType = org.jivesoftware.smack.packet.Message.Type.headline;
-		case MSG_TYPE_ERROR:
-			smackMsgType = org.jivesoftware.smack.packet.Message.Type.error;
-		break;
-		default:
-		Log.w(TAG, "message type error" );
-		break;
-	}
-	return smackMsgType;
-}
-*/
 /**
  * Set the type of the message.
  * @param type the type to set
@@ -336,6 +309,14 @@ public String getImageURL() {
 
 public void setTravelInfo(String mTravelInfo) {
 	this.mTravelInfo = mTravelInfo;
+}
+
+public int getDailyInstaType() {
+	return mDailyInstaType;
+}
+
+public void setDailyInstaType(int mDailyInstaType) {
+	this.mDailyInstaType = mDailyInstaType;
 }
 
 public void setImageURL(String mImageURL) {

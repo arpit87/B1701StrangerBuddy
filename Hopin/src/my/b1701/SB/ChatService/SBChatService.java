@@ -1,6 +1,7 @@
 package my.b1701.SB.ChatService;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import my.b1701.SB.R;
 import my.b1701.SB.ChatClient.ChatWindow;
@@ -11,6 +12,7 @@ import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.ThisUserNew;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
@@ -52,6 +54,7 @@ public class SBChatService extends Service {
 	private PacketListener msgListener = null;	
 	public static boolean isRunning=false;
 	
+	
 	 /** Broadcast intent type. */
     public static final String SBCHAT_CONNECTION_CLOSED = "SBConnectionClosed";
     public static final String SBLOGIN_TO_CHAT = "SBLoginToChatServer";
@@ -87,10 +90,20 @@ public class SBChatService extends Service {
 		isRunning = true;
 	}
 	
+		
 	@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
         ToastTracker.showToast("service strted with id:"+startId);
+        if(mConnectionAdapter == null)
+        	mConnectionAdapter = new XMPPConnectionListenersAdapter(mXMPPConnection,this);
+        else
+        {
+        String login = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);		
+		String password = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
+		if(login != "" || password != "")
+        	mConnectionAdapter.loginAsync(login, password);
+        }
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         return START_STICKY;
@@ -204,6 +217,8 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 		if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBINFOSENTTOSERVER))
 			return;
 		
+		SBChatManager chatManager = mConnectionAdapter.getChatManager();		
+		
 		Log.i(TAG,"Starting broadcast");
 		List <NearbyUser>nearbyUserList = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
 		if(nearbyUserList!=null)
@@ -211,9 +226,14 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 		{
 			String fbid = n.getUserFBInfo().getFbid();
 			if(fbid!="")
-				try {
-					Log.i(TAG,"broadcasting to fbid:"+fbid);
-					mConnectionAdapter.getChatManager().createChat(fbid, null).sendBroadCastMessage();
+				try {	
+					Message msg = new Message(fbid,Message.MSG_TYPE_NEWUSER_BROADCAST);
+					msg.setDailyInstaType(ThisUserNew.getInstance().get_Daily_Instant_Type());
+					if(chatManager != null)					
+					{
+						Log.i(TAG,"broadcasting to fbid:"+fbid);
+						chatManager.getChat(fbid).sendMessage(msg);
+					}
 				} catch (RemoteException e) {
 					Log.i(TAG,"Unable to send broadcast msg");
 					e.printStackTrace();

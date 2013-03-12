@@ -1,6 +1,8 @@
 package my.b1701.SB.ChatService;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import my.b1701.SB.ChatClient.IChatManagerListener;
@@ -94,8 +96,30 @@ public class SBChatManager extends IChatManager.Stub {
 		if (mAllChats.containsKey(key)) {
 		    return mAllChats.get(key);
 		}
-		return null;
+		else
+		{
+			Chat c = mChatManager.createChat(key, null);
+			// maybe a little probleme of thread synchronization
+			// if so use an HashTable instead of a HashMap for mChats
+			return getChatAdapter(c);
+		}
+			
+	
     }   
+	
+	public void notifyAllPendingQueue()
+	{
+		Collection<ChatAdapter> c = mAllChats.values();
+		
+		Iterator it = c.iterator();
+		while(it.hasNext())
+		{
+			ChatAdapter ca = (ChatAdapter) it.next();
+			ca.notifyMsgQueue();
+		}
+			
+		
+	}
 	
 	public int numChats()
 	{

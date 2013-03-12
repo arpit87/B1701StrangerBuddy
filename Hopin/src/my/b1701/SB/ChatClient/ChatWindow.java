@@ -241,9 +241,9 @@ public void onResume() {
 		SBChatMessage lastMessage = null;
 		if(!"".equals(inputContent))
 		{
-			Message newMessage = new Message(mParticipantFBID,Message.MSG_TYPE_CHAT);
+			Message newMessage = new Message(mParticipantFBID);
 			newMessage.setBody(inputContent);
-			newMessage.setFrom(mThiUserChatUserName+"@"+ServerConstants.CHATSERVERIP);
+			newMessage.setFrom(mThiUserChatUserName+"@"+ServerConstants.CHATSERVERIP);			
 			newMessage.setSubject(mThisUserChatFullName);			
 			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());		 
 				 				
@@ -253,8 +253,7 @@ public void onResume() {
 			
 		  //send msg to xmpp
 			 try {
-				if (chatAdapter == null) {
-										
+				if (chatAdapter == null) {										
 					chatAdapter = mChatManager.createChat(mParticipantFBID, mMessageListener);					
 				}
 				if(chatAdapter != null)
@@ -262,10 +261,7 @@ public void onResume() {
 					chatAdapter.setOpen(true);
 					chatAdapter.sendMessage(newMessage);
 				}
-				else
-				{
-					sendingFailed(lastMessage);
-				}
+				
 			    } catch (RemoteException e) {
 			    	sendingFailed(lastMessage);
 				Log.e(TAG, e.getMessage());
@@ -310,10 +306,11 @@ public void onResume() {
 	    	if (chatAdapter != null) {
 	    		chatAdapter.setOpen(true);
 	    		chatAdapter.addMessageListener(mMessageListener);
+	    		fetchPastMsgsIfAny();
 	    	    
 	    	}
 	    	//getParticipantInfoFromFBID(participant);	    	
-	    	fetchPastMsgsIfAny();
+	    	
 	        }
 	    
 	    /**
@@ -467,7 +464,8 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 			  {
 				  mMessagesListAdapter.updateMessageStatusWithUniqueID(msg.getUniqueMsgIdentifier(), msg.getStatus());
 			  }
-			  else if (msg.getBody() != null) {
+			  else if(msg.getStatus() == SBChatMessage.RECEIVED){
+			  if (msg.getBody() != null) {
 				    SBChatMessage lastMessage = null;
 				    
 				    if (mMessagesListAdapter.getCount() != 0)
@@ -483,6 +481,7 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 				    }	   
 				
 			    }
+			  }
 		  }			  
 		  		   
 		 	
