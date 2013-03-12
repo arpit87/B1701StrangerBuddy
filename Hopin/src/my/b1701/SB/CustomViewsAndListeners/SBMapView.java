@@ -64,7 +64,13 @@ public class SBMapView extends MapView implements OnGestureListener {
     	if(selfView!=null)
     		super.removeView(selfView);     	
     }
-    
+
+    @Override
+    public void removeAllViews(){
+        removeAllNearbyUserView();
+        removeSelfView();
+    }
+
     private void setupGestures() {
     	gd = new GestureDetector(Platform.getInstance().getContext(),this);  
         
