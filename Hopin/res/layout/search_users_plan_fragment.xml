@@ -20,6 +20,7 @@
      android:layout_marginTop="10dip"
      android:layout_marginBottom="3dip"
      />    
+   
  <AutoCompleteTextView        
          android:id="@+id/search_user_plan_source"         
         android:layout_width="fill_parent"
@@ -36,7 +37,7 @@
         android:completionThreshold="2"
         android:hint="Enter source"        
         />   
-      
+   
  
 <TextView android:text="Enter destination"
      android:textColor="@color/frame_blue"

@@ -79,10 +79,21 @@
         android:layout_height="wrap_content"       
         android:layout_gravity="center_horizontal"
         android:text="No active request"
+        android:lines="1"
         android:textColor="@color/gray"
         android:textSize="20dip"
         android:paddingLeft="20dip"
-        android:paddingRight="20dip"/>       
+        android:paddingRight="20dip"/>   
+        <TextView 
+             android:id="@+id/show_active_req_carpooltime"
+             android:layout_width="match_parent"
+        android:layout_height="wrap_content"       
+        android:layout_gravity="center_horizontal"        
+        android:lines="1"
+        android:textColor="@color/black"
+        android:textSize="15dip"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"/>    
     
  </LinearLayout>
   <Button
