@@ -77,12 +77,12 @@ public class SBChatManager extends IChatManager.Stub {
 	public IChatAdapter createChat(String participant, IMessageListener listener) throws RemoteException {
 			String key = participant+"@"+ServerConstants.CHATSERVERIP;
 			ChatAdapter chatAdapter;
-			if (mAllChats.containsKey(key)) {
-				chatAdapter = mAllChats.get(key);
+			if (mAllChats.containsKey(participant)) {
+				chatAdapter = mAllChats.get(participant);
 				chatAdapter.addMessageListener(listener);
 			    return chatAdapter;
 			}
-			Chat c = mChatManager.createChat(key, null);
+			Chat c = mChatManager.createChat(participant, null);
 			// maybe a little probleme of thread synchronization
 			// if so use an HashTable instead of a HashMap for mChats
 			chatAdapter = getChatAdapter(c);
@@ -168,17 +168,19 @@ public class SBChatManager extends IChatManager.Stub {
 			//which will then take care of further msgs
 			 ChatAdapter newchatAdapter;
 			 String key = StringUtils.parseName(chat.getParticipant());
+			 if(!my.b1701.SB.Util.StringUtils.isBlank(key))
 				if (mAllChats.containsKey(key)) {
 					newchatAdapter= mAllChats.get(key);
+					Log.i(TAG,"returning old adapter for:"+key);
 				}
 				else
 				{
+					Log.i(TAG,"chat adapter not fond so creating new for:"+key);
 					newchatAdapter = new ChatAdapter(chat,SBChatManager.this);	
 					mAllChats.put(key,newchatAdapter);
 				}
 				//newchatAdapter.addMessageListener(mChatAndInitialMsgListener);
-			    Log.d(TAG, "Chat" + chat.toString() + " created locally " + locally + " with " + chat.getParticipant());
-			   
+			    Log.d(TAG, "Insane smack " + chat.toString() + " created locally " + locally + " with blank key?: " + key);			   
 		
 		}	
 		}

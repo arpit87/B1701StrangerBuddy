@@ -79,6 +79,7 @@ public class SBChatService extends Service {
 		initializeConfigration();
 		//configure(ProviderManager.getInstance());
 		mXMPPConnection = new XMPPConnection(mConnectionConfiguration);
+		XMPPConnection.DEBUG_ENABLED = true;
 		Log.d(TAG, "made xmpp connection");
 		//service has connection adapter which has all listeners 
 		mConnectionAdapter = new XMPPConnectionListenersAdapter(mXMPPConnection,this);
@@ -190,7 +191,7 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 		//network may be temporarily lost..check if android trying to connect to other network like wifi/gprs switch(failover)
 		 String reason = intent.getStringExtra(ConnectivityManager.EXTRA_REASON);		 
          boolean isFailover = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER, false);
-         Toast.makeText(context, "network lost:( "+reason+",failover:"+isFailover,  Toast.LENGTH_SHORT).show();
+         //Toast.makeText(context, "network lost:( "+reason+",failover:"+isFailover,  Toast.LENGTH_SHORT).show();
          Log.d(TAG,"connectivity changed ,network lost:( "+reason+",failover:"+isFailover);
         //need a reconnection mechanism        	 
 		//context.stopService(new Intent(context, SBChatService.class));
@@ -198,7 +199,7 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 	    else
 	    {
 	    	//network came up again
-	    	Toast.makeText(context, "NEtwork up yippe,ll login",  Toast.LENGTH_SHORT).show();
+	    	ToastTracker.showToast("NEtwork up yippe,ll login",  Toast.LENGTH_SHORT);
 	    	String login = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
 	    	String password = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
 	    	mConnectionAdapter.loginAsync(login, password);

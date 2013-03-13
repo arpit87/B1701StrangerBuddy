@@ -41,12 +41,12 @@ import android.util.Log;
     private final List<Message> mMessages; 
     private final HashMap<Long,Message> mSentNotDeliveredMsgHashSet;
     private SBChatManager mChatManager;
-    SBMsgListener mMsgListener = new SBMsgListener();
+    SBMsgListener mMsgListener = null;
     int notificationid = 0;
     String mTravelinfo = "";
     String mImageURL = "";
     private final RemoteCallbackList<IMessageListener> mRemoteListeners = new RemoteCallbackList<IMessageListener>();
-    private LinkedBlockingQueue<Message> mMsgqueue= new LinkedBlockingQueue<Message>();
+    private LinkedBlockingQueue<Message> mMsgqueue= null;
     SenderThread mSenderThread = null;
     
     //small chat participant should be complete as to is overridden inside sendMsg by smack to participant
@@ -54,6 +54,8 @@ import android.util.Log;
     	mSmackChat = chat;
     	mParticipant = chat.getParticipant();
     	mMessages = new LinkedList<Message>();
+    	mMsgListener = new SBMsgListener();
+    	mMsgqueue= new LinkedBlockingQueue<Message>();
     	mSmackChat.addMessageListener(mMsgListener);
     	mChatManager = chatManager;    	    	
     	mSentNotDeliveredMsgHashSet = new HashMap<Long,Message>();
@@ -61,6 +63,7 @@ import android.util.Log;
     	mImageURL = ThisUserConfig.getInstance().getString(ThisUserConfig.FBPICURL);
     	mSenderThread = new SenderThread();
     	mSenderThread.start();
+    	Log.i(TAG,"chatadapter created for:"+mParticipant);
         }
     
 	@Override
@@ -68,6 +71,7 @@ import android.util.Log;
 		//here we just put on queue
 		try {
 			mMsgqueue.put(msg);
+			Log.e(TAG,"added msg in queue of:"+mParticipant);
 			if(msg.getType() == Message.MSG_TYPE_CHAT)
 				mMessages.add(msg);	
 		} catch (InterruptedException e) {

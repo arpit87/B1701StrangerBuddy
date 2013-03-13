@@ -291,13 +291,13 @@ private class ConnectToChatServerTask extends AsyncTask<XMPPConnectionListenersA
 				return;
 			loginToServer = new LoginToChatServerTask();
 			loginToServer.execute(adapter);
-			Toast.makeText(mService, "connected to xmpp,logging", Toast.LENGTH_SHORT).show();
+			ToastTracker.showToast("connected to xmpp,logging");
 			Log.d(TAG, "connected to xmpp,logging");
 		}
 		else
 		{
 			Log.d(TAG, "connected to xmpp,but not logging");
-			Toast.makeText(mService, "connected to xmpp but not logging", Toast.LENGTH_SHORT).show();
+			ToastTracker.showToast("connected to xmpp but not logging");
 			tryinLogging.set(false);
 		}
 		
@@ -338,7 +338,7 @@ private class LoginToChatServerTask extends AsyncTask<XMPPConnectionListenersAda
 				return;
 			}
 			Log.d(TAG, "logged in to xmpp");
-			Toast.makeText(mService, "logged in  to xmpp", Toast.LENGTH_SHORT).show();	
+			ToastTracker.showToast("logged in  to xmpp", Toast.LENGTH_SHORT);	
 			if(mChatManager==null)
 				mChatManager = new SBChatManager(mXMPPConnection, mService);
 		 	mChatManager.notifyAllPendingQueue();
