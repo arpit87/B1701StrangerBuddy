@@ -1,11 +1,12 @@
 package my.b1701.SB.HelperClasses;
 
+import my.b1701.SB.R;
+import my.b1701.SB.Platform.Platform;
 import android.widget.ImageView;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import my.b1701.SB.Platform.Platform;
-import my.b1701.SB.R;
 
 public class SBImageLoader {
 	

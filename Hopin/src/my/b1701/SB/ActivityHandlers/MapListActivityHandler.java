@@ -346,7 +346,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 						Log.i(TAG,"fblogin prompt clicked");
 					}
 				});
-		        ImageView buttonClosefbprompt = (ImageView) popUpView.findViewById(R.id.fbloginpromptclose);
+		        ImageView buttonClosefbprompt = (ImageView) popUpView.findViewById(R.id.fbloginpromptclose);		        
 		        buttonClosefbprompt.setOnClickListener(new OnClickListener() {
 					
 					@Override
@@ -359,12 +359,13 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 			else
 			{
 				//will flicker prompt here if already showing
+				TextView fblogintext = (TextView) popUpView.findViewById(R.id.fbloginprompttext);
 				Animation anim = new AlphaAnimation(0.0f, 1.0f);
-		        anim.setDuration(100); //You can manage the time of the blink with this parameter
+		        anim.setDuration(50); //You can manage the time of the blink with this parameter
 		        anim.setStartOffset(20);
 		        anim.setRepeatMode(Animation.REVERSE);
-		        anim.setRepeatCount(1500);
-		        popUpView.startAnimation(anim);				
+		        anim.setRepeatCount(6);
+		        fblogintext.startAnimation(anim);				
 			}
 			//popUpView.setBackgroundResource(R.drawable.transparent_black);
 		}

@@ -13,7 +13,7 @@ public class ToastTracker {
 		final int thisduration = duration;
 		Platform.getInstance().getHandler().post((new Runnable(){
 			public void run() {				
-				Toast.makeText(context, thismsg, thisduration).show();				
+				//Toast.makeText(context, thismsg, thisduration).show();				
 			}}));
 		
 	}
@@ -22,7 +22,7 @@ public class ToastTracker {
 		final String thismsg = message;		
 		Platform.getInstance().getHandler().post((new Runnable(){
 			public void run() {				
-				Toast.makeText(context, thismsg, Toast.LENGTH_SHORT).show();				
+				//Toast.makeText(context, thismsg, Toast.LENGTH_SHORT).show();				
 			}}));
 		
 	}

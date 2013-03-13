@@ -66,6 +66,10 @@ import android.util.Log;
     	Log.i(TAG,"chatadapter created for:"+mParticipant);
         }
     
+	public int getNotificationid() {
+		return notificationid;
+	}
+
 	@Override
 	public void sendMessage(Message msg) throws RemoteException{
 		//here we just put on queue
@@ -169,9 +173,9 @@ import android.util.Log;
 		
 		@Override
 		public void processMessage(Chat chat, org.jivesoftware.smack.packet.Message message) {
-		    Message msg = new Message(message);		    
-		    Log.d(TAG, "new msg " + msg.getBody());	
-		    Log.d(TAG, "chat is open?"+mIsOpen) ;
+			Log.d(TAG, "new msg ");	
+			Log.d(TAG, "chat is open?"+mIsOpen) ;
+		    Message msg = new Message(message);	
 		    //if broadcast message from new user then do getMatch req
 		    if(msg.getType() == Message.MSG_TYPE_NEWUSER_BROADCAST)
 		    {

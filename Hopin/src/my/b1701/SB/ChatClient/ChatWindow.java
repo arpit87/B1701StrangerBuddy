@@ -110,14 +110,13 @@ public class ChatWindow extends Activity{
 @Override
 public void onResume() {
 	super.onResume();
-	//set participant before binding
-	String oldParticipant = mParticipantFBID;
+	//set participant before binding	
 	mParticipantFBID = getIntent().getStringExtra(PARTICIPANT);	
+	if(StringUtils.isBlank(mParticipantFBID))
+	  return;
 	mParticipantName = getIntent().getStringExtra(PARTICIPANT_NAME);
 	mParticipantTravelDetails = getIntent().getStringExtra(TRAVELINFO);	
-	mParticipantImageURL = getIntent().getStringExtra(IMAGEURL);	
-	if(mParticipantFBID == "")
-		mParticipantFBID = oldParticipant;	
+	mParticipantImageURL = getIntent().getStringExtra(IMAGEURL);
 	mContactNameTextView.setText(mParticipantName);
 	mTravelDetails.setText(mParticipantTravelDetails);
 	mMessagesListAdapter.setParticipantFBURL(mParticipantImageURL);

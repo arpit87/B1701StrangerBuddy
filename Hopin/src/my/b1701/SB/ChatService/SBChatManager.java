@@ -82,7 +82,7 @@ public class SBChatManager extends IChatManager.Stub {
 				chatAdapter.addMessageListener(listener);
 			    return chatAdapter;
 			}
-			Chat c = mChatManager.createChat(participant, null);
+			Chat c = mChatManager.createChat(key, null);
 			// maybe a little probleme of thread synchronization
 			// if so use an HashTable instead of a HashMap for mChats
 			chatAdapter = getChatAdapter(c);
