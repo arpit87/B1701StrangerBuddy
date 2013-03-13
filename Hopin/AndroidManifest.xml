@@ -55,7 +55,8 @@
         
         <activity android:name=".Activities.Tutorial" 
             android:theme="@android:style/Theme.NoTitleBar" 
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" >
 			  
         </activity>
         
