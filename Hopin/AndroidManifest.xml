@@ -38,11 +38,6 @@
              
         </activity>
         
-       <activity android:name=".test.ChatLoginActivity" 
-            android:theme="@android:style/Theme.NoTitleBar" 
-            android:screenOrientation="portrait" >   
-                  
-        </activity>
        
         <activity
             android:name=".Activities.StartStrangerBuddyActivity" 
@@ -102,12 +97,8 @@
             android:screenOrientation="portrait" 
             >            
         </activity>
-           
        
-       <activity android:name=".Activities.SBHistoryActivity"
-                 android:theme="@android:style/Theme.NoTitleBar"
-                 android:screenOrientation="portrait" />
-          
+            
 
        <provider
            android:name="my.b1701.SB.provider.HistoryContentProvider"
