@@ -41,6 +41,7 @@ public class SBChatManager extends IChatManager.Stub {
 		this.mChatManager.addChatListener(mChatAndInitialMsgListener);		
 	}
 	
+	
 	/**
      * Get an existing ChatAdapter or create it if necessary.
      * @param chat The real instance of smack chat

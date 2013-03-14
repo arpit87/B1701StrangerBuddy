@@ -80,6 +80,8 @@ public class AddThisUserSrcDstRequest extends SBHttpRequest {
         }
 
         try {
+        	if(response==null)
+				return null;
             jsonStr = responseHandler.handleResponse(response);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());

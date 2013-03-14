@@ -1,7 +1,6 @@
 package my.b1701.SB.ChatService;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import my.b1701.SB.R;
 import my.b1701.SB.ChatClient.ChatWindow;
@@ -48,10 +47,7 @@ public class SBChatService extends Service {
 	int mPort;
 	private SBChatBroadcastReceiver mReceiver = new SBChatBroadcastReceiver();
 	private String mHost = ServerConstants.CHATSERVERIP;
-	String mErrorMsg = "";
-	private Roster mRoster = null;
-	private ConnectionListener connectionListener = null;
-	private PacketListener msgListener = null;	
+	String mErrorMsg = "";	
 	public static boolean isRunning=false;
 	
 	
@@ -102,7 +98,7 @@ public class SBChatService extends Service {
         {
         String login = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);		
 		String password = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
-		if(login != "" || password != "")
+		if(login != "" && password != "")
         	mConnectionAdapter.loginAsync(login, password);
         }
         // We want this service to continue running until it is explicitly

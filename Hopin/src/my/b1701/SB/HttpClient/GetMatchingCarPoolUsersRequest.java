@@ -68,7 +68,9 @@ public class GetMatchingCarPoolUsersRequest  extends SBHttpRequest{
 			}
 			
 			try {
-				jsonStr = responseHandler.handleResponse(response);
+				if(response==null)
+					return null;
+					jsonStr = responseHandler.handleResponse(response);
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -78,7 +80,7 @@ public class GetMatchingCarPoolUsersRequest  extends SBHttpRequest{
 			} 		
 			
 			getNearbyUsersResponse =	new GetMatchingCarPoolUsersResponse(response,jsonStr);
-		return getNearbyUsersResponse;
+			return getNearbyUsersResponse;
 		
 	}
 	

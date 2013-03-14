@@ -74,6 +74,8 @@ public class AddUserRequest extends SBHttpRequest{
 				e.printStackTrace();
 			}
 			try {
+				if(response==null)
+					return null;
 				jsonStr = responseHandler.handleResponse(response);
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block

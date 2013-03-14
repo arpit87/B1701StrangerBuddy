@@ -59,8 +59,7 @@ public class ChatWindow extends Activity{
     private EditText mInputField;
     private Button mSendButton;
     private IChatAdapter chatAdapter;
-    private IChatManager mChatManager;
-    private IChatManagerListener mChatManagerListener = new ChatManagerListener();
+    private IChatManager mChatManager;   
     private IMessageListener mMessageListener = new SBOnChatMessageListener();
     private ISBChatConnAndMiscListener mCharServiceConnMiscListener = new SBChatServiceConnAndMiscListener();
     private final ChatServiceConnection mChatServiceConnection = new ChatServiceConnection();
@@ -282,9 +281,9 @@ public void onResume() {
 	    	try {
 				if(mThiUserChatUserName != "" && mThisUserChatPassword != "")
 				{
-					progressDialog = ProgressDialog.show(ChatWindow.this, "Logging in", "Please wait..", true);
+					//progressDialog = ProgressDialog.show(ChatWindow.this, "Logging in", "Please wait..", true);
 			    	Log.d(TAG,"logging in chat window  with username,pass:" + mThiUserChatUserName + ","+mThisUserChatPassword);
-					xmppApis.loginWithCallBack(mThiUserChatUserName, mThisUserChatPassword,mCharServiceConnMiscListener);
+					xmppApis.loginAsync(mThiUserChatUserName, mThisUserChatPassword);
 				}
 				else
 				{									
@@ -325,6 +324,7 @@ public void onResume() {
 			    List<SBChatMessage> msgList = convertMessagesList(chatMessages);
 			    mMessagesListAdapter.addAllToList(msgList);
 			    mMessagesListAdapter.notifyDataSetChanged();
+			    mMessagesListView.setSelection(mMessagesListView.getCount()-1);
 			}
 		}
 	    }
@@ -407,7 +407,13 @@ public void onResume() {
 	    	public void onServiceConnected(ComponentName className, IBinder boundService) {
 	    		ToastTracker.showToast("onServiceConnected called", Toast.LENGTH_SHORT);
 	    		Log.d(TAG,"onServiceConnected called");
-	    		xmppApis = IXMPPAPIs.Stub.asInterface((IBinder)boundService);
+	    		xmppApis = IXMPPAPIs.Stub.asInterface((IBinder)boundService);	    		
+	    		try {
+					xmppApis.loginAsync(mThiUserChatUserName, mThisUserChatPassword);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	    		initializeChatWindow();    	
 	    		Log.d(TAG,"service connected");
 	    	}
@@ -415,12 +421,8 @@ public void onResume() {
 	    	@Override
 	    	public void onServiceDisconnected(ComponentName arg0) {
 	    		ToastTracker.showToast("onService disconnected", Toast.LENGTH_SHORT);
-	    		xmppApis = null;	    		
-	    	    try {	    		
-	    		mChatManager.removeChatCreationListener(mChatManagerListener);
-	    	    } catch (RemoteException e) {
-	    		Log.e(TAG, e.getMessage());
-	    	    }
+	    		xmppApis = null;   		
+	    	    
 	    		Log.d(TAG,"service disconnected");
 	    	}
 
@@ -521,17 +523,12 @@ private class SBChatServiceConnAndMiscListener extends ISBChatConnAndMiscListene
 
 	@Override
 	public void loggedIn() throws RemoteException {
-		Log.d(TAG, "Chat window login call back");
-		if(progressDialog.isShowing())
-		{
-			progressDialog.dismiss();			
-		}
+		Log.d(TAG, "Chat window login call back");		
 		if(mChatManager == null)
 			mChatManager = xmppApis.getChatManager();
 		
 		if(mChatManager == null)
-		{
-			ToastTracker.showToast("chatwindow login callback,loggedin but still chatmanager null!!");	
+		{			
 			Log.d(TAG, "Chat window login call back,logged in but still didnt find chat manager");
 		}
 		else

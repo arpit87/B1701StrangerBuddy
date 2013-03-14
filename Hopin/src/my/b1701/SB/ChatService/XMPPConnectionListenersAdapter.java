@@ -58,37 +58,14 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 			     final SBChatService service) {
 		 mXMPPConnection = con;	
 		mLogin = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);		
-		mPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
-		//mLogin = "test";
-		//mPassword = "test";
+		mPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);		
 		mService = service;	
+		mChatManager = new SBChatManager(mXMPPConnection, mService);
 		Log.d(TAG, "xmpp connection listener will connect");
-		loginAsync(mLogin, mPassword);		
-		
-		
-		//try {			
-			Toast.makeText(mService, "connecting to xmpp", Toast.LENGTH_SHORT).show();
-		//this.connect();
-			Log.d(TAG, "connecting to xmpp");
-		//} catch (RemoteException e1) {
-			// TODO Auto-generated catch block
-			//e1.printStackTrace();
-		//}
-		
-		//login only if not new user
-		//if(ThisUserConfig.getInstance().getBool(ThisUserConfig.FBCHECK))
-		//{
-	//	Log.d(TAG, "xmpp connection listener will login");
-			//try {
-			//	Toast.makeText(mService, "logging to xmpp", Toast.LENGTH_SHORT).show();
-				//this.login(mLogin, mPassword);
-			//	Log.d(TAG, "xmpp connection listener will login");
-		//	} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-		//		e.printStackTrace();
-			//}
-			
-		//}
+		loginAsync(mLogin, mPassword);
+		Toast.makeText(mService, "connecting to xmpp", Toast.LENGTH_SHORT).show();
+		Log.d(TAG, "connecting to xmpp");
+	
 	 }
 	 
 	 
@@ -339,9 +316,8 @@ private class LoginToChatServerTask extends AsyncTask<XMPPConnectionListenersAda
 			}
 			Log.d(TAG, "logged in to xmpp");
 			ToastTracker.showToast("logged in  to xmpp", Toast.LENGTH_SHORT);	
-			if(mChatManager==null)
-				mChatManager = new SBChatManager(mXMPPConnection, mService);
-		 	mChatManager.notifyAllPendingQueue();
+			if(mChatManager!=null)				
+				mChatManager.notifyAllPendingQueue();
 		 	Runnable sendPresence = new Runnable() {
 				
 				@Override

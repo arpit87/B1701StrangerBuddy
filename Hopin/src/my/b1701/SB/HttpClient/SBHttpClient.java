@@ -40,14 +40,15 @@ public class SBHttpClient {
 	         for(int i=0;i<count;i++)
 	         {
 	        	 response =  request[i].execute();
-	        	 if(response.getStatus()!=ServerResponseBase.ResponseStatus.HttpStatus200)
-	        		 break;
+	        	 if(response.getStatus()!=ServerResponseBase.ResponseStatus.HttpStatus200)	        	   
+	        		 return null;
 	         }
 	         return response;
 		}
 		
 		protected void onPostExecute(ServerResponseBase response) {
-			response.process();
+			if(response!=null)
+				response.process();
 		}
 
 				

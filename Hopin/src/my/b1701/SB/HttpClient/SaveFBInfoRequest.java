@@ -72,6 +72,8 @@ public class SaveFBInfoRequest extends SBHttpRequest{
 			}
 
 			try {
+				if(response==null)
+					return null;
 				jsonStr = responseHandler.handleResponse(response);
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
