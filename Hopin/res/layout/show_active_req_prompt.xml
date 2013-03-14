@@ -11,25 +11,25 @@
     android:paddingTop="5dip" >    
 
     <TextView
-           
-            android:layout_width="250dip"
-            android:layout_height="wrap_content" 
-            android:text="Load active request result?"   
-            android:textColor="@color/white"
-            android:textSize="20dip"
-            android:padding="2.0dip"
-            android:background="@drawable/gradient_green" 
-            android:layout_marginBottom="10dip"
+          
+           android:layout_width="250dip"
+           android:layout_height="wrap_content" 
+           android:text="Show any active request?"   
+           android:textColor="@color/white"
+           android:textSize="20dip"
+           android:padding="2.0dip"
+           android:background="@drawable/green_bar" 
+           android:layout_marginBottom="5dip"
                       
              />
             
   <LinearLayout 
-      android:id="@+id/show_active_req_instalayout"
+      android:id="@+id/show_active_req_prompt_instalayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical">  
    <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20dip"
@@ -38,20 +38,85 @@
                 android:layout_marginLeft="5dip"
                 android:layout_gravity="center_horizontal" />
         
-         
+      <TableLayout
+          android:id="@+id/show_active_req_prompt_instadetails"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="4dip"
+    android:layout_weight="1"
+    android:visibility="gone">
+    <TableRow 
+        android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+            
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="15dip"
+            android:text="From: "    
+            android:gravity="right"                    
+             />
+		    <TextView
+		        android:id="@+id/show_active_req_prompt_insta_source"
+		        android:layout_width="210dip"
+		        android:layout_height="wrap_content"		        
+		        android:textColor="#343434"
+		        android:textSize="15dip"
+		        android:layout_marginTop="1dip"      
+		        android:maxLines="2"
+		        android:ellipsize="marquee"   />
+    </TableRow>
+    <TableRow >
          <TextView
-             android:id="@+id/show_active_req_instadetails"
-             android:layout_width="match_parent"
+            
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dip"
+            android:textStyle="bold"
+            android:text="To: "    
+            android:gravity="right"                   
+             />
+          <TextView
+        android:id="@+id/show_active_req_prompt_insta_destination"
+         android:layout_width="210dip"
+        android:layout_height="wrap_content"       
+        android:textColor="#343434"
+        android:textSize="15dip"
+        android:layout_marginTop="1dip"    
+        android:maxLines="2"
+        android:ellipsize="marquee"     />
+    </TableRow>
+    <TableRow > <TextView
+            
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dip"
+            android:text="Time: "       
+            android:textStyle="bold"                
+             />
+    <TextView
+        android:id="@+id/show_active_req_prompt_insta_time"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"        
+        android:textColor="#343434"
+        android:textSize="15dip"
+        android:lines="1"
+                 />
+    </TableRow>
+    </TableLayout>
+    <TextView 
+             android:id="@+id/show_active_req_prompt_insta_noreq"
+             android:layout_width="wrap_content"
         android:layout_height="wrap_content"       
         android:layout_gravity="center_horizontal"
         android:text="No active request"
+        android:lines="1"
         android:textColor="@color/gray"
         android:textSize="20dip"
         android:paddingLeft="20dip"
-         android:paddingRight="20dip"/>
-         
-         </LinearLayout>  
-
+        android:paddingRight="20dip"/> 
+</LinearLayout>
         <View
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
@@ -59,23 +124,90 @@
                 android:layout_marginTop="5dip"
                 android:layout_marginLeft="5dip"/>
  <LinearLayout 
-     android:id="@+id/show_active_req_carpoollayout"
+     android:id="@+id/show_active_req_prompt_carpoollayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"> 
-        <TextView
-                android:layout_width="match_parent"
+      <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20dip"
-                android:text="Daily Carpool"
+                android:text="Daily CarPool"
                 android:layout_marginTop="5dip"
                 android:layout_marginLeft="5dip"
                 android:layout_gravity="center_horizontal" />
+        <TableLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/show_active_req_prompt_carpooldetails"
+    android:padding="4dip"
+    android:layout_weight="1"
+    android:visibility="gone">
+    <TableRow 
+        android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+           
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="15dip"
+            android:text="From: "    
+            android:gravity="right"                    
+             />
+		    <TextView
+		        android:id="@+id/show_active_req_prompt_carpool_source"
+		        android:layout_width="210dip"
+		        android:layout_height="wrap_content"		        
+		        android:textColor="#343434"
+		        android:textSize="15dip"
+		        android:layout_marginTop="1dip"      
+		        android:maxLines="2"
+		        android:ellipsize="marquee"   />
+    </TableRow>
+    <TableRow >
+         <TextView
+            
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dip"
+            android:textStyle="bold"
+            android:text="To: "    
+            android:gravity="right"                   
+             />
+          <TextView
+        android:id="@+id/show_active_req_prompt_carpool_destination"
+         android:layout_width="210dip"
+        android:layout_height="wrap_content"       
+        android:textColor="#343434"
+        android:textSize="15dip"
+        android:layout_marginTop="1dip"    
+        android:maxLines="2"
+        android:ellipsize="marquee"     />
+    </TableRow>
+    <TableRow > <TextView
+            
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dip"
+            android:text="Time: "       
+            android:textStyle="bold"                
+             />
+    <TextView
+        android:id="@+id/show_active_req_prompt_carpool_time"
+         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"        
+        android:textColor="#343434"
+        android:textSize="15dip"
+        android:lines="1"
+                 />
+    </TableRow>
+    </TableLayout>
         
          <TextView 
-             android:id="@+id/show_active_req_carpooldetails"
-             android:layout_width="match_parent"
+             android:id="@+id/show_active_req_prompt_carpool_noreq"
+             android:layout_width="wrap_content"
         android:layout_height="wrap_content"       
         android:layout_gravity="center_horizontal"
         android:text="No active request"
@@ -84,25 +216,22 @@
         android:textSize="20dip"
         android:paddingLeft="20dip"
         android:paddingRight="20dip"/>   
-        <TextView 
-             android:id="@+id/show_active_req_carpooltime"
-             android:layout_width="match_parent"
-        android:layout_height="wrap_content"       
-        android:layout_gravity="center_horizontal"        
-        android:lines="1"
-        android:textColor="@color/black"
-        android:textSize="15dip"
-        android:paddingLeft="20dip"
-        android:paddingRight="20dip"/>    
+         
     
  </LinearLayout>
+       <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/gray"
+                android:layout_marginTop="5dip"
+                android:layout_marginLeft="5dip"/>
   <Button
-            android:id="@+id/show_active_req_newreqbutton"
+            android:id="@+id/show_active_req_prompt_newreqbutton"
             android:textSize="15dip" 
             android:textColor="@color/white" 
             android:layout_gravity="center_horizontal"
              android:background="@drawable/green_gradient_btn_selector"
-             android:layout_marginTop="20dip"                        
+             android:layout_marginTop="5dip"                        
              android:layout_width="wrap_content"
              android:layout_height="30dip"
              android:paddingLeft="3dip"

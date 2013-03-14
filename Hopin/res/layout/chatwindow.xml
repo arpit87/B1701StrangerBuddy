@@ -5,20 +5,18 @@
 	
 	  <RelativeLayout android:id="@+id/chat_header"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"		
-		android:background="@drawable/gradient_green" 
+		android:background="@drawable/green_bar" 
 		android:padding="4dip"
 		>
 	<TextView android:id="@+id/chat_contact_name"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:lines="1" android:singleLine="true" android:textSize="16sp"
-				android:textStyle="bold" android:textColor="@color/white"
-				android:background="@drawable/transparent_black"
+				android:textStyle="bold" android:textColor="@color/white"				
 				android:text="Arpit Mishra" />	
 	<TextView android:id="@+id/chat_contact_destination"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:lines="1" android:singleLine="true" android:textSize="12sp"
-				android:textStyle="bold" android:textColor="@color/white"
-				android:background="@drawable/transparent_black"
+				android:textStyle="bold" android:textColor="@color/white"				
 				android:text="Powai->Andheri"
 				android:layout_below="@id/chat_contact_name"
 			 />			    
@@ -42,19 +40,28 @@
 	    android:fastScrollEnabled="true"
 	    android:focusable="false"	    
 	    android:smoothScrollbar="false"
-	    android:transcriptMode="normal" />
+	    android:transcriptMode="normal" 
+	    android:soundEffectsEnabled="true"/>
 
 	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:orientation="horizontal"
-		android:background="#222222">
+		android:layout_height="wrap_content" android:orientation="horizontal"		
+		android:background="@color/white" >
 		<EditText android:id="@+id/chat_input" android:layout_width="wrap_content"
 			android:layout_height="fill_parent" android:layout_weight="1"
 			android:maxLines="5"
 			android:inputType="textShortMessage|textAutoCorrect|textMultiLine"
 			android:imeOptions="actionSend" android:cursorVisible="true"
+			android:background="@drawable/gray_green_background_selector"
 			 />
 		<Button android:id="@+id/chat_send_message"
 			android:layout_width="wrap_content" android:layout_height="fill_parent"
-			android:text="Send" />
+			android:text="Send"
+			android:background="@drawable/green_gradient_button"
+			android:textColor="@color/white"
+			android:layout_marginLeft="2dip"
+			android:paddingLeft="5dip"
+			android:paddingRight="5dip"
+			android:textSize="20sp"
+			 />
 	</LinearLayout>
 </LinearLayout>
