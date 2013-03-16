@@ -365,7 +365,7 @@
                  android:paddingTop="5dip"
                  android:layout_gravity="left"      
                  android:gravity="left"          
-                 android:text="-Girls visible only to girls"
+                 android:text="-Female visible only to female"
                  android:textSize="15dip"
                  android:textColor="@color/very_dark_gray" />
                <TextView

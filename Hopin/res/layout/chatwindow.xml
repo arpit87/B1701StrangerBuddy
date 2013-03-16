@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical">
+	android:orientation="vertical"
+	android:background="@color/white">
 	
 	  <RelativeLayout android:id="@+id/chat_header"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"		
-		android:background="@drawable/green_bar" 
-		android:padding="4dip"
+		android:background="@drawable/transparent_black" 
+		android:paddingLeft="4dip"
 		>
 	<TextView android:id="@+id/chat_contact_name"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
@@ -18,14 +19,24 @@
 				android:lines="1" android:singleLine="true" android:textSize="12sp"
 				android:textStyle="bold" android:textColor="@color/white"				
 				android:text="Powai->Andheri"
-				android:layout_below="@id/chat_contact_name"
+				android:layout_below="@id/chat_contact_name"				
 			 />			    
-		
+			 
+	  <ImageView
+	    android:id="@+id/chatwindow_menuButton" 
+	    android:layout_width="wrap_content"
+	    android:layout_height="38dip"
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	   android:src="@drawable/actionbarmenu"
+	   android:background="?android:attr/selectableItemBackground"
+	   />
 	</RelativeLayout> 
 	<View android:layout_width="fill_parent" android:layout_height="1dp"
 		 android:background="@color/gray"
 		 android:padding="2dip"
 		 />
+	
 
 	<ListView
 	    android:id="@+id/chat_messages"
@@ -51,13 +62,13 @@
 			android:maxLines="5"
 			android:inputType="textShortMessage|textAutoCorrect|textMultiLine"
 			android:imeOptions="actionSend" android:cursorVisible="true"
-			android:background="@drawable/gray_green_background_selector"
+			
 			 />
 		<Button android:id="@+id/chat_send_message"
 			android:layout_width="wrap_content" android:layout_height="fill_parent"
 			android:text="Send"
-			android:background="@drawable/green_gradient_button"
-			android:textColor="@color/white"
+			
+			android:textColor="@color/black"
 			android:layout_marginLeft="2dip"
 			android:paddingLeft="5dip"
 			android:paddingRight="5dip"
