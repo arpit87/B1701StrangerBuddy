@@ -70,7 +70,7 @@ public class NearbyUsersListViewAdapter extends BaseAdapter{
         TextView userSource = (TextView)thisUserView.findViewById(R.id.nearbyusersource);
         TextView userDestination = (TextView)thisUserView.findViewById(R.id.nearbyuserdestination);
         TextView userTime = (TextView)thisUserView.findViewById(R.id.nearbyusertime);        
-        SBImageLoader.getInstance().displayImageElseStub(thisUser.getUserFBInfo().getImageURL(), userImageView, R.id.userpic);
+        SBImageLoader.getInstance().displayImageElseStub(thisUser.getUserFBInfo().getImageURL(), userImageView, R.drawable.userpicicon);
         final UserFBInfo thisUserFBInfo = thisUser.getUserFBInfo();
         UserLocInfo thisUserLocInfo = thisUser.getUserLocInfo();
         UserOtherInfo thisUserOtherInfo = thisUser.getUserOtherInfo();
