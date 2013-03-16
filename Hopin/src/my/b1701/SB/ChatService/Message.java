@@ -2,15 +2,11 @@ package my.b1701.SB.ChatService;
 
 
 
-import my.b1701.SB.ChatClient.SBChatMessage;
-
-import org.jivesoftware.smack.packet.Message.Type;
-import org.jivesoftware.smack.packet.XMPPError;
-import org.jivesoftware.smack.util.StringUtils;
-
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
+import my.b1701.SB.ChatClient.SBChatMessage;
+import org.jivesoftware.smack.packet.XMPPError;
+import org.jivesoftware.smack.util.StringUtils;
 
 //mFrom,to should have ip appended
 //getParticipant gives name widout ip
@@ -85,6 +81,13 @@ mFrom = "";
 mTime = "";
 }
 
+public Message(final String to, final String from, final String body, final int dailyInstaType, final String time){
+    mTo = to;
+    mFrom = from;
+    mBody = body;
+    mDailyInstaType = dailyInstaType;
+    mTime = time;
+}
 /**
  * Constructor a message of type chat.
  * @param to the destination of the message
