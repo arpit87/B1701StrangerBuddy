@@ -92,4 +92,13 @@ public class BlockedUsers {
             Log.e(TAG, "ClearAllQueryError", e);
         }
     }
+
+    public static void deleteFromList(String fbId){
+        try {
+            ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
+            cr.delete(mUri, "fbId = ?", new String[]{fbId});
+        } catch (RuntimeException e){
+            Log.e(TAG, "Error in deleting user : " + fbId, e);
+        }
+    }
 }
