@@ -91,6 +91,12 @@
              >
         </activity>
         
+         <activity android:name=".Activities.OtherUserProfileActivity" 
+            android:theme="@android:style/Theme.Dialog" 
+            android:screenOrientation="portrait" 
+             >
+        </activity>
+        
            <activity android:name=".Activities.SearchInputActivityNew" 
             android:theme="@android:style/Theme.NoTitleBar" 
             android:launchMode="singleTop"
