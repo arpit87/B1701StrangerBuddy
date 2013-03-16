@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.util.Log;
 import my.b1701.SB.ChatService.Message;
 import my.b1701.SB.Platform.Platform;
+import my.b1701.SB.Server.ServerConstants;
 import my.b1701.SB.provider.ChatHistoryProvider;
 
 import java.util.*;
@@ -23,8 +24,8 @@ public class ChatHistory {
                                                     "timestamp"
                                                    };
 
-    public static List<Message> getChatHistory(String fbid){
-        fbid = fbid.split("@")[0];
+    public static List<Message> getChatHistory(String userId){
+        String fbid = getFBId(userId);
         Log.i(TAG, "Fetching chat history for " + fbid);
         List<Message> messages;
 
@@ -93,8 +94,8 @@ public class ChatHistory {
 
         try {
             ContentValues values = new ContentValues();
-            values.put(columns[0], message.getTo().split("@")[0]);
-            values.put(columns[1], message.getFrom().split("@")[0]);
+            values.put(columns[0], getFBId(message.getTo()));
+            values.put(columns[1], getFBId(message.getFrom()));
             values.put(columns[2], message.getBody());
             values.put(columns[3], message.getDailyInstaType());
             values.put(columns[4], -1);
@@ -115,11 +116,15 @@ public class ChatHistory {
     }
 
     private static Message buildMessage(Cursor cursor){
-        String to = cursor.getString(0);
-        String from = cursor.getString(1);
+        String to = cursor.getString(0) + "@" + ServerConstants.CHATSERVERIP;
+        String from = cursor.getString(1) + "@" + ServerConstants.CHATSERVERIP;
         String body = cursor.getString(2);
         int dailyInstaType = cursor.getInt(3);
         String time = cursor.getString(5);
-        return new Message(to, from, body, dailyInstaType, time);
+        return new Message(to, from, body, dailyInstaType, time, Message.MSG_TYPE_CHAT);
+    }
+
+    private static String getFBId(String userid){
+        return userid.split("@")[0];
     }
 }
