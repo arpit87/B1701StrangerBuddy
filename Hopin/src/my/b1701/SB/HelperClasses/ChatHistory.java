@@ -114,11 +114,11 @@ public class ChatHistory {
     }
 
     private static Message buildMessage(Cursor cursor){
-        String to = cursor.getString(1);
-        String from = cursor.getString(2);
-        String body = cursor.getString(3);
-        int dailyInstaType = cursor.getType(4);
-        String time = cursor.getString(6);
+        String to = cursor.getString(0);
+        String from = cursor.getString(1);
+        String body = cursor.getString(2);
+        int dailyInstaType = cursor.getInt(3);
+        String time = cursor.getString(5);
         return new Message(to, from, body, dailyInstaType, time);
     }
 }
