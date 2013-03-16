@@ -15,7 +15,8 @@ import java.util.List;
 public class BlockedUsers {
 
     private static final String TAG = "my.b1701.SB.HelperClasses";
-    private static Uri mUri = Uri.parse("content://" + BlockedUsersProvider.AUTHORITY + "/db_fetch_only");
+    private static Uri mUriFetch = Uri.parse("content://" + BlockedUsersProvider.AUTHORITY + "/db_fetch_only");
+    private static Uri mUri = Uri.parse("content://" + BlockedUsersProvider.AUTHORITY + "/blockedUsers");
     private static String[] columns = new String[] {"fbId"};
 
     public static List<String> getList(){
@@ -23,7 +24,7 @@ public class BlockedUsers {
         List<String> blockedUsers;
         
         ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
-        Cursor cursor = cr.query(mUri, columns, null, null, null);
+        Cursor cursor = cr.query(mUriFetch, columns, null, null, null);
 
         if (cursor == null || cursor.getCount() == 0) {
             Log.i(TAG, "Empty result");
@@ -47,7 +48,7 @@ public class BlockedUsers {
     public static boolean isUserBlocked(String fbId){
         Log.i(TAG, "Checking if '" + fbId + "' is blocked");
         ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
-        Cursor cursor = cr.query(mUri, columns, "fbId = ?", new String[]{fbId}, null);
+        Cursor cursor = cr.query(mUriFetch, columns, "fbId = ?", new String[]{fbId}, null);
 
         boolean isUserBlocked = true;
         if (cursor == null || cursor.getCount() == 0){

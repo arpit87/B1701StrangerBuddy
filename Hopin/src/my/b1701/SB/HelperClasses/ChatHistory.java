@@ -13,7 +13,8 @@ import java.util.*;
 
 public class ChatHistory {
     private static final String TAG = "my.b1701.SB.HelperClasses.ChatHistory";
-    private static Uri mUri = Uri.parse("content://" + ChatHistoryProvider.AUTHORITY + "/db_fetch_only");
+    private static Uri mUriFetch = Uri.parse("content://" + ChatHistoryProvider.AUTHORITY + "/db_fetch_only");
+    private static Uri mUri = Uri.parse("content://" + ChatHistoryProvider.AUTHORITY + "/chathistory");
     private static String[] columns = new String[] {"fbIdTo",
                                                     "fbIdFrom",
                                                     "body",
@@ -27,7 +28,7 @@ public class ChatHistory {
         List<Message> messages;
 
         ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
-        Cursor cursor = cr.query(mUri, columns, "fbIdTo = ? or fbIdFrom = ?", new String[]{fbid, fbid}, columns[5]);
+        Cursor cursor = cr.query(mUriFetch, columns, "fbIdTo = ? or fbIdFrom = ?", new String[]{fbid, fbid}, columns[5]);
 
         if (cursor == null || cursor.getCount() == 0) {
             Log.i(TAG, "Empty result");
@@ -52,7 +53,7 @@ public class ChatHistory {
         Log.i(TAG, "Fetching complete chat history");
         Map<String, List<Message>> chatHistory = new HashMap<String, List<Message>>();
         ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
-        Cursor cursor = cr.query(mUri, columns, null, null, columns[5]);
+        Cursor cursor = cr.query(mUriFetch, columns, null, null, columns[5]);
 
         if (!(cursor == null || cursor.getCount() == 0)){
             Message message = buildMessage(cursor);
