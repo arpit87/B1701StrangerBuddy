@@ -158,6 +158,9 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 		    Log.e(TAG, "Error while log in", e);
 		    mErrorMsg = "Error while log in";
 		    return false;
+		}catch (IllegalStateException e) {
+		    Log.i(TAG, "Already logged in", e);		    
+		    return true;
 		}
 		return true;
 	    }

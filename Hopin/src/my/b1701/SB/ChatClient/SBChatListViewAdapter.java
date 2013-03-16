@@ -155,6 +155,9 @@ public class SBChatListViewAdapter extends BaseAdapter {
 		    	case SBChatMessage.DELIVERED:
 		    	statusText = "Delivered";
 			    break;	
+		    	case SBChatMessage.BLOCKED:
+		    	statusText = "Blocked";
+			    break;	
 		    	case SBChatMessage.RECEIVED:
 			    statusText = "@"+time;
 				break;

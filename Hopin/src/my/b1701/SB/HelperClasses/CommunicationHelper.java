@@ -77,8 +77,7 @@ public class CommunicationHelper {
 			String userFBID = n.getUserFBInfo().getFbid();
 			String imageURL = n.getUserFBInfo().getImageURL();
 			String travelDetailInfo = n.getUserLocInfo().getFormattedTravelDetails();
-			startChatIntent.putExtra(ChatWindow.PARTICIPANT, userFBID);
-			startChatIntent.putExtra(ChatWindow.IMAGEURL, imageURL);
+			startChatIntent.putExtra(ChatWindow.PARTICIPANT, userFBID);			
 			startChatIntent.putExtra(ChatWindow.PARTICIPANT_NAME, n.getUserFBInfo().getFullName());
 			startChatIntent.putExtra(ChatWindow.TRAVELINFO, travelDetailInfo);			
 			context.startActivity(startChatIntent);

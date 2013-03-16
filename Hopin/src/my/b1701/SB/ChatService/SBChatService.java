@@ -29,7 +29,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -133,16 +135,17 @@ public class SBChatService extends Service {
     }
 	
 
-	public void sendNotification(int id,String participant,String participant_name,String travelInfo,String imageurl) {
+	public void sendNotification(int id,String participant,String participant_name,String travelInfo) {
 
 		 Intent chatIntent = new Intent(this,ChatWindow.class);
 		 	chatIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		   chatIntent.putExtra(ChatWindow.PARTICIPANT, participant);	
 		   chatIntent.putExtra(ChatWindow.PARTICIPANT_NAME, participant_name);
-		   chatIntent.putExtra(ChatWindow.IMAGEURL, imageurl);
+		   
 		   chatIntent.putExtra(ChatWindow.TRAVELINFO, travelInfo);
 		   Log.i(TAG, "Sending notification") ;	    
-		 PendingIntent pintent = PendingIntent.getActivity(this, 0, chatIntent, PendingIntent.FLAG_ONE_SHOT);			
+		 PendingIntent pintent = PendingIntent.getActivity(this, 0, chatIntent, PendingIntent.FLAG_ONE_SHOT);	
+		 Uri sound_uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		 
 		 Notification notif = new Notification(R.drawable.launchernew32,"New message from "+participant_name,System.currentTimeMillis());
 		 notif.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -157,7 +160,8 @@ public class SBChatService extends Service {
 			notif.ledARGB = 0xff0000ff; // Blue color
 			notif.ledOnMS = 1000;
 			notif.ledOffMS = 1000;
-			notif.defaults |= Notification.DEFAULT_LIGHTS;			
+			notif.defaults |= Notification.DEFAULT_LIGHTS;	
+			notif.sound = sound_uri;
 			mNotificationManager.notify(id, notif);
 			Log.i(TAG, "notification sent") ;
 		    }

@@ -1,7 +1,6 @@
 package my.b1701.SB.ChatClient;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import my.b1701.SB.R;
@@ -12,33 +11,38 @@ import my.b1701.SB.ChatService.Message;
 import my.b1701.SB.ChatService.SBChatService;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.AlertDialogBuilder;
+import my.b1701.SB.HelperClasses.BlockedUsers;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.HttpClient.GetMatchingNearbyUsersRequest;
+import my.b1701.SB.HttpClient.GetOtherUserProfileAndShowPopup;
 import my.b1701.SB.HttpClient.SBHttpClient;
-import my.b1701.SB.HttpClient.SBHttpRequest;
 import my.b1701.SB.Server.ServerConstants;
-import my.b1701.SB.Users.CurrentNearbyUsers;
-import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Util.StringUtils;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +52,7 @@ public class ChatWindow extends Activity{
 	private static String TAG = "my.b1701.SB.ChatClient.ChatWindow";
 	public static String PARTICIPANT = "participant";
 	public static String TRAVELINFO = "travel_info";
-	public static String IMAGEURL = "imageurl";
+	public static String DAILYINSTATYPE = "daily_insta";
 	public static String PARTICIPANT_NAME = "name";
 	private IXMPPAPIs xmppApis = null;
 	private TextView mContactNameTextView;
@@ -57,7 +61,8 @@ public class ChatWindow extends Activity{
     //private ImageView mContactPic;   
     private ListView mMessagesListView;
     private EditText mInputField;
-    private Button mSendButton;
+    private Button mSendButton; 
+    private ImageView mMenuButton;
     private IChatAdapter chatAdapter;
     private IChatManager mChatManager;   
     private IMessageListener mMessageListener = new SBOnChatMessageListener();
@@ -65,9 +70,8 @@ public class ChatWindow extends Activity{
     private final ChatServiceConnection mChatServiceConnection = new ChatServiceConnection();
     private String mParticipantFBID = "";  
     private String mParticipantName = "";  
-    private String mParticipantTravelDetails = "";
-    private String mParticipantImageURL = "";
-    private int mDailyInstaType = 1; //1 insta,0 daily
+    private String mParticipantTravelDetails = "";    
+    private String mParticipantImageURL = "";    
     private SBChatBroadcastReceiver mSBBroadcastReceiver = new SBChatBroadcastReceiver();
     Handler mHandler = new Handler();
     private SBChatListViewAdapter mMessagesListAdapter = new SBChatListViewAdapter();
@@ -77,14 +81,18 @@ public class ChatWindow extends Activity{
     private String mThisUserChatFullName =  "";
 	private ProgressDialog progressDialog;
 	private FacebookConnector fbconnect; // required if user not logged in
+	PopupWindow popUpMenu;
+	
     
 		    
 	    @Override
 		public void onCreate(Bundle savedInstanceState) {	    	
 		super.onCreate(savedInstanceState);			
 		setContentView(R.layout.chatwindow);
+		
 		//this.registerReceiver(mSBBroadcastReceiver, new IntentFilter(SBBroadcastReceiver.SBCHAT_CONNECTION_CLOSED));
 	    mContactNameTextView = (TextView) findViewById(R.id.chat_contact_name);
+	    mMenuButton = (ImageView) findViewById(R.id.chatwindow_menuButton);
 	   // mContactPicFrame = (ImageView) findViewById(R.id.chat_contact_pic_frame);
 	    mTravelDetails = (TextView) findViewById(R.id.chat_contact_destination);	    
 	   // mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
@@ -92,19 +100,31 @@ public class ChatWindow extends Activity{
 	    mMessagesListView.setAdapter(mMessagesListAdapter);
 	    mInputField = (EditText) findViewById(R.id.chat_input);		
 		mInputField.requestFocus();
-		mSendButton = (Button) findViewById(R.id.chat_send_message);
+		mSendButton = (Button) findViewById(R.id.chat_send_message);		
 		mSendButton.setOnClickListener(new OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
 			sendMessage();
 		    }
+		});	
+		
+		mMenuButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				showPopupMenu(v);				
+			}
 		});
+		
 		
 		mThiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
 		mThisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
 		mThisUserChatFullName = ThisUserConfig.getInstance().getString(ThisUserConfig.FB_FULLNAME);
 		
 }
+	    
+	    
+
 
 @Override
 public void onResume() {
@@ -115,9 +135,9 @@ public void onResume() {
 	  return;
 	mParticipantName = getIntent().getStringExtra(PARTICIPANT_NAME);
 	mParticipantTravelDetails = getIntent().getStringExtra(TRAVELINFO);	
-	mParticipantImageURL = getIntent().getStringExtra(IMAGEURL);
 	mContactNameTextView.setText(mParticipantName);
 	mTravelDetails.setText(mParticipantTravelDetails);
+	mParticipantImageURL = "http://graph.facebook.com/" + mParticipantFBID + "/picture?type=small";
 	mMessagesListAdapter.setParticipantFBURL(mParticipantImageURL);
 	//mContactNameTextView.setText(mReceiver);
 	//getParticipantInfoFromFBID(mParticipantFBID);
@@ -139,8 +159,39 @@ public void onResume() {
 	//setTitle(getString(R.string.conversation_name) +": " +jid);
 	
 }
+
+private void showPopupMenu(View v)
+{
+	LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	View layout = inflater.inflate(R.layout.chat_popupmenu, null);	
+	popUpMenu = new PopupWindow(layout,LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);	
+	popUpMenu.setFocusable(true);
+	popUpMenu.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+	popUpMenu.showAsDropDown(v);
+	Button show_profile = (Button) layout.findViewById(R.id.chat_popupmenu_profile);
+	show_profile.setOnClickListener(new OnClickListener() {		
+		@Override
+		public void onClick(View v) {
+			ProgressHandler.showInfiniteProgressDialoge(ChatWindow.this, "Fetching user profile", "Please wait..");
+	    	GetOtherUserProfileAndShowPopup req = new GetOtherUserProfileAndShowPopup(mParticipantFBID);
+			SBHttpClient.getInstance().executeRequest(req);	
+			popUpMenu.dismiss();
+		}
+	});
 	
-    
+	Button block_user = (Button) layout.findViewById(R.id.chat_popupmenu_block);
+	block_user.setOnClickListener(new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			BlockedUsers.addtoList(mParticipantFBID);
+	        Toast.makeText(ChatWindow.this, mParticipantName + " blocked", Toast.LENGTH_SHORT);	
+	        popUpMenu.dismiss();
+		}
+	});
+}
+
+
     @Override
     protected void onPause() {
 	super.onPause();
@@ -171,7 +222,7 @@ public void onResume() {
     
     
     @Override
-    protected void onNewIntent(Intent intent) {
+	public void onNewIntent(Intent intent) {
 	super.onNewIntent(intent);
 	setIntent(intent);	
     }
@@ -243,7 +294,8 @@ public void onResume() {
 			newMessage.setBody(inputContent);
 			newMessage.setFrom(mThiUserChatUserName+"@"+ServerConstants.CHATSERVERIP);			
 			newMessage.setSubject(mThisUserChatFullName);			
-			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());		 
+			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());	
+			newMessage.setTimeStamp(StringUtils.gettodayDateInFormat("hh:mm"));
 				 				
 			mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID,inputContent, false, StringUtils.gettodayDateInFormat("hh:mm"),
 					                                          SBChatMessage.SENDING,newMessage.getUniqueMsgIdentifier()));
@@ -447,7 +499,7 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 		 //   	   return;
 		 //  }
 		   
-		  if(msg.getType() == Message.MSG_TYPE_ACK)
+		  if(msg.getType() == Message.MSG_TYPE_ACKFOR_DELIVERED)
 		  {
 			  //here we should receive acks of only open chats
 			  //non open chats ack update msgs in list of theie respective chatAdapter and user when next opens them

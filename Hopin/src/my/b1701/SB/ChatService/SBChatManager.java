@@ -128,9 +128,9 @@ public class SBChatManager extends IChatManager.Stub {
 		return mAllChats.size();
 	}
 	
-	public void notifyChat(int id,String participant_fbid,String participant_name,String travel_info,String imageurl) { 	   			
+	public void notifyChat(int id,String participant_fbid,String participant_name,String travel_info) { 	   			
 			Log.i(TAG, "Sending notification") ;
-	    	mService.sendNotification(id,participant_fbid,participant_name,travel_info,imageurl);
+	    	mService.sendNotification(id,participant_fbid,participant_name,travel_info);
 	   
 	}
 	

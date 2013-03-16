@@ -28,6 +28,7 @@ public class SBChatMessage {
 	public static final int RECEIVED = 4;
 	public static final int OLD = 5;
 	public static final int UNKNOWN = 6;
+	public static final int BLOCKED = 7;
 	
 	
 	/**

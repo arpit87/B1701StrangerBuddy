@@ -33,7 +33,7 @@ public class ChatHistory {
             Log.i(TAG, "Empty result");
             messages = Collections.emptyList();
         } else {
-            messages = new ArrayList<Message>();
+            messages = new LinkedList<Message>();
             if (cursor.moveToFirst()) {
                 do {
                     messages.add(buildMessage(cursor));

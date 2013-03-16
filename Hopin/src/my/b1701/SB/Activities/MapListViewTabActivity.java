@@ -66,7 +66,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     private SBMapFragment sbMapFragment;
     private SBListFragment sbListFragment;
     private ImageView mFbLogin;
-    private Menu menu;
+    private Menu mMenu;
 	
 	public FacebookConnector getFbConnector()
 	{
@@ -181,7 +181,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         if (!isMapShowing){
             isMapShowing = true;
             showMapView();
-            MenuItem menuItem = menu.findItem(R.id.btn_listview);
+            MenuItem menuItem = mMenu.findItem(R.id.btn_listview);
             menuItem.setIcon(R.drawable.maptolist);
         } else {
                 
@@ -218,7 +218,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
+        this.mMenu = menu;
         MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
@@ -235,10 +235,13 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
 	    	 searchInputIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 	   		 startActivity(searchInputIntent);
         	break;
+        case R.id.btn_listview:
+        	toggleMapListView(menuItem);
+        	break;
         case R.id.fb_login_menuitem:
         	if(ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
         	{
-        		Toast.makeText(this, "Already logged in", Toast.LENGTH_SHORT);
+        		Toast.makeText(this, "Already logged in", Toast.LENGTH_SHORT).show();
         		break;
         	}
         	FBLoginDialogFragment fblogin_dialog = new FBLoginDialogFragment();
@@ -254,15 +257,11 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         	i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         	startActivity(i);
         	break;
-        case R.id.btn_listview:   		
-          	toggleMapListView(menuItem);
-          	break;
         case R.id.exit_app_menuitem:
         	//delete user request,close service
         	Platform.getInstance().stopChatService();
         	finish();
-        	break;  
-   	 
+        	break; 
    	 case R.id.test_app_menuitem:
    		ShowActiveReqPrompt activereq_dialog = new ShowActiveReqPrompt();
    		activereq_dialog.show(getSupportFragmentManager(), "fblogin_dialog");
