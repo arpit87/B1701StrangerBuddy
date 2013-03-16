@@ -24,6 +24,7 @@ public class ChatHistory {
                                                    };
 
     public static List<Message> getChatHistory(String fbid){
+        fbid = fbid.split("@")[0];
         Log.i(TAG, "Fetching chat history for " + fbid);
         List<Message> messages;
 
@@ -92,8 +93,8 @@ public class ChatHistory {
 
         try {
             ContentValues values = new ContentValues();
-            values.put(columns[0], message.getTo());
-            values.put(columns[1], message.getFrom());
+            values.put(columns[0], message.getTo().split("@")[0]);
+            values.put(columns[1], message.getFrom().split("@")[0]);
             values.put(columns[2], message.getBody());
             values.put(columns[3], message.getDailyInstaType());
             values.put(columns[4], -1);
