@@ -79,8 +79,8 @@ public class FacebookConnector {
     
     public void loginToFB()
     { 	
-    	facebook.authorize(underlying_activity, permissions, new LoginDialogListener());
-	   /* String access_token = ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN);
+    	//facebook.authorize(underlying_activity, permissions, new LoginDialogListener());
+	    String access_token = ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN);
 	    long expires = ThisUserConfig.getInstance().getLong(ThisUserConfig.FBACCESSEXPIRES);
 	 
 	    if (access_token != "") {
@@ -94,7 +94,7 @@ public class FacebookConnector {
     	 if (!facebook.isSessionValid()) {
     		 facebook.authorize(underlying_activity, permissions, new LoginDialogListener());  
     		 
-    	 }*/
+    	 }
     }  
     
     public void authorizeCallback(int requestCode, int resultCode,Intent data)

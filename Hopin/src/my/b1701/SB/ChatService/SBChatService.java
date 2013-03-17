@@ -1,5 +1,6 @@
 package my.b1701.SB.ChatService;
 
+import java.io.File;
 import java.util.List;
 
 import my.b1701.SB.R;
@@ -18,6 +19,8 @@ import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
+import org.jivesoftware.smack.SASLAuthentication;
+import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 
 import android.app.Activity;
@@ -32,6 +35,7 @@ import android.content.IntentFilter;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -76,8 +80,11 @@ public class SBChatService extends Service {
 		
 		initializeConfigration();
 		//configure(ProviderManager.getInstance());
-		mXMPPConnection = new XMPPConnection(mConnectionConfiguration);
+		System.setProperty("smack.debugEnabled", "true");
 		XMPPConnection.DEBUG_ENABLED = true;
+		SASLAuthentication.supportSASLMechanism("PLAIN");
+		mXMPPConnection = new XMPPConnection(mConnectionConfiguration);	
+		
 		Log.d(TAG, "made xmpp connection");
 		//service has connection adapter which has all listeners 
 		mConnectionAdapter = new XMPPConnectionListenersAdapter(mXMPPConnection,this);
@@ -126,6 +133,21 @@ public class SBChatService extends Service {
 		mConnectionConfiguration.setReconnectionAllowed(true);
 		mConnectionConfiguration.setDebuggerEnabled(true);
 		mConnectionConfiguration.setSendPresence(true);
+		SmackConfiguration.setPacketReplyTimeout(10000);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			mConnectionConfiguration.setTruststoreType("AndroidCAStore");
+			mConnectionConfiguration.setTruststorePassword(null);
+			mConnectionConfiguration.setTruststorePath(null);
+		} else {
+			mConnectionConfiguration.setTruststoreType("BKS");
+		    String path = System.getProperty("javax.net.ssl.trustStore");
+		    if (path == null)
+		        path = System.getProperty("java.home") + File.separator + "etc"
+		            + File.separator + "security" + File.separator
+		            + "cacerts.bks";
+		    mConnectionConfiguration.setTruststorePath(path);
+		}
+		
 	}
 	
 	@Override
