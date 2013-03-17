@@ -300,8 +300,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//active chat for incoming added here and for outgoing added in chatwindow
-				ActiveChat.addChat(msg.getInitiator(), msg.getSubject(), msg.getBody());
+				//active chat for incoming added here and for outgoing added in chatwindow				
 				if (mMessages.size() == HISTORY_MAX_SIZE)
 					mMessages.remove(0);
 				msg.setStatus(SBChatMessage.RECEIVED);				

@@ -197,6 +197,9 @@ private void showPopupMenu(View v)
 	    if (chatAdapter != null) {
 	    	try {
 				chatAdapter.setOpen(false);
+				List<Message> chatMessages = chatAdapter.getMessages();
+				Message lastmMessage = chatMessages.get(chatMessages.size()-1);
+				ActiveChat.addChat(mParticipantFBID, mParticipantName, lastmMessage.getBody());
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -283,6 +286,8 @@ private void showPopupMenu(View v)
 			return mParticipantFBID;
 		}
 
+	    
+	    
 		private void sendMessage() {
 		final String inputContent = mInputField.getText().toString();	
 		SBChatMessage lastMessage = null;
@@ -294,8 +299,7 @@ private void showPopupMenu(View v)
 			newMessage.setSubject(mThisUserChatFullName);			
 			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());	
 			newMessage.setTimeStamp(StringUtils.gettodayDateInFormat("hh:mm"));
-			newMessage.setStatus(SBChatMessage.SENDING);
-			ActiveChat.addChat(mParticipantFBID, mParticipantName, inputContent);				
+			newMessage.setStatus(SBChatMessage.SENDING);							
 			mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID,inputContent, false, StringUtils.gettodayDateInFormat("hh:mm"),
 					                                          SBChatMessage.SENDING,newMessage.getUniqueMsgIdentifier()));
 			mMessagesListAdapter.notifyDataSetChanged();
