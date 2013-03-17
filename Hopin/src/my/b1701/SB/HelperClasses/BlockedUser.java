@@ -12,16 +12,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BlockedUsers {
+public class BlockedUser {
 
     private static final String TAG = "my.b1701.SB.HelperClasses";
     private static Uri mUriFetch = Uri.parse("content://" + BlockedUsersProvider.AUTHORITY + "/db_fetch_only");
     private static Uri mUri = Uri.parse("content://" + BlockedUsersProvider.AUTHORITY + "/blockedUsers");
-    private static String[] columns = new String[] {"fbId"};
+    private static String[] columns = new String[] {"fbId", "name"};
 
-    public static List<String> getList(){
+    private final String fbId;
+    private final String name;
+
+    public BlockedUser(String fbId, String name) {
+        this.fbId = fbId;
+        this.name = name;
+    }
+
+    public String getFbId() {
+        return fbId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static List<BlockedUser> getList(){
         Log.i(TAG, "Fetching blocked Users");
-        List<String> blockedUsers;
+        List<BlockedUser> blockedUsers;
         
         ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
         Cursor cursor = cr.query(mUriFetch, columns, null, null, null);
@@ -30,10 +46,11 @@ public class BlockedUsers {
             Log.i(TAG, "Empty result");
             blockedUsers = Collections.emptyList();
         } else {
-            blockedUsers = new ArrayList<String>();
+            blockedUsers = new ArrayList<BlockedUser>();
             if (cursor.moveToFirst()) {
                 do {
-                    blockedUsers.add(cursor.getString(1));
+                    BlockedUser blockedUser = new BlockedUser(cursor.getString(0), cursor.getString(1));
+                    blockedUsers.add(blockedUser);
                 } while (cursor.moveToNext());
             }
         }
@@ -62,23 +79,24 @@ public class BlockedUsers {
         return isUserBlocked;
     }
 
-    public static void addtoList(final String fbId){
+    public static void addtoList(final String fbId, final String name){
         Log.i(TAG, "Adding '" +fbId + "' to blocked users list");
         new Thread("blockUser") {
             @Override
             public void run() {
-                saveHistoryBlocking(fbId);
+                saveHistoryBlocking(fbId, name);
             }
         }.start();
 
     }
 
-    private static void saveHistoryBlocking(String fbId) {
+    private static void saveHistoryBlocking(String fbId, String name) {
         ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
 
         try {
             ContentValues values = new ContentValues();
             values.put(columns[0], fbId);
+            values.put(columns[1], name);
             cr.insert(mUri, values);
         } catch (RuntimeException e) {
             Log.e(TAG, "BlockUserQueryError", e);

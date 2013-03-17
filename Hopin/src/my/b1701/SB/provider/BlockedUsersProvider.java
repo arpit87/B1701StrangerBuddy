@@ -37,6 +37,7 @@ public class BlockedUsersProvider extends ContentProvider {
             builder.append("CREATE TABLE blockedUsers (" +
                     "_id INTEGER PRIMARY KEY" +
                     ",fbId TEXT" +
+                    ",name TEXT" +
                     ");");
             db.execSQL(builder.toString());
         }
