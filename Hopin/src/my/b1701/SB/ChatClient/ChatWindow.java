@@ -294,7 +294,7 @@ private void showPopupMenu(View v)
 			newMessage.setSubject(mThisUserChatFullName);			
 			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());	
 			newMessage.setTimeStamp(StringUtils.gettodayDateInFormat("hh:mm"));
-			ActiveChat.addChat(mParticipantFBID, mThisUserChatFullName, inputContent);				
+			ActiveChat.addChat(mParticipantFBID, mParticipantName, inputContent);				
 			mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID,inputContent, false, StringUtils.gettodayDateInFormat("hh:mm"),
 					                                          SBChatMessage.SENDING,newMessage.getUniqueMsgIdentifier()));
 			mMessagesListAdapter.notifyDataSetChanged();

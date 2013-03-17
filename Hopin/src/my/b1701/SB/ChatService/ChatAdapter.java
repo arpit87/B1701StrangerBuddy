@@ -41,7 +41,7 @@ import android.util.Log;
  * @author arpit87
  * 
  */
-@SuppressLint("ParserError")
+
 class ChatAdapter extends IChatAdapter.Stub {
 
 	private static final int HISTORY_MAX_SIZE = 50;
@@ -293,7 +293,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 			if (msg.getType() == Message.MSG_TYPE_CHAT) {
 				sendAck(msg);
 				//active chat for incoming added here and for outgoing added in chatwindow
-				ActiveChat.addChat(mParticipant, msg.getSubject(), msg.getBody());
+				ActiveChat.addChat(msg.getInitiator(), msg.getSubject(), msg.getBody());
 				if (mMessages.size() == HISTORY_MAX_SIZE)
 					mMessages.remove(0);
 				updateMessageStatusInList(msg, SBChatMessage.RECEIVED);				

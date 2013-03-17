@@ -116,11 +116,12 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 		
 		mLogin = login;
 		mPassword = password;
-		
+		Log.d(TAG, "login async called");
 		if(!mXMPPConnection.isConnected())
 		{
 			if(tryinConnecting.getAndSet(true))
 				return;
+			Log.d(TAG, "xmpp isconnected is false and none tryin to connect so i will");
 			connectToServer = new ConnectToChatServerTask();
 			connectToServer.execute(this);
 			
@@ -129,9 +130,13 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 		{	
 			if(tryinLogging.getAndSet(true))
 				return;
+			Log.d(TAG, "xmpp isAuthenticated is false and none tryin to login so i will");
 			loginToServer = new LoginToChatServerTask();
 			loginToServer.execute(this);
 		}
+		else if(mChatManager!=null)				
+			mChatManager.notifyAllPendingQueue(); ///means we already logged in so send the msgs
+			
 	}
 	
 	//this should be called in separate thread
