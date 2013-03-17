@@ -22,7 +22,8 @@ public class ChatHistory {
                                                     "groupId",
                                                     "timestamp",
                                                     "status",
-                                                    "uniqueId"
+                                                    "uniqueId",
+                                                    "date"
                                                    };
 
     public static List<Message> getChatHistory(String userId){
@@ -31,7 +32,7 @@ public class ChatHistory {
         List<Message> messages;
 
         ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
-        Cursor cursor = cr.query(mUriFetch, columns, "fbIdTo = ? or fbIdFrom = ?", new String[]{fbid, fbid}, columns[5]);
+        Cursor cursor = cr.query(mUriFetch, columns, "fbIdTo = ? or fbIdFrom = ?", new String[]{fbid, fbid}, columns[7]);
 
         if (cursor == null || cursor.getCount() == 0) {
             Log.i(TAG, "Empty result");
@@ -81,16 +82,17 @@ public class ChatHistory {
 
     public static void addtoChatHistory(final Message message){
         Log.i(TAG, "Saving chathistory for user " + message.getFrom());
+        final long time = System.currentTimeMillis();
         new Thread("addchathistory") {
             @Override
             public void run() {
-                saveChatHistoryBlocking(message);
+                saveChatHistoryBlocking(message, time);
             }
         }.start();
 
     }
 
-    private static void saveChatHistoryBlocking(Message message) {
+    private static void saveChatHistoryBlocking(Message message, long time) {
         ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
 
         try {
@@ -102,6 +104,7 @@ public class ChatHistory {
             values.put(columns[4], message.getTimestamp());
             values.put(columns[5], message.getStatus());
             values.put(columns[6], message.getUniqueMsgIdentifier());
+            values.put(columns[7], time);
             cr.insert(mUri, values);
         } catch (RuntimeException e) {
             Log.e(TAG, "BlockUserQueryError", e);
