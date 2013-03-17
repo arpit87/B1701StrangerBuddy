@@ -103,6 +103,14 @@
             android:screenOrientation="portrait" 
             >            
         </activity>
+        
+           
+        <activity android:name=".Activities.MyChatsActivity" 
+            android:theme="@android:style/Theme.NoTitleBar" 
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" 
+            >            
+        </activity>
        
             
 
