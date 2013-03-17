@@ -118,6 +118,10 @@
                android:name="my.b1701.SB.provider.ChatHistoryProvider"
                android:authorities="my.b1701.SB.provider.ChatHistoryProvider" />
 
+       <provider
+               android:name="my.b1701.SB.provider.ActiveChatProvider"
+               android:authorities="my.b1701.SB.provider.ActiveChatProvider" />
+
         <receiver android:name=".LocationHelpers.LocationUpdaterFromIntent"
             android:exported="false">
              </receiver> 

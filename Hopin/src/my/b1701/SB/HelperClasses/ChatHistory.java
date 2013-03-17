@@ -82,7 +82,7 @@ public class ChatHistory {
 
     public static void addtoChatHistory(final Message message){
         Log.i(TAG, "Saving chathistory for user " + message.getFrom());
-        new Thread("blockUser") {
+        new Thread("addchathistory") {
             @Override
             public void run() {
                 saveChatHistoryBlocking(message);
