@@ -21,7 +21,9 @@ public class ChatHistory {
                                                     "body",
                                                     "dailyInstaType",
                                                     "groupId",
-                                                    "timestamp"
+                                                    "timestamp",
+                                                    "status",
+                                                    "uniqueId"
                                                    };
 
     public static List<Message> getChatHistory(String userId){
@@ -100,6 +102,8 @@ public class ChatHistory {
             values.put(columns[3], message.getDailyInstaType());
             values.put(columns[4], -1);
             values.put(columns[5], message.getTimestamp());
+            values.put(columns[6], message.getStatus());
+            values.put(columns[7], message.getUniqueMsgIdentifier());
             cr.insert(mUri, values);
         } catch (RuntimeException e) {
             Log.e(TAG, "BlockUserQueryError", e);
@@ -115,13 +119,21 @@ public class ChatHistory {
         }
     }
 
+    public static void updateStatus(long messageUniqueId, int status){
+        ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(columns[6],status);
+        cr.update(mUri, contentValues, "uniqueId = ?", new String[]{Long.toString(messageUniqueId)});
+    }
+
     private static Message buildMessage(Cursor cursor){
         String to = cursor.getString(0) + "@" + ServerConstants.CHATSERVERIP;
         String from = cursor.getString(1) + "@" + ServerConstants.CHATSERVERIP;
         String body = cursor.getString(2);
         int dailyInstaType = cursor.getInt(3);
         String time = cursor.getString(5);
-        return new Message(to, from, body, dailyInstaType, time, Message.MSG_TYPE_CHAT);
+        int status = cursor.getInt(6);
+        return new Message(to, from, body, dailyInstaType, time, Message.MSG_TYPE_CHAT, status);
     }
 
     private static String getFBId(String userid){

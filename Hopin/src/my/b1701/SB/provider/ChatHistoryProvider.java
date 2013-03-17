@@ -42,6 +42,8 @@ public class ChatHistoryProvider extends ContentProvider {
                     ",dailyInstaType INTEGER" +
                     ",groupId INTEGER" +
                     ",timestamp TEXT" +
+                    ",status INTEGER" +
+                    ",uniqueId LONG" +
                     ");");
             db.execSQL(builder.toString());
         }
@@ -131,7 +133,25 @@ public class ChatHistoryProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
-        return 0;
+    public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int length = uri.getPathSegments().size();
+        if (length != 1) {
+            throw new IllegalArgumentException("Unknown Uri");
+        }
+
+        final String base = uri.getPathSegments().get(0);
+        int count = 0;
+        if (base.equals(mTableName)) {
+            count = db.update(mTableName, contentValues, selection, selectionArgs);
+        } else {
+            throw new IllegalArgumentException("Unknown Uri");
+        }
+
+        if (count > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return count;
     }
 }

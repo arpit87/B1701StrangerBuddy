@@ -82,13 +82,15 @@ mFrom = "";
 mTime = "";
 }
 
-public Message(final String to, final String from, final String body, final int dailyInstaType, final String time, final int type){
+public Message(final String to, final String from, final String body, final int dailyInstaType, final String time,
+               final int type, final int status){
     mTo = to;
     mFrom = from;
     mBody = body;
     mDailyInstaType = dailyInstaType;
     mTime = time;
     mType = type;
+    mStatus = status;
 }
 /**
  * Constructor a message of type chat.
