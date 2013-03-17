@@ -135,21 +135,19 @@ public class SBChatService extends Service {
     }
 	
 
-	public void sendNotification(int id,String participant,String participant_name,String travelInfo) {
+	public void sendNotification(int id,String participant,String participant_name,String chatMessage) {
 
 		 Intent chatIntent = new Intent(this,ChatWindow.class);
 		 	chatIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		   chatIntent.putExtra(ChatWindow.PARTICIPANT, participant);	
-		   chatIntent.putExtra(ChatWindow.PARTICIPANT_NAME, participant_name);
-		   
-		   chatIntent.putExtra(ChatWindow.TRAVELINFO, travelInfo);
+		   chatIntent.putExtra(ChatWindow.PARTICIPANT_NAME, participant_name);		   
 		   Log.i(TAG, "Sending notification") ;	    
 		 PendingIntent pintent = PendingIntent.getActivity(this, 0, chatIntent, PendingIntent.FLAG_ONE_SHOT);	
 		 Uri sound_uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		 
 		 Notification notif = new Notification(R.drawable.launchernew32,"New message from "+participant_name,System.currentTimeMillis());
 		 notif.flags |= Notification.FLAG_AUTO_CANCEL;
-		 notif.setLatestEventInfo(this, participant_name, travelInfo, pintent);
+		 notif.setLatestEventInfo(this, participant_name, chatMessage, pintent);
 				 /*
          .setContentText("New message from:"+participant)
          .setSmallIcon(R.drawable.chat_horn3)  
@@ -228,8 +226,7 @@ class SBChatBroadcastReceiver extends BroadcastReceiver{
 			String fbid = n.getUserFBInfo().getFbid();
 			if(fbid!="")
 				try {	
-					Message msg = new Message(fbid,Message.MSG_TYPE_NEWUSER_BROADCAST);
-					msg.setDailyInstaType(ThisUserNew.getInstance().get_Daily_Instant_Type());
+					Message msg = new Message(fbid,Message.MSG_TYPE_NEWUSER_BROADCAST);					
 					if(chatManager != null)					
 					{
 						Log.i(TAG,"broadcasting to fbid:"+fbid);

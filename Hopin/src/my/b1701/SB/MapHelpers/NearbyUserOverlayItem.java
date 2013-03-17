@@ -250,7 +250,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			chatIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View chatIconView) {
-					CommunicationHelper.getInstance().onChatClickWithUser(mNearbyUser);						
+					CommunicationHelper.getInstance().onChatClickWithUser(mNearbyUser.getUserFBInfo().getFbid(),mNearbyUser.getUserFBInfo().getFullName());						
 				}
 			});
 			

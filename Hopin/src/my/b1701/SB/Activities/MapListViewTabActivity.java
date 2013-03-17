@@ -238,7 +238,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         case R.id.btn_listview:
         	toggleMapListView(menuItem);
         	break;
-        case R.id.fb_login_menuitem:
+       /* case R.id.fb_login_menuitem:
         	if(ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
         	{
         		Toast.makeText(this, "Already logged in", Toast.LENGTH_SHORT).show();
@@ -251,7 +251,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         	//logout from chat server?
 			FacebookConnector fbconnect = new FacebookConnector(MapListViewTabActivity.this);
         	fbconnect.logoutFromFB();
-        	break;
+        	break;*/
         case R.id.settings_menuitem:
         	Intent i = new Intent(this,SettingsActivity.class);
         	i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -262,15 +262,20 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         	Platform.getInstance().stopChatService();
         	finish();
         	break; 
-   	 case R.id.test_app_menuitem:
+   	/* case R.id.test_app_menuitem:
    		ShowActiveReqPrompt activereq_dialog = new ShowActiveReqPrompt();
    		activereq_dialog.show(getSupportFragmentManager(), "fblogin_dialog");
-   		 break;
+   		 break;*/
      case R.id.my_requests:
          Intent myRequestIntent = new Intent(this, MyRequestsActivity.class);
          myRequestIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
          startActivity(myRequestIntent);
          break;
+     case R.id.my_chats:
+         Intent myChatsIntent = new Intent(this, MyChatsActivity.class);
+         myChatsIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+         startActivity(myChatsIntent);
+         break;  
      
         } 
         return super.onOptionsItemSelected(menuItem);

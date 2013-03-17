@@ -118,7 +118,7 @@ public class NewUserDialogFragment extends DialogFragment{
 			chatIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View chatIconView) {					
-					CommunicationHelper.getInstance().onChatClickWithUser(thisNearbyUser);						
+					CommunicationHelper.getInstance().onChatClickWithUser(thisNearbyUser.getUserFBInfo().getFbid(),thisNearbyUser.getUserFBInfo().getFBUsername());						
 				}
 			});
 			

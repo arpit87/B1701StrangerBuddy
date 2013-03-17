@@ -18,11 +18,16 @@ import android.widget.ProgressBar;
  */
 
 
+
 public class ProgressHandler {
 	ProgressBar progressBar = null;	
 	private static ProgressDialog progressDialog = null;
 	private static AtomicBoolean isshowing = new AtomicBoolean(false);
 	private int count = 10;
+	
+	private static Activity underlying_activity = null;
+	private static String title = "";
+	private static String message = "";
 	private static Runnable cancelableRunnable = new Runnable() {
 		
 		@Override
@@ -36,23 +41,27 @@ public class ProgressHandler {
 		}
 	};
 	
+	private static Runnable startRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			progressDialog = ProgressDialog.show(underlying_activity, title, message, true);
+			progressDialog.setOnCancelListener(new OnCancelListener() {				
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					isshowing.set(false);					
+				}		
+		});
+	}};
+	
 	public static void showInfiniteProgressDialoge(final Activity underlying_activity,final String title,final String message)
 	{
 		if(!isshowing.getAndSet(true)) 
 		{
-			Platform.getInstance().getHandler().post((new Runnable(){
-				public void run() {						
-					progressDialog = ProgressDialog.show(underlying_activity, title, message, true);
-					progressDialog.setOnCancelListener(new OnCancelListener() {
-						
-						@Override
-						public void onCancel(DialogInterface dialog) {
-							isshowing.set(false);
-							
-						}
-					});
-				}}));
-			
+			ProgressHandler.underlying_activity = underlying_activity;
+			ProgressHandler.title = title;
+			ProgressHandler.message = message;
+			Platform.getInstance().getHandler().post(startRunnable);			
 			//set cancelable after 10 sec of delay
 			Platform.getInstance().getHandler().postDelayed(cancelableRunnable,10000);
 		}
@@ -60,8 +69,11 @@ public class ProgressHandler {
 		{
 			if(progressDialog!=null)
 			{
-				progressDialog.setTitle(title);
-				progressDialog.setMessage(message);
+				Platform.getInstance().getHandler().post((new Runnable(){
+					public void run() {
+					progressDialog.setTitle(title);
+					progressDialog.setMessage(message);
+				}}));
 			}
 		}
 	}

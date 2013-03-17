@@ -33,9 +33,9 @@ public static final int MSG_TYPE_ACKFOR_BLOCKED = 700;
 public static final String USERID = "user_id";
 public static final String UNIQUEID = "unique_id";
 public static final String SBMSGTYPE = "sb_msg_type";
-public static final String DAILYINSTATYPE = "daily_insta_type"; //0 daily,1 insta..we need to know what type of broadcast
 public static final String TIME = "time";
-public static final String TRAVELINFO = "travel_info";
+public static final String DAILYINSTATYPE = "daily_insta_type";
+
 
 /** Parcelable.Creator needs by Android. */
 public static final Parcelable.Creator<Message> CREATOR = new Parcelable.Creator<Message>() {
@@ -52,6 +52,7 @@ public Message[] newArray(int size) {
 };
 
 
+
 private int mType = (int)Message.MSG_TYPE_CHAT;
 private String mBody = "";
 private String mSubject="";
@@ -59,11 +60,11 @@ private String mTo ="";
 private String mFrom ="";
 private String mThread = "";
 private String mTime = "";
-private String mTravelInfo = "";
 private String mImageURL = "";
 private int mStatus = SBChatMessage.UNKNOWN;
 private long mUniqueMsgIdentifier = 0;
-private int mDailyInstaType = 1;
+private int mDailyInstaType = -1;
+
 
 // TODO ajouter l'erreur
 
@@ -82,12 +83,11 @@ mFrom = "";
 mTime = "";
 }
 
-public Message(final String to, final String from, final String body, final int dailyInstaType, final String time,
+public Message(final String to, final String from, final String body, final String time,
                final int type, final int status){
     mTo = to;
     mFrom = from;
-    mBody = body;
-    mDailyInstaType = dailyInstaType;
+    mBody = body;    
     mTime = time;
     mType = type;
     mStatus = status;
@@ -137,9 +137,7 @@ mFrom = in.readString();
 mStatus = in.readInt();
 mUniqueMsgIdentifier = in.readLong();
 mTime = in.readString();
-mTravelInfo = in.readString();
 mImageURL = in.readString();
-mDailyInstaType = in.readInt();
 }
 
 /**
@@ -157,9 +155,7 @@ dest.writeString(mFrom);
 dest.writeInt(mStatus);
 dest.writeLong(mUniqueMsgIdentifier);
 dest.writeString(mTime);
-dest.writeString(mTravelInfo);
 dest.writeString(mImageURL);
-dest.writeInt(mDailyInstaType);
 }
 
 /**
@@ -306,28 +302,21 @@ public void setTimeStamp(String mTime) {
 	this.mTime = mTime;
 }
 
-public String getTravelInfo() {
-	return mTravelInfo;
-}
 
 public String getImageURL() {
 	return mImageURL;
 }
 
-public void setTravelInfo(String mTravelInfo) {
-	this.mTravelInfo = mTravelInfo;
-}
-
-public int getDailyInstaType() {
-	return mDailyInstaType;
+public void setImageURL(String mImageURL) {
+	this.mImageURL = mImageURL;
 }
 
 public void setDailyInstaType(int mDailyInstaType) {
 	this.mDailyInstaType = mDailyInstaType;
 }
 
-public void setImageURL(String mImageURL) {
-	this.mImageURL = mImageURL;
+public int getDailyInstaType() {
+	return mDailyInstaType;
 }
 
 }

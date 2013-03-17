@@ -7,8 +7,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import my.b1701.SB.ChatClient.IMessageListener;
 import my.b1701.SB.ChatClient.SBChatMessage;
+import my.b1701.SB.HelperClasses.ActiveChat;
 import my.b1701.SB.HelperClasses.BlockedUsers;
 import my.b1701.SB.HelperClasses.ChatHistory;
+import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetFBInfoForUserIDAndShowPopup;
@@ -46,16 +48,12 @@ class ChatAdapter extends IChatAdapter.Stub {
 	private static final String TAG = "my.b1701.SB.ChatService.ChatAdapter";
 	private Boolean mIsOpen = false;
 	private final Chat mSmackChat;
-	private final String mParticipant;
+	private final String mParticipant;	
 	private List<Message> mMessages;
 	private final HashMap<Long, Message> mSentNotDeliveredMsgHashSet;
 	private SBChatManager mChatManager;
 	SBMsgListener mMsgListener = null;
-	int notificationid = 0;
-	String mDailyTravelinfo = "";
-	String mInstaTravelinfo = "";
-	String mTravelinfo = "";
-	int mDailyInstaType = -1;
+	int notificationid = 0;	
 	String mImageURL = "";
 	private final RemoteCallbackList<IMessageListener> mRemoteListeners = new RemoteCallbackList<IMessageListener>();
 	private LinkedBlockingQueue<Message> mMsgqueue = null;
@@ -65,7 +63,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 	// sendMsg by smack to participant
 	public ChatAdapter(final Chat chat, SBChatManager chatManager) {
 		mSmackChat = chat;
-		mParticipant = chat.getParticipant();
+		mParticipant = chat.getParticipant();		
 		mMessages = ChatHistory.getChatHistory(mParticipant);
 		if(mMessages.size()==0)
 			mMessages = new LinkedList<Message>();
@@ -80,11 +78,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 		String instaReqJson = ThisUserConfig.getInstance().getString(
 				ThisUserConfig.ACTIVE_REQ_INSTA);
 		String carpoolReqJson = ThisUserConfig.getInstance().getString(
-				ThisUserConfig.ACTIVE_REQ_CARPOOL);
-		if (!StringUtils.isEmpty(carpoolReqJson))
-			mDailyTravelinfo = setTravelInfo(carpoolReqJson, 0);
-		if (!StringUtils.isEmpty(instaReqJson))
-			mInstaTravelinfo = setTravelInfo(instaReqJson, 1);
+				ThisUserConfig.ACTIVE_REQ_CARPOOL);		
 		mSenderThread = new SenderThread();
 		mSenderThread.start();
 		Log.i(TAG, "chatadapter created for:" + mParticipant);
@@ -94,7 +88,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 		return notificationid;
 	}
 
-	private String setTravelInfo(String responseJsonStr, int daily_insta_type) {
+	/*private String setTravelInfo(String responseJsonStr, int daily_insta_type) {
 		JSONObject responseJsonObj;
 		String formattedTraveDetails = "";
 		try {
@@ -122,12 +116,18 @@ class ChatAdapter extends IChatAdapter.Stub {
 		}
 		return formattedTraveDetails;
 
-	}
+	}*/
 
 	private void addMessageToList(Message msg)
 	{
 		mMessages.add(msg);
 		ChatHistory.addtoChatHistory(msg);
+	}
+	
+	private void updateMessageStatusInList(Message msg, int status)
+	{
+		msg.setStatus(status);
+		ChatHistory.updateStatus(msg.getUniqueMsgIdentifier(), status);
 	}
 	
 	@Override
@@ -239,6 +239,8 @@ class ChatAdapter extends IChatAdapter.Stub {
 				// caution..call back listener to chatwindow might not be
 				// registered yet for this chat
 				// listener get registered only when chat window opens
+				if(!ThisAppConfig.getInstance().getBool(ThisAppConfig.NEWUSERPOPUP))
+					return;
 				String thisNearbyUserFBID = msg.getInitiator();
 				if(BlockedUsers.isUserBlocked(thisNearbyUserFBID))
 					return;
@@ -246,10 +248,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 						.getProperty(Message.USERID);
 				int daily_insta_type = (Integer) message
 						.getProperty(Message.DAILYINSTATYPE);
-				if (daily_insta_type == 0)
-					mTravelinfo = mDailyTravelinfo;
-				else if (daily_insta_type == 1)
-					mTravelinfo = mInstaTravelinfo;
+				
 				ToastTracker.showToast("got broadcast from userid:"
 						+ thisNearbyUserUSERID);
 				GetFBInfoForUserIDAndShowPopup req = new GetFBInfoForUserIDAndShowPopup(
@@ -272,9 +271,9 @@ class ChatAdapter extends IChatAdapter.Stub {
 				if (origMsg != null) {
 					Log.i(TAG, "got ack for msg: " + origMsg.getBody());
 					if(msg.getType() == Message.MSG_TYPE_ACKFOR_BLOCKED)
-						origMsg.setStatus(SBChatMessage.BLOCKED);
+						updateMessageStatusInList(origMsg, SBChatMessage.BLOCKED);						
 					else
-						origMsg.setStatus(SBChatMessage.DELIVERED);
+						updateMessageStatusInList(origMsg, SBChatMessage.DELIVERED);						
 					origMsg.setTimeStamp(StringUtils
 							.gettodayDateInFormat("hh:mm"));
 					mSentNotDeliveredMsgHashSet.remove(origMsg);
@@ -293,22 +292,13 @@ class ChatAdapter extends IChatAdapter.Stub {
 			// this is chat coming from outside,send ack to this msg
 			if (msg.getType() == Message.MSG_TYPE_CHAT) {
 				sendAck(msg);
+				//active chat for incoming added here and for outgoing added in chatwindow
+				ActiveChat.addChat(mParticipant, msg.getSubject(), msg.getBody());
 				if (mMessages.size() == HISTORY_MAX_SIZE)
 					mMessages.remove(0);
-				msg.setStatus(SBChatMessage.RECEIVED);
-				msg.setTimeStamp((String) message.getProperty(Message.TIME));
-				msg.setTravelInfo((String) message
-						.getProperty(Message.TRAVELINFO));
-				int daily_insta_type = (Integer) message
-						.getProperty(Message.DAILYINSTATYPE);
-				if (daily_insta_type == 0) {
-					mDailyInstaType = daily_insta_type;
-					mTravelinfo = mDailyTravelinfo;
-				} else if (daily_insta_type == 1) {
-					mDailyInstaType = daily_insta_type;
-					mTravelinfo = mInstaTravelinfo;
-				}
-				msg.setDailyInstaType(daily_insta_type);
+				updateMessageStatusInList(msg, SBChatMessage.RECEIVED);				
+				msg.setTimeStamp((String) message.getProperty(Message.TIME));				
+				
 				addMessageToList(msg);
 
 				if (mIsOpen) {
@@ -319,10 +309,8 @@ class ChatAdapter extends IChatAdapter.Stub {
 					String participant_name = msg.getSubject();
 					if (participant_name == "")
 						participant_name = "Unknown";
-					String travel_info = (String) message
-							.getProperty(Message.TRAVELINFO);
-					mChatManager.notifyChat(notificationid, msg.getInitiator(),
-							participant_name, mTravelinfo);
+					
+					mChatManager.notifyChat(notificationid, msg.getInitiator(),participant_name,msg.getBody());
 
 				}
 
@@ -373,34 +361,17 @@ class ChatAdapter extends IChatAdapter.Stub {
 		msgToSend.setSubject(msg.getSubject());
 		msgToSend.setProperty(Message.UNIQUEID, msg.getUniqueMsgIdentifier());
 		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_CHAT);
-		msgToSend.setProperty(Message.TIME, msg.getTimestamp());
-		msgToSend.setProperty(Message.TRAVELINFO, mTravelinfo);
-		// things very confusing here..wt we diong is, every message should have
-		// daily insta type n travel info
-		// this info is set depending on wt previous incoming msg u got.
-		// in the incoming msg we get same info n set for this user to be sent
-		// in this users reply
-		// so its like if other user initiated chat for carpool then read from
-		// his msg that its carpool
-		// set in ur msg that it was carpool n set ur travel info accordingly
-		if (mDailyInstaType == -1 && mMessages.size() > 0) {
-			// this case comes when android kill our chat adapter so we read
-			// daily insta type
-			// from last msg restored from sql
-			mDailyInstaType = mMessages.get(mMessages.size() - 1)
-					.getDailyInstaType();
-		}
-		msgToSend.setProperty(Message.DAILYINSTATYPE, mDailyInstaType);
-
+		msgToSend.setProperty(Message.TIME, msg.getTimestamp());		
+	
 		try {
 			mSmackChat.sendMessage(msgToSend);
 			Log.i(TAG, "chat message sent to " + msg.getTo());
-			msg.setStatus(SBChatMessage.SENT);
+			updateMessageStatusInList(msg, SBChatMessage.SENT);			
 			mSentNotDeliveredMsgHashSet.put(msg.getUniqueMsgIdentifier(), msg);
 		} catch (XMPPException e) {
 			// TODO retry sending msg?
 			Log.i(TAG, "message sending to had xmpp exception" + msg.getTo());
-			msg.setStatus(SBChatMessage.SENDING_FAILED);
+			updateMessageStatusInList(msg, SBChatMessage.SENDING_FAILED);			
 			e.printStackTrace();
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
@@ -430,10 +401,12 @@ class ChatAdapter extends IChatAdapter.Stub {
 		// 4) dailyinstatype
 		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();
 		msgToSend.setProperty(Message.SBMSGTYPE,
-				Message.MSG_TYPE_NEWUSER_BROADCAST);
-		msgToSend.setProperty(Message.DAILYINSTATYPE, msg.getDailyInstaType());
+				Message.MSG_TYPE_NEWUSER_BROADCAST);		
 		msgToSend.setProperty(Message.USERID, ThisUserNew.getInstance()
 				.getUserID());
+		msgToSend.setProperty(Message.DAILYINSTATYPE, ThisUserNew.getInstance()
+				.get_Daily_Instant_Type());
+		
 		msgToSend.setProperty(Message.UNIQUEID, System.currentTimeMillis());
 		try {
 			mSmackChat.sendMessage(msgToSend);

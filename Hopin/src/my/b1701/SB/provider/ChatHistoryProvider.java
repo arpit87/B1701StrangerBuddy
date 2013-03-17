@@ -38,8 +38,7 @@ public class ChatHistoryProvider extends ContentProvider {
                     "_id INTEGER PRIMARY KEY" +
                     ",fbIdTo TEXT" +
                     ",fbIdFrom TEXT" +
-                    ",body TEXT" +
-                    ",dailyInstaType INTEGER" +
+                    ",body TEXT" +                  
                     ",groupId INTEGER" +
                     ",timestamp TEXT" +
                     ",status INTEGER" +

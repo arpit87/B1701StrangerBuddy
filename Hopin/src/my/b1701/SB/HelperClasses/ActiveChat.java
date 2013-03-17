@@ -96,7 +96,7 @@ public class ActiveChat {
         ContentValues contentValues = new ContentValues();
         if (isPresent) {
             //not updating the name
-            contentValues.put(columns[1], lastMessage);
+            contentValues.put(columns[2], lastMessage);
             cr.update(mUri, contentValues, "fbId = ?", new String[] {fbId});
         } else {
             contentValues.put(columns[0], fbId);

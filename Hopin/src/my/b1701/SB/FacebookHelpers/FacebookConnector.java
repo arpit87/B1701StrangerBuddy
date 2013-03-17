@@ -78,8 +78,9 @@ public class FacebookConnector {
     }
     
     public void loginToFB()
-    { 		
-	    String access_token = ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN);
+    { 	
+    	facebook.authorize(underlying_activity, permissions, new LoginDialogListener());
+	   /* String access_token = ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN);
 	    long expires = ThisUserConfig.getInstance().getLong(ThisUserConfig.FBACCESSEXPIRES);
 	 
 	    if (access_token != "") {
@@ -93,7 +94,7 @@ public class FacebookConnector {
     	 if (!facebook.isSessionValid()) {
     		 facebook.authorize(underlying_activity, permissions, new LoginDialogListener());  
     		 
-    	 }
+    	 }*/
     }  
     
     public void authorizeCallback(int requestCode, int resultCode,Intent data)
@@ -104,8 +105,8 @@ public class FacebookConnector {
     class LoginDialogListener implements DialogListener {
 	    public void onComplete(Bundle values) {	    	
 	    	ThisUserConfig.getInstance().putString(ThisUserConfig.FBACCESSTOKEN, facebook.getAccessToken());
-        	ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES, facebook.getAccessExpires());         	
-        	ToastTracker.showToast("Authentication successsful");
+        	ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES, facebook.getAccessExpires());
+        	ProgressHandler.showInfiniteProgressDialoge(underlying_activity, "Authentication successsful", "Preparing for first run");
         	requestUserData();        	
         }    
 	    
@@ -169,7 +170,7 @@ public class FacebookConnector {
                 	if(userId == "")
                 	{
                 		//this happens on fb login from tutorial page.
-                		ProgressHandler.showInfiniteProgressDialoge(underlying_activity, "Welcome "+first_name+" "+last_name+"!", "Preparing for first run");
+                		ProgressHandler.showInfiniteProgressDialoge(underlying_activity, "Welcome "+first_name+" "+last_name+"!", "Please wait..");
                 		String uuid = ThisAppConfig.getInstance().getString(ThisAppConfig.APPUUID);
                 		SBHttpRequest request = new AddUserRequest(uuid,username,underlying_activity);		
                   		SBHttpClient.getInstance().executeRequest(request);

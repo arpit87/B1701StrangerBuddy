@@ -125,7 +125,7 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 			connectToServer.execute(this);
 			
 		}
-		else
+		else if(!mXMPPConnection.isAuthenticated())
 		{	
 			if(tryinLogging.getAndSet(true))
 				return;
@@ -325,9 +325,13 @@ private class LoginToChatServerTask extends AsyncTask<XMPPConnectionListenersAda
 				
 				@Override
 				public void run() {
-					Log.d(TAG, "sending presence packet");
-					Presence presence = new Presence(Presence.Type.available);
-				 	mXMPPConnection.sendPacket(presence);					
+					try{
+						Log.d(TAG, "sending presence packet");
+						Presence presence = new Presence(Presence.Type.available);
+					 	mXMPPConnection.sendPacket(presence);			
+					}catch (IllegalStateException e) {
+					    Log.e(TAG, "Problem sending presence packet", e);
+					}
 				}
 			};
 			sendPresence.run();

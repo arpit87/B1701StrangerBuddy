@@ -10,6 +10,7 @@ import my.b1701.SB.ChatService.IXMPPAPIs;
 import my.b1701.SB.ChatService.Message;
 import my.b1701.SB.ChatService.SBChatService;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
+import my.b1701.SB.HelperClasses.ActiveChat;
 import my.b1701.SB.HelperClasses.AlertDialogBuilder;
 import my.b1701.SB.HelperClasses.BlockedUsers;
 import my.b1701.SB.HelperClasses.ProgressHandler;
@@ -69,8 +70,7 @@ public class ChatWindow extends Activity{
     private ISBChatConnAndMiscListener mCharServiceConnMiscListener = new SBChatServiceConnAndMiscListener();
     private final ChatServiceConnection mChatServiceConnection = new ChatServiceConnection();
     private String mParticipantFBID = "";  
-    private String mParticipantName = "";  
-    private String mParticipantTravelDetails = "";    
+    private String mParticipantName = "";       
     private String mParticipantImageURL = "";    
     private SBChatBroadcastReceiver mSBBroadcastReceiver = new SBChatBroadcastReceiver();
     Handler mHandler = new Handler();
@@ -94,7 +94,7 @@ public class ChatWindow extends Activity{
 	    mContactNameTextView = (TextView) findViewById(R.id.chat_contact_name);
 	    mMenuButton = (ImageView) findViewById(R.id.chatwindow_menuButton);
 	   // mContactPicFrame = (ImageView) findViewById(R.id.chat_contact_pic_frame);
-	    mTravelDetails = (TextView) findViewById(R.id.chat_contact_destination);	    
+	    	    
 	   // mContactPic = (ImageView) findViewById(R.id.chat_contact_pic);
 	    mMessagesListView = (ListView) findViewById(R.id.chat_messages);
 	    mMessagesListView.setAdapter(mMessagesListAdapter);
@@ -134,9 +134,7 @@ public void onResume() {
 	if(StringUtils.isBlank(mParticipantFBID))
 	  return;
 	mParticipantName = getIntent().getStringExtra(PARTICIPANT_NAME);
-	mParticipantTravelDetails = getIntent().getStringExtra(TRAVELINFO);	
 	mContactNameTextView.setText(mParticipantName);
-	mTravelDetails.setText(mParticipantTravelDetails);
 	mParticipantImageURL = "http://graph.facebook.com/" + mParticipantFBID + "/picture?type=small";
 	mMessagesListAdapter.setParticipantFBURL(mParticipantImageURL);
 	//mContactNameTextView.setText(mReceiver);
@@ -296,7 +294,7 @@ private void showPopupMenu(View v)
 			newMessage.setSubject(mThisUserChatFullName);			
 			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());	
 			newMessage.setTimeStamp(StringUtils.gettodayDateInFormat("hh:mm"));
-				 				
+			ActiveChat.addChat(mParticipantFBID, mThisUserChatFullName, inputContent);				
 			mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID,inputContent, false, StringUtils.gettodayDateInFormat("hh:mm"),
 					                                          SBChatMessage.SENDING,newMessage.getUniqueMsgIdentifier()));
 			mMessagesListAdapter.notifyDataSetChanged();
@@ -493,11 +491,7 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 	 		
 		    @Override
 		    public void run() {
-		   //this means chat switched before callback but this should not happen as we are chking isOpen inchatadapter
-		  // if(chatAdapter.getParticipant()!=mParticipantFBID){
-		//	   Log.d(TAG,"chat callback on non open chat!!!shouldnt happen as we chking isopen in adapter");
-		 //   	   return;
-		 //  }
+		
 		   
 		  if(msg.getType() == Message.MSG_TYPE_ACKFOR_DELIVERED)
 		  {
@@ -519,6 +513,8 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 			  }
 			  else if(msg.getStatus() == SBChatMessage.RECEIVED){
 			  if (msg.getBody() != null) {
+				  	//incomiing added in chatadapter
+				  	//ActiveChat.addChat(mParticipantFBID, mThisUserChatFullName, msg.getBody());
 				    SBChatMessage lastMessage = null;
 				    
 				    if (mMessagesListAdapter.getCount() != 0)

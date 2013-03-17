@@ -18,8 +18,7 @@ public class ChatHistory {
     private static Uri mUri = Uri.parse("content://" + ChatHistoryProvider.AUTHORITY + "/chathistory");
     private static String[] columns = new String[] {"fbIdTo",
                                                     "fbIdFrom",
-                                                    "body",
-                                                    "dailyInstaType",
+                                                    "body",                                                 
                                                     "groupId",
                                                     "timestamp",
                                                     "status",
@@ -98,12 +97,11 @@ public class ChatHistory {
             ContentValues values = new ContentValues();
             values.put(columns[0], getFBId(message.getTo()));
             values.put(columns[1], getFBId(message.getFrom()));
-            values.put(columns[2], message.getBody());
-            values.put(columns[3], message.getDailyInstaType());
-            values.put(columns[4], -1);
-            values.put(columns[5], message.getTimestamp());
-            values.put(columns[6], message.getStatus());
-            values.put(columns[7], message.getUniqueMsgIdentifier());
+            values.put(columns[2], message.getBody());           
+            values.put(columns[3], -1);
+            values.put(columns[4], message.getTimestamp());
+            values.put(columns[5], message.getStatus());
+            values.put(columns[6], message.getUniqueMsgIdentifier());
             cr.insert(mUri, values);
         } catch (RuntimeException e) {
             Log.e(TAG, "BlockUserQueryError", e);
@@ -129,11 +127,10 @@ public class ChatHistory {
     private static Message buildMessage(Cursor cursor){
         String to = cursor.getString(0) + "@" + ServerConstants.CHATSERVERIP;
         String from = cursor.getString(1) + "@" + ServerConstants.CHATSERVERIP;
-        String body = cursor.getString(2);
-        int dailyInstaType = cursor.getInt(3);
-        String time = cursor.getString(5);
-        int status = cursor.getInt(6);
-        return new Message(to, from, body, dailyInstaType, time, Message.MSG_TYPE_CHAT, status);
+        String body = cursor.getString(2);       
+        String time = cursor.getString(4);
+        int status = cursor.getInt(5);
+        return new Message(to, from, body, time, Message.MSG_TYPE_CHAT, status);
     }
 
     private static String getFBId(String userid){

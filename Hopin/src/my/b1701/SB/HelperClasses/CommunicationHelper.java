@@ -37,7 +37,7 @@ public class CommunicationHelper {
 		return instance;
 	}
 	
-	public void onChatClickWithUser(NearbyUser n)
+	public void onChatClickWithUser(String fbid,String full_name)
 	{
 		//chat username and id are set only after successful addition to chat server
 		//if these missing =?not yet added on chat server
@@ -69,21 +69,16 @@ public class CommunicationHelper {
 			//Intent fbLoginIntent = new Intent(context,LoginActivity.class);			
 			//MapListActivityHandler.getInstance().getUnderlyingActivity().startActivity(fbLoginIntent);
 		}	
-		else if(n.getUserFBInfo().FBInfoAvailable())
+		else 
 		{
 			Intent startChatIntent = new Intent(Platform.getInstance().getContext(),ChatWindow.class);					
 			startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
-		 			| Intent.FLAG_ACTIVITY_NEW_TASK);
-			String userFBID = n.getUserFBInfo().getFbid();
-			String imageURL = n.getUserFBInfo().getImageURL();
-			String travelDetailInfo = n.getUserLocInfo().getFormattedTravelDetails();
-			startChatIntent.putExtra(ChatWindow.PARTICIPANT, userFBID);			
-			startChatIntent.putExtra(ChatWindow.PARTICIPANT_NAME, n.getUserFBInfo().getFullName());
-			startChatIntent.putExtra(ChatWindow.TRAVELINFO, travelDetailInfo);			
+		 			| Intent.FLAG_ACTIVITY_NEW_TASK);			
+			startChatIntent.putExtra(ChatWindow.PARTICIPANT, fbid);			
+			startChatIntent.putExtra(ChatWindow.PARTICIPANT_NAME, full_name);
 			context.startActivity(startChatIntent);
 		}
-		else
-			ToastTracker.showToast("Not available, user not FB logged in");
+		
 	
 	}
 	
