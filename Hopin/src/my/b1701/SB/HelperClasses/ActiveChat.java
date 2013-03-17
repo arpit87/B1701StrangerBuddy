@@ -17,18 +17,24 @@ public class ActiveChat {
     private static final String TAG = "my.b1701.SB.HelperClasses.ActiveChat";
     private static Uri mUriFetch = Uri.parse("content://" + ActiveChatProvider.AUTHORITY + "/db_fetch_only");
     private static Uri mUri = Uri.parse("content://" + ActiveChatProvider.AUTHORITY + "/activechat");
-    private static String[] columns = new String[] {"fbId", "lastMessage"};
+    private static String[] columns = new String[] {"fbId", "name", "lastMessage"};
 
     private final String userId;
+    private final String name;
     private final String lastMessage;
 
-    public ActiveChat(String userId, String lastMessage){
+    public ActiveChat(String userId, String name, String lastMessage){
         this.userId = userId;
+        this.name = name;
         this.lastMessage = lastMessage;
     }
 
     public String getUserId() {
         return userId;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getLastMessage() {
@@ -49,7 +55,7 @@ public class ActiveChat {
             activeChats = new ArrayList<ActiveChat>();
             if (cursor.moveToFirst()) {
                 do {
-                    ActiveChat activeChat = new ActiveChat(cursor.getString(0), cursor.getString(1));
+                    ActiveChat activeChat = new ActiveChat(cursor.getString(0), cursor.getString(1), cursor.getString(2));
                     activeChats.add(activeChat);
                 } while (cursor.moveToNext());
             }
@@ -62,18 +68,18 @@ public class ActiveChat {
         return activeChats;
     }
 
-    public static void addChat(final String fbId, final String lastMessage){
+    public static void addChat(final String fbId, final String name, final String lastMessage){
         Log.i(TAG, "Saving chat for fbId : " + fbId );
         new Thread("addlastchat") {
             @Override
             public void run() {
-                saveChat(fbId, lastMessage);
+                saveChat(fbId, name, lastMessage);
             }
         }.start();
 
     }
 
-    private static void saveChat(String fbId, String lastMessage) {
+    private static void saveChat(String fbId, String name, String lastMessage) {
         ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
         Cursor cursor = cr.query(mUriFetch, columns, "fbId = ?", new String[] {fbId}, null);
 
@@ -89,11 +95,13 @@ public class ActiveChat {
 
         ContentValues contentValues = new ContentValues();
         if (isPresent) {
+            //not updating the name
             contentValues.put(columns[1], lastMessage);
             cr.update(mUri, contentValues, "fbId = ?", new String[] {fbId});
         } else {
             contentValues.put(columns[0], fbId);
-            contentValues.put(columns[1], lastMessage);
+            contentValues.put(columns[1], name);
+            contentValues.put(columns[2], lastMessage);
             cr.insert(mUri, contentValues);
         }
     }

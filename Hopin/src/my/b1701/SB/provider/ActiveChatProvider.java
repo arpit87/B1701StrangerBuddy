@@ -35,6 +35,7 @@ public class ActiveChatProvider extends ContentProvider{
             builder.append("CREATE TABLE activechat (" +
                     "_id INTEGER PRIMARY KEY" +
                     ",fbId TEXT" +
+                    ",name TEXT" +
                     ",lastMessage TEXT" +
                     ");");
             db.execSQL(builder.toString());
