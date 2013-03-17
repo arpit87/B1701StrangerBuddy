@@ -295,7 +295,13 @@ class ChatAdapter extends IChatAdapter.Stub {
 			// this is chat coming from outside,send ack to this msg
 			if (msg.getType() == Message.MSG_TYPE_CHAT) {
 				try {
-					sendMessage(msg);
+					Message ackmsg = null;					
+					if (BlockedUsers.isUserBlocked(mParticipant))
+					 ackmsg = new Message(msg.getFrom(),Message.MSG_TYPE_ACKFOR_BLOCKED);
+					else
+						ackmsg = new Message(msg.getFrom(),Message.MSG_TYPE_ACKFOR_DELIVERED);	
+					ackmsg.setUniqueMsgIdentifier(msg.getUniqueMsgIdentifier());
+					sendMessage(ackmsg);
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -331,14 +337,8 @@ class ChatAdapter extends IChatAdapter.Stub {
 		// msg type is overritten by smack so add property so need to set as
 		// property
 		// msgToSend.setType(org.jivesoftware.smack.packet.Message.Type.headline);
-		msgToSend.setProperty(Message.UNIQUEID, msg.getUniqueMsgIdentifier());
-		if (BlockedUsers.isUserBlocked(mParticipant))
-			msgToSend.setProperty(Message.SBMSGTYPE,
-					Message.MSG_TYPE_ACKFOR_BLOCKED);
-
-		else
-			msgToSend.setProperty(Message.SBMSGTYPE,
-					Message.MSG_TYPE_ACKFOR_DELIVERED);
+		msgToSend.setProperty(Message.UNIQUEID, msg.getUniqueMsgIdentifier());		
+		msgToSend.setProperty(Message.SBMSGTYPE,msg.getType());
 
 		try {
 			mSmackChat.sendMessage(msgToSend);
