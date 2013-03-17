@@ -14,13 +14,10 @@
             android:title="@string/menu_search"
             android:icon="@drawable/ic_menu_search"            
             android:showAsAction="always"
-            />        
-
-    <item android:id="@+id/settings_menuitem" android:title="Settings" android:showAsAction="never"></item> 
-    <item android:id="@+id/my_requests" android:title="My Requests" android:showAsAction="never"></item>
-    <item android:id="@+id/fb_login_menuitem" android:title="Login" android:showAsAction="never"></item>
-    <item android:id="@+id/fb_logout_menuitem" android:title="Logout" android:showAsAction="never"></item>
-    <item android:id="@+id/test_app_menuitem" android:title="Test" android:showAsAction="never" ></item>
+            /> 
+    <item android:id="@+id/my_requests" android:title="Active Requests" android:showAsAction="never"></item>
+     <item android:id="@+id/my_chats" android:title="Chats" android:showAsAction="never"></item>
+   <item android:id="@+id/settings_menuitem" android:title="Settings" android:showAsAction="never"></item>
     <item android:id="@+id/exit_app_menuitem" android:title="Exit" android:showAsAction="never" ></item>
       
 </menu>

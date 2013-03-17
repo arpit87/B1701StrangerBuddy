@@ -54,7 +54,7 @@
              android:layout_height="match_parent"
              android:textColor="@color/gray"
         	 android:textSize="15dip"
-         	 android:text="New matching user found"
+         	 android:text="Show popup when new matching user found"
          	 android:paddingLeft="10dip"
          	 android:paddingRight="40dip"
          	 android:layout_weight="4"   
@@ -72,7 +72,7 @@
             />
           </TableRow>
           
-                 <TableRow android:layout_width="match_parent"
+         <!--          <TableRow android:layout_width="match_parent"
              android:layout_height="wrap_content">
          <TextView
              android:id="@+id/settings_newuser_showpopup_text"
@@ -96,7 +96,7 @@
              android:layout_weight="1"  
              android:layout_gravity="center_vertical"         
             />
-          </TableRow>
+          </TableRow>-->
           </TableLayout>
                          
          
@@ -189,7 +189,7 @@
              android:layout_height="match_parent"
              android:textColor="@color/gray"
         	 android:textSize="15dip"
-         	 android:text="Visible only to girls and vice versa"
+         	 android:text="Visible only to women and vice versa"
          	 android:paddingLeft="10dip"
          	 android:paddingRight="40dip"  
          	 android:layout_weight="4"

@@ -155,7 +155,7 @@
         android:layout_height="30dip"        
         android:layout_centerHorizontal="true"
         android:layout_below="@id/tableLayout1"
-        android:background="@drawable/button_sign_in_with_facebook"
+        android:src="@drawable/fblogin_bigbutton_selector"
          />
   <TextView
         android:id="@+id/disclaimer"

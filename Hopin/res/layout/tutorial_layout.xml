@@ -365,7 +365,7 @@
                  android:paddingTop="5dip"
                  android:layout_gravity="left"      
                  android:gravity="left"          
-                 android:text="-Female visible only to female"
+                 android:text="-women visible only to women"
                  android:textSize="15dip"
                  android:textColor="@color/very_dark_gray" />
                <TextView
@@ -407,9 +407,10 @@
         android:id="@+id/tutorial_signInViaFacebook"
         android:layout_width="wrap_content"
         android:layout_height="30dip" 
-          android:layout_marginTop="15dip"       
+        android:layout_marginTop="15dip"       
         android:layout_gravity="center_horizontal"       
-        android:background="@drawable/button_sign_in_with_facebook"
+        android:background="@drawable/fblogin_bigbutton_selector"
+        android:focusable="true"
          />  
          
        <TextView
