@@ -69,7 +69,7 @@
 		        android:textColor="#343434"
 		        android:textSize="15dip"
 		        android:layout_marginTop="1dip"      
-		        android:maxLines="2"
+		        android:maxLines="1"
 		        android:ellipsize="marquee"   />
     </TableRow>
     <TableRow >

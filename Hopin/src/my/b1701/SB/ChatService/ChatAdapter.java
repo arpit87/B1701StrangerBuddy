@@ -188,8 +188,11 @@ class ChatAdapter extends IChatAdapter.Stub {
 						msgsent = sendChatMessage(m);
 						break;
 					case Message.MSG_TYPE_ACKFOR_DELIVERED:
-						msgsent = sendChatMessage(m);
+						msgsent = sendAck(m);
 						break;
+					case Message.MSG_TYPE_ACKFOR_BLOCKED:
+						msgsent = sendAck(m);
+						break;	
 					case Message.MSG_TYPE_NEWUSER_BROADCAST:
 						msgsent = sendBroadCastMessage(m);
 						break;
@@ -291,13 +294,18 @@ class ChatAdapter extends IChatAdapter.Stub {
 
 			// this is chat coming from outside,send ack to this msg
 			if (msg.getType() == Message.MSG_TYPE_CHAT) {
-				sendAck(msg);
+				try {
+					sendMessage(msg);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				//active chat for incoming added here and for outgoing added in chatwindow
 				ActiveChat.addChat(msg.getInitiator(), msg.getSubject(), msg.getBody());
 				if (mMessages.size() == HISTORY_MAX_SIZE)
 					mMessages.remove(0);
-				updateMessageStatusInList(msg, SBChatMessage.RECEIVED);				
-				msg.setTimeStamp((String) message.getProperty(Message.TIME));				
+				msg.setStatus(SBChatMessage.RECEIVED);				
+				msg.setTimeStamp((String) message.getProperty(Message.TIME));			
 				
 				addMessageToList(msg);
 

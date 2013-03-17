@@ -183,7 +183,7 @@ private void showPopupMenu(View v)
 		@Override
 		public void onClick(View v) {
 			BlockedUsers.addtoList(mParticipantFBID);
-	        Toast.makeText(ChatWindow.this, mParticipantName + " blocked", Toast.LENGTH_SHORT);	
+	        ToastTracker.showToast(mParticipantName + " blocked", Toast.LENGTH_SHORT);	
 	        popUpMenu.dismiss();
 		}
 	});
@@ -294,6 +294,7 @@ private void showPopupMenu(View v)
 			newMessage.setSubject(mThisUserChatFullName);			
 			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());	
 			newMessage.setTimeStamp(StringUtils.gettodayDateInFormat("hh:mm"));
+			newMessage.setStatus(SBChatMessage.SENDING);
 			ActiveChat.addChat(mParticipantFBID, mParticipantName, inputContent);				
 			mMessagesListAdapter.addMessage(new SBChatMessage(mThiUserChatUserName, mParticipantFBID,inputContent, false, StringUtils.gettodayDateInFormat("hh:mm"),
 					                                          SBChatMessage.SENDING,newMessage.getUniqueMsgIdentifier()));
