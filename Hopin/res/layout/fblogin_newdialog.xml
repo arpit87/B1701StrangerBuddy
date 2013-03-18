@@ -150,17 +150,17 @@
 
     
     <Button
-        android:id="@+id/signInViaFacebook"
+        android:id="@+id/fb_login_signviafb"
         android:layout_width="wrap_content"
         android:layout_height="30dip"        
         android:layout_centerHorizontal="true"
         android:layout_below="@id/tableLayout1"
-        android:src="@drawable/fblogin_bigbutton_selector"
+        android:background="@drawable/fblogin_bigbutton_selector"
          />
   <TextView
         android:id="@+id/disclaimer"
         android:textColor="@color/black"
-        android:layout_below="@id/signInViaFacebook"
+        android:layout_below="@id/fb_login_signviafb"
         android:layout_marginTop="10dip"
         android:textSize="10dip"
         android:layout_width="wrap_content"
