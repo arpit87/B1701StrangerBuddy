@@ -80,6 +80,11 @@ public class BlockedUser {
     }
 
     public static void addtoList(final String fbId, final String name){
+        if (isUserBlocked(fbId)) {
+            Log.i(TAG, "User already blocked");
+            return;
+        }
+
         Log.i(TAG, "Adding '" +fbId + "' to blocked users list");
         new Thread("blockUser") {
             @Override

@@ -1,34 +1,23 @@
 package my.b1701.SB.ChatService;
 
+import android.os.RemoteCallbackList;
+import android.os.RemoteException;
+import android.util.Log;
+import my.b1701.SB.ChatClient.IMessageListener;
+import my.b1701.SB.ChatClient.SBChatMessage;
+import my.b1701.SB.HelperClasses.*;
+import my.b1701.SB.HttpClient.GetFBInfoForUserIDAndShowPopup;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.Users.ThisUserNew;
+import my.b1701.SB.Util.StringUtils;
+import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.MessageListener;
+import org.jivesoftware.smack.XMPPException;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import my.b1701.SB.ChatClient.IMessageListener;
-import my.b1701.SB.ChatClient.SBChatMessage;
-import my.b1701.SB.HelperClasses.ActiveChat;
-import my.b1701.SB.HelperClasses.BlockedUsers;
-import my.b1701.SB.HelperClasses.ChatHistory;
-import my.b1701.SB.HelperClasses.ThisAppConfig;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.HttpClient.GetFBInfoForUserIDAndShowPopup;
-import my.b1701.SB.HttpClient.SBHttpClient;
-import my.b1701.SB.Users.ThisUserNew;
-import my.b1701.SB.Users.UserAttributes;
-import my.b1701.SB.Util.StringUtils;
-
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.XMPPException;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.annotation.SuppressLint;
-import android.os.RemoteCallbackList;
-import android.os.RemoteException;
-import android.util.Log;
 
 /***
  * There is a chatAdapter for every chat which stores a list of all chat msgs
@@ -245,7 +234,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 				if(!ThisAppConfig.getInstance().getBool(ThisAppConfig.NEWUSERPOPUP))
 					return;
 				String thisNearbyUserFBID = msg.getInitiator();
-				if(BlockedUsers.isUserBlocked(thisNearbyUserFBID))
+				if(BlockedUser.isUserBlocked(thisNearbyUserFBID))
 					return;
 				String thisNearbyUserUSERID = (String) message
 						.getProperty(Message.USERID);
@@ -296,7 +285,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 			if (msg.getType() == Message.MSG_TYPE_CHAT) {
 				try {
 					Message ackmsg = null;					
-					if (BlockedUsers.isUserBlocked(mParticipant))
+					if (BlockedUser.isUserBlocked(mParticipant))
 					 ackmsg = new Message(msg.getFrom(),Message.MSG_TYPE_ACKFOR_BLOCKED);
 					else
 						ackmsg = new Message(msg.getFrom(),Message.MSG_TYPE_ACKFOR_DELIVERED);	

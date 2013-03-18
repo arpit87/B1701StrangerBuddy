@@ -35,8 +35,7 @@ public class BlockedUsersProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
             StringBuilder builder = new StringBuilder();
             builder.append("CREATE TABLE blockedUsers (" +
-                    "_id INTEGER PRIMARY KEY" +
-                    ",fbId TEXT" +
+                    "fbId TEXT PRIMARY KEY" +
                     ",name TEXT" +
                     ");");
             db.execSQL(builder.toString());

@@ -1,25 +1,5 @@
 package my.b1701.SB.ChatClient;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import my.b1701.SB.R;
-import my.b1701.SB.ChatService.IChatAdapter;
-import my.b1701.SB.ChatService.IChatManager;
-import my.b1701.SB.ChatService.IXMPPAPIs;
-import my.b1701.SB.ChatService.Message;
-import my.b1701.SB.ChatService.SBChatService;
-import my.b1701.SB.FacebookHelpers.FacebookConnector;
-import my.b1701.SB.HelperClasses.ActiveChat;
-import my.b1701.SB.HelperClasses.AlertDialogBuilder;
-import my.b1701.SB.HelperClasses.BlockedUsers;
-import my.b1701.SB.HelperClasses.ProgressHandler;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
-import my.b1701.SB.HttpClient.GetOtherUserProfileAndShowPopup;
-import my.b1701.SB.HttpClient.SBHttpClient;
-import my.b1701.SB.Server.ServerConstants;
-import my.b1701.SB.Util.StringUtils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
@@ -27,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,14 +17,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
+import my.b1701.SB.ChatService.*;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
+import my.b1701.SB.HelperClasses.*;
+import my.b1701.SB.HttpClient.GetOtherUserProfileAndShowPopup;
+import my.b1701.SB.HttpClient.SBHttpClient;
+import my.b1701.SB.R;
+import my.b1701.SB.Server.ServerConstants;
+import my.b1701.SB.Util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ChatWindow extends Activity{
@@ -182,7 +165,7 @@ private void showPopupMenu(View v)
 		
 		@Override
 		public void onClick(View v) {
-			BlockedUsers.addtoList(mParticipantFBID);
+			BlockedUser.addtoList(mParticipantFBID, mParticipantName);
 	        ToastTracker.showToast(mParticipantName + " blocked", Toast.LENGTH_SHORT);	
 	        popUpMenu.dismiss();
 		}
@@ -198,8 +181,10 @@ private void showPopupMenu(View v)
 	    	try {
 				chatAdapter.setOpen(false);
 				List<Message> chatMessages = chatAdapter.getMessages();
-				Message lastmMessage = chatMessages.get(chatMessages.size()-1);
-				ActiveChat.addChat(mParticipantFBID, mParticipantName, lastmMessage.getBody());
+                if (chatMessages != null && !chatMessages.isEmpty()) {
+				    Message lastmMessage = chatMessages.get(chatMessages.size()-1);
+				    ActiveChat.addChat(mParticipantFBID, mParticipantName, lastmMessage.getBody());
+                }
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

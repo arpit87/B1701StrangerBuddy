@@ -123,7 +123,7 @@ public class ChatHistory {
     public static void updateStatus(long messageUniqueId, int status){
         ContentResolver cr = Platform.getInstance().getContext().getContentResolver();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(columns[6],status);
+        contentValues.put(columns[5],status);
         cr.update(mUri, contentValues, "uniqueId = ?", new String[]{Long.toString(messageUniqueId)});
     }
 
