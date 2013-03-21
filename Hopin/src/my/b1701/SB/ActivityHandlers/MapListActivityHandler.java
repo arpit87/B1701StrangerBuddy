@@ -34,12 +34,14 @@ import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
+import my.b1701.SB.MapHelpers.GourpedNearbyUsersIteamizedOverlay;
 import my.b1701.SB.MapHelpers.NearbyUsersItemizedOverlay;
 import my.b1701.SB.MapHelpers.ThisUserItemizedOverlay;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.R;
 import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.NearbyUser;
+import my.b1701.SB.Users.NearbyUserGroup;
 import my.b1701.SB.Users.ThisUserNew;
 import my.b1701.SB.Users.UserAttributes;
 import my.b1701.SB.Util.StringUtils;
@@ -47,6 +49,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MapListActivityHandler  extends BroadcastReceiver{
@@ -273,9 +276,8 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		{
 			Log.i(TAG,"removing prev nearby users overlay");			
 			mapView.getOverlays().remove(nearbyUserItemizedOverlay);
-			mapView.removeAllNearbyUserView();
+			mapView.removeAllNearbyUserView();			
 		}
-
         //update listview
         updateListFrag(nearbyUsers);
 
@@ -285,11 +287,37 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
             return;
         }
 		
-		nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
-		nearbyUserItemizedOverlay.addList(nearbyUsers);
+		//nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
+		//nearbyUserItemizedOverlay.addList(nearbyUsers);
+		//Log.i(TAG,"adding nearby useroverlay");		
+		//mapView.getOverlays().add(nearbyUserItemizedOverlay);	
+		
+		
+		
+		int i=0;
+		NearbyUserGroup group1 = new NearbyUserGroup();
+		NearbyUserGroup group2 = new NearbyUserGroup();
+		for(NearbyUser n:nearbyUsers)
+		{
+			if(i%2==0)
+				group1.addNearbyUserToGroup(n);
+			else
+				group2.addNearbyUserToGroup(n);	
+			i++;
+		}
+		
+		List<NearbyUserGroup> groupList = new LinkedList<NearbyUserGroup>();
+		groupList.add(group1);
+		//groupList.add(group2);
+		
+		nearbyUserItemizedOverlay = new GourpedNearbyUsersIteamizedOverlay(mapView);
+		nearbyUserItemizedOverlay.addList(groupList);
 		Log.i(TAG,"adding nearby useroverlay");		
-		mapView.getOverlays().add(nearbyUserItemizedOverlay);	
+		mapView.getOverlays().add(nearbyUserItemizedOverlay);
+		
 		mapView.postInvalidate();
+		
+		
 
 		
 		//show fb login popup at bottom if not yet logged in

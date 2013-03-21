@@ -13,9 +13,14 @@ public class NearbyUserGroup {
 	
 	public List <NearbyUser> mUsersListInGroup = Collections.emptyList();
 	public SBGeoPoint mGeoPoint = null;
-	public List<String> fbids;
+	public List<String> fbids = Collections.emptyList();
 	int lat = 0;
 	int longi = 0;
+	
+	public NearbyUserGroup()
+	{
+	
+	}
 	
 	NearbyUserGroup(List<NearbyUser> nearbyUsers)
 	{
@@ -47,13 +52,8 @@ public class NearbyUserGroup {
 	public List <NearbyUser> getAllUsersInGroup()
 	{
 		return mUsersListInGroup;
-	}
-	
-	public void addNearbyUserToGroup(NearbyUser n)
-	{
-		mUsersListInGroup.add(n);
-	}
-	
+	}	
+		
 	public List<String> getAllFBIds()
 	{
 		return fbids;
@@ -64,17 +64,19 @@ public class NearbyUserGroup {
 		return mUsersListInGroup.get(i);
 	}
 
-	public void addUserToGroup(NearbyUser n)
+	public void addNearbyUserToGroup(NearbyUser n)
 	{
 		if(mUsersListInGroup.isEmpty())
 		{
 			mUsersListInGroup = new ArrayList<NearbyUser>();
+			fbids = new ArrayList<String>();
 			lat = n.getUserLocInfo().getGeoPoint().getLatitudeE6();
 			longi = n.getUserLocInfo().getGeoPoint().getLongitudeE6();
 		}
 		lat = (lat + n.getUserLocInfo().getGeoPoint().getLatitudeE6())/2;
 		longi = (longi + n.getUserLocInfo().getGeoPoint().getLongitudeE6())/2;			
 		mGeoPoint = new SBGeoPoint(lat, longi);		
-		mUsersListInGroup.add(n);		
+		mUsersListInGroup.add(n);	
+		fbids.add(n.getUserFBInfo().getFbid());
 	}
 }

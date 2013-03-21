@@ -2,6 +2,7 @@ package my.b1701.SB.CustomViewsAndListeners;
 
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
@@ -23,10 +24,11 @@ public class SBMapView extends MapView implements OnGestureListener {
     private List<View> nearByUserViewList = new ArrayList<View>();
     private int nearbyUserMApViewListIndex = 1; //start from 1 as self view at 0 so it remains always at bottom
     private View selfView = null;
+	private int oldZoomLevel = -1;
 
 	public SBMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setupGestures();
+        setupGestures();        
     }
 
     public SBMapView(Context context, AttributeSet attrs, int defStyle) {
@@ -70,7 +72,17 @@ public class SBMapView extends MapView implements OnGestureListener {
         removeAllNearbyUserView();
         removeSelfView();
     }
-
+    
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+        if (getZoomLevel() != oldZoomLevel) {
+           // mListener.onZoom();
+            oldZoomLevel  = getZoomLevel();
+        }
+    }
+       
+    
     private void setupGestures() {
     	gd = new GestureDetector(Platform.getInstance().getContext(),this);  
         
@@ -107,6 +119,8 @@ public class SBMapView extends MapView implements OnGestureListener {
 			return super.onTouchEvent(ev);
 		}
 	}
+	
+	
 	
 	public void setOnSingleTapListener(OnSingleTapListener singleTapListener) {
 		this.singleTapListener = singleTapListener;

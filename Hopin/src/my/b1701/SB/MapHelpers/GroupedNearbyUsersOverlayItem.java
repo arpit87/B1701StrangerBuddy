@@ -50,18 +50,23 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
 	public SBGeoPoint mGeoPoint = null;
 	boolean isVisibleSmall = false;
 	boolean isVisibleExpanded = false;
-	boolean isVisibleExpandedIndividual = false;
-	private List<NearbyUser> mNearbyUserList = null;
+	boolean isVisibleExpandedIndividual = false;	
 	private TextView textViewNumberOfUSers = null;
 	
 	private NearbyUserGroup mUserGroup = null;
 	private int chatIconImgSrc;
 	private int smsIconImgSrc;
 	private int facebookIconImgSrc;
+	private ImageView picViewExpanded = null ;		
+	private TextView expandedBalloonHeader = null;
+	private ImageView chatIcon = null;
+	private ImageView smsIcon = null;
+	private ImageView facebookIcon = null ;
+	private ImageView buttonClose = null;
 	
 
-	public GroupedNearbyUsersOverlayItem(NearbyUserGroup user_group ,SBMapView mapView) {
-		super(user_group.getGeoPointOfGroup(), "","" );
+	public GroupedNearbyUsersOverlayItem(NearbyUserGroup user_group ,SBMapView mapView) {	
+		super(user_group.getGeoPointOfGroup(), "", "");
 		this.mUserGroup = user_group;
 		this.mGeoPoint = user_group.getGeoPointOfGroup();		
 		this.mMapView = mapView;
@@ -89,7 +94,7 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
 			viewOnMarkerSmall = mInflater.inflate(R.layout.map_frame_multipleusers, null);			
 			
 			textViewNumberOfUSers = (TextView)viewOnMarkerSmall.findViewById(R.id.map_frame_multipleusers_numbertextview);	
-			textViewNumberOfUSers.setText(mNearbyUserList.size());
+			textViewNumberOfUSers.setText(((Integer)mUserGroup.getNumberOfUsersInGroup()).toString());
 			
 			viewOnMarkerSmall.setOnTouchListener(new OnTouchListener() {
 				
@@ -175,12 +180,7 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
 		params.mode = MapView.LayoutParams.MODE_MAP;
 				
 			removeExpandedView();
-			ImageView picViewExpanded = null;		
-			TextView expandedBalloonHeader = null;
-			ImageView chatIcon = null;
-			ImageView smsIcon = null;
-			ImageView facebookIcon = null ;
-			ImageView buttonClose = null;
+			
 			if(viewOnMarkerIndividualExpanded==null)
 			{
 			 viewOnMarkerIndividualExpanded = mInflater.inflate(R.layout.map_expanded_layout, null);
@@ -301,7 +301,7 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
 				
 				
 			});
-			ImageView buttonClose = (ImageView)viewOnMarkerIndividualExpanded.findViewById(R.id.map_expanded_grid_buttonclose);
+			ImageView buttonClose = (ImageView)viewOnMarkerExpanded.findViewById(R.id.map_expanded_grid_buttonclose);
 			buttonClose.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View buttonClose) {
@@ -338,16 +338,20 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
 		String name_str,worksat_str,studiedat_str,hometown_str,gender_str = "";
 		
 		if(!userFBInfo.FBInfoAvailable())
+		{
+			userNotLoggedIn = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.usernotloggedintext);
+			userNotLoggedIn.setVisibility(View.VISIBLE);
 			return;
+		}
 		
-		userNotLoggedIn = (TextView)viewOnMarkerExpanded.findViewById(R.id.usernotloggedintext);
+		userNotLoggedIn = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.usernotloggedintext);
 		userNotLoggedIn.setVisibility(View.GONE);
 		
-		fb_name = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_balloon_header);
-		works_at = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_work);
-		studied_at = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_education);
-		hometown = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_from);
-		gender = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_gender);
+		fb_name = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_balloon_header);
+		works_at = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_work);
+		studied_at = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_education);
+		hometown = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_from);
+		gender = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_gender);
 		
 		name_str = userFBInfo.getFullName();
 		worksat_str = userFBInfo.getWorksAt();
