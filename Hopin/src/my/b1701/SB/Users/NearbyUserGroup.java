@@ -1,13 +1,10 @@
 package my.b1701.SB.Users;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 
-import com.google.android.maps.GeoPoint;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class NearbyUserGroup {
 	
@@ -22,7 +19,7 @@ public class NearbyUserGroup {
 	
 	}
 	
-	NearbyUserGroup(List<NearbyUser> nearbyUsers)
+	public NearbyUserGroup(List<NearbyUser> nearbyUsers)
 	{
 		mUsersListInGroup = nearbyUsers;
 		fbids = new ArrayList<String>();

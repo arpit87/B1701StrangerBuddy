@@ -6,7 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.location.Location;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -26,11 +28,7 @@ import my.b1701.SB.CustomViewsAndListeners.SBMapView;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
-import my.b1701.SB.HelperClasses.BroadCastConstants;
-import my.b1701.SB.HelperClasses.ProgressHandler;
-import my.b1701.SB.HelperClasses.SBImageLoader;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.HelperClasses.*;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.MapHelpers.BaseItemizedOverlay;
@@ -39,18 +37,12 @@ import my.b1701.SB.MapHelpers.NearbyUsersItemizedOverlay;
 import my.b1701.SB.MapHelpers.ThisUserItemizedOverlay;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.R;
-import my.b1701.SB.Users.CurrentNearbyUsers;
-import my.b1701.SB.Users.NearbyUser;
-import my.b1701.SB.Users.NearbyUserGroup;
-import my.b1701.SB.Users.ThisUserNew;
-import my.b1701.SB.Users.UserAttributes;
+import my.b1701.SB.Users.*;
 import my.b1701.SB.Util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class MapListActivityHandler  extends BroadcastReceiver{
 	
@@ -58,8 +50,9 @@ public class MapListActivityHandler  extends BroadcastReceiver{
 	private static final String TAG = "my.b1701.SB.ActivityHandlers.MapActivityHandler";
 	private static MapListActivityHandler instance=new MapListActivityHandler();
 	private MapListViewTabActivity underlyingActivity;	
+	private BaseItemizedOverlay nearbyUserGroupItemizedOverlay;
 	private BaseItemizedOverlay nearbyUserItemizedOverlay;
-	private MapController mapcontroller;	
+	private MapController mapcontroller;
 	private BaseItemizedOverlay thisUserOverlay;
 	private boolean updateMap = false;
 	private ProgressDialog progressDialog;
@@ -84,6 +77,9 @@ public class MapListActivityHandler  extends BroadcastReceiver{
 		return nearbyUserItemizedOverlay;
 	}
 
+    public BaseItemizedOverlay getNearbyUserGroupItemizedOverlay() {
+        return nearbyUserGroupItemizedOverlay;
+    }
 
 	public boolean isMapInitialized() {
 		return mapInitialized;
@@ -272,11 +268,16 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		
 		//update map view
 		Log.i(TAG,"updating earby user");
-		if(nearbyUserItemizedOverlay!=null)
+		if(nearbyUserItemizedOverlay!=null || nearbyUserGroupItemizedOverlay != null)
 		{
 			Log.i(TAG,"removing prev nearby users overlay");			
-			mapView.getOverlays().remove(nearbyUserItemizedOverlay);
-			mapView.removeAllNearbyUserView();			
+			if (nearbyUserItemizedOverlay != null) {
+                mapView.getOverlays().remove(nearbyUserItemizedOverlay);
+            }
+            if (nearbyUserGroupItemizedOverlay != null) {
+                mapView.getOverlays().remove(nearbyUserGroupItemizedOverlay);
+            }
+			mapView.removeAllNearbyUserView();
 		}
         //update listview
         updateListFrag(nearbyUsers);
@@ -291,29 +292,51 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		//nearbyUserItemizedOverlay.addList(nearbyUsers);
 		//Log.i(TAG,"adding nearby useroverlay");		
 		//mapView.getOverlays().add(nearbyUserItemizedOverlay);	
+
+        Context context = Platform.getInstance().getContext();
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float density = displayMetrics.density;
+        float  ppi = displayMetrics.densityDpi * density;
+        float factor = displayMetrics.densityDpi / 160;
+        double gridWidth = ppi * 0.2; //pixels in 5 mm
+
+        Map<String,List<NearbyUser>> gridToUsersMap = new HashMap<String, List<NearbyUser>>();
+        for (NearbyUser nearbyUser : nearbyUsers) {
+            SBGeoPoint geoPoint = nearbyUser.getUserLocInfo().getGeoPoint();
+            Point point = mapView.getProjection().toPixels(geoPoint, null);
+            float x = point.x * factor;
+            float y = point.y * factor;
+
+            int column = (int)(x/gridWidth);
+            int row = (int) (y/gridWidth);
+            String key = column + ":" + row;
+            List<NearbyUser> users = gridToUsersMap.get(key);
+            if (users == null) {
+                users = new ArrayList<NearbyUser>();
+                gridToUsersMap.put(key, users);
+            }
+            users.add(nearbyUser);
+        }
 		
+        List<NearbyUserGroup> groups = new LinkedList<NearbyUserGroup>();
+        List<NearbyUser> individualUsers = new LinkedList<NearbyUser>();
+        for (Map.Entry<String, List<NearbyUser>> entry : gridToUsersMap.entrySet()){
+            if (entry.getValue().size() == 1){
+                individualUsers.add(entry.getValue().get(0));
+            } else {
+                groups.add(new NearbyUserGroup(entry.getValue()));
+            }
+        }
 		
-		
-		int i=0;
-		NearbyUserGroup group1 = new NearbyUserGroup();
-		NearbyUserGroup group2 = new NearbyUserGroup();
-		for(NearbyUser n:nearbyUsers)
-		{
-			if(i%2==0)
-				group1.addNearbyUserToGroup(n);
-			else
-				group2.addNearbyUserToGroup(n);	
-			i++;
-		}
-		
-		List<NearbyUserGroup> groupList = new LinkedList<NearbyUserGroup>();
-		groupList.add(group1);
-		//groupList.add(group2);
-		
-		nearbyUserItemizedOverlay = new GourpedNearbyUsersIteamizedOverlay(mapView);
-		nearbyUserItemizedOverlay.addList(groupList);
+
+		nearbyUserGroupItemizedOverlay = new GourpedNearbyUsersIteamizedOverlay(mapView);
+		nearbyUserGroupItemizedOverlay.addList(groups);
+
+        nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
+        nearbyUserItemizedOverlay.addList(individualUsers);
 		Log.i(TAG,"adding nearby useroverlay");		
 		mapView.getOverlays().add(nearbyUserItemizedOverlay);
+        mapView.getOverlays().add(nearbyUserGroupItemizedOverlay);
 		
 		mapView.postInvalidate();
 		
