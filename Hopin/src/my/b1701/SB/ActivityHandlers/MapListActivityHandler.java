@@ -358,12 +358,14 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 	
 	public void updateOverlayOnZoomChange()
 	{
+		Log.i(TAG,"updating nearby users on zoom change");
 		updateNearbyUsers();
 		mapView.postInvalidate();
 	}
 	
 	public void updateNearbyUsersOnUSersChange()
 	{
+		Log.i(TAG,"updating nearby users on user change");
 		updateNearbyUsers();
 		centerMap();
 		mapView.postInvalidate();
@@ -498,6 +500,7 @@ public void clearAllData()
     mListViewContainer = null;
 	if(mapView!=null)
 	{
+		mapView.setOldZoomLevel(-1);
 		mapView.removeAllViews();
 		mapView.getOverlays().clear();
 	}

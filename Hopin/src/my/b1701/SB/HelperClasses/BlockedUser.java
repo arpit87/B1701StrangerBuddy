@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BlockedUser {
 
-    private static final String TAG = "my.b1701.SB.HelperClasses";
+    private static final String TAG = "my.b1701.SB.HelperClasses.BlockedUser";
     private static Uri mUriFetch = Uri.parse("content://" + BlockedUsersProvider.AUTHORITY + "/db_fetch_only");
     private static Uri mUri = Uri.parse("content://" + BlockedUsersProvider.AUTHORITY + "/blockedUsers");
     private static String[] columns = new String[] {"fbId", "name"};
@@ -69,6 +69,7 @@ public class BlockedUser {
 
         boolean isUserBlocked = true;
         if (cursor == null || cursor.getCount() == 0){
+        	Log.i(TAG, "fbid:" + fbId + "' is not blocked ");
             isUserBlocked = false;
         }
 
@@ -76,6 +77,7 @@ public class BlockedUser {
             cursor.close();
         }
 
+        Log.i(TAG, "fbid:" + fbId + "' is blocked :"+isUserBlocked);
         return isUserBlocked;
     }
 

@@ -1,25 +1,31 @@
 package my.b1701.SB.ChatService;
 
-import android.os.RemoteCallbackList;
-import android.os.RemoteException;
-import android.util.Log;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import my.b1701.SB.ChatClient.IMessageListener;
 import my.b1701.SB.ChatClient.SBChatMessage;
-import my.b1701.SB.HelperClasses.*;
+import my.b1701.SB.HelperClasses.BlockedUser;
+import my.b1701.SB.HelperClasses.ChatHistory;
+import my.b1701.SB.HelperClasses.ThisAppConfig;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetFBInfoForUserIDAndShowPopup;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.Users.ThisUserNew;
 import my.b1701.SB.Util.StringUtils;
+
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPException;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.RemoteCallbackList;
+import android.os.RemoteException;
+import android.util.Log;
 
 /***
  * There is a chatAdapter for every chat which stores a list of all chat msgs
@@ -263,7 +269,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 				Message origMsg = mSentNotDeliveredMsgHashSet.get(msg
 						.getUniqueMsgIdentifier());
 				if (origMsg != null) {
-					origMsg.setTimeStamp(msg.getTimestamp());
+					origMsg.setTimeStamp((String)message.getProperty(Message.TIME));
 					Log.i(TAG, "got ack for msg: " + origMsg.getBody());
 					if(msg.getType() == Message.MSG_TYPE_ACKFOR_BLOCKED)
 						updateMessageStatusInList(origMsg, SBChatMessage.BLOCKED);						
@@ -329,6 +335,8 @@ class ChatAdapter extends IChatAdapter.Stub {
 
 	}
 	
+
+	
 	private void setPriorUndeliveredMsgsToFailed(Message lastDeliveredMsg)
 	{
 		int oneBeforedeliveredMsgIndex = mMessages.lastIndexOf(lastDeliveredMsg)-1;
@@ -389,18 +397,12 @@ class ChatAdapter extends IChatAdapter.Stub {
 		msgToSend.setProperty(Message.SBMSGTYPE, Message.MSG_TYPE_CHAT);
 		msgToSend.setProperty(Message.TIME, msg.getTimestamp());		
 	
-		try {
-			if(BlockedUser.isUserBlocked(msg.getReceiver()))
-			{
-				updateMessageStatusInList(msg, SBChatMessage.BLOCKED);	
-			}
-			else
-			{
-				mSmackChat.sendMessage(msgToSend);
-				Log.i(TAG, "chat message sent to " + msg.getTo());
-				updateMessageStatusInList(msg, SBChatMessage.SENT);			
-				mSentNotDeliveredMsgHashSet.put(msg.getUniqueMsgIdentifier(), msg);
-			}
+		try {			
+			mSmackChat.sendMessage(msgToSend);
+			Log.i(TAG, "chat message sent to " + msg.getTo());
+			updateMessageStatusInList(msg, SBChatMessage.SENT);			
+			mSentNotDeliveredMsgHashSet.put(msg.getUniqueMsgIdentifier(), msg);
+			
 		} catch (XMPPException e) {
 			// TODO retry sending msg?
 			Log.i(TAG, "message sending to had xmpp exception" + msg.getTo());

@@ -41,6 +41,11 @@ public class SBMapView extends MapView implements OnGestureListener {
         setupGestures();
     }
     
+    public void setOldZoomLevel(int level)
+    {
+    	oldZoomLevel = -1;
+    }
+    
     public void addNearbyUserView(View v, MapView.LayoutParams params )
     {
     	super.addView(v,nearbyUserMApViewListIndex++,params); 
@@ -76,7 +81,7 @@ public class SBMapView extends MapView implements OnGestureListener {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-        if (getZoomLevel() != oldZoomLevel) {           
+        if (getZoomLevel() != oldZoomLevel && oldZoomLevel!= -1) {           
             oldZoomLevel  = getZoomLevel();
             MapListActivityHandler.getInstance().updateOverlayOnZoomChange();
         }

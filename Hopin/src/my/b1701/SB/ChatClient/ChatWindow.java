@@ -1,9 +1,11 @@
 package my.b1701.SB.ChatClient;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
@@ -87,7 +89,10 @@ public class ChatWindow extends Activity{
 		mSendButton.setOnClickListener(new OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
-			sendMessage();
+		    	if(BlockedUser.isUserBlocked(mParticipantFBID))
+		    		buildUnblockAlertMessageToUnblock(mParticipantFBID);
+		    	else
+		    		sendMessage();
 		    }
 		});	
 		
@@ -160,7 +165,7 @@ private void showPopupMenu(View v)
 		}
 	});
 	
-	Button block_unblock_user = (Button) layout.findViewById(R.id.chat_popupmenu_block);
+	final Button block_unblock_user = (Button) layout.findViewById(R.id.chat_popupmenu_block);
 	if(BlockedUser.isUserBlocked(mParticipantFBID))
 		block_unblock_user.setText("Unblock");
 	block_unblock_user.setOnClickListener(new OnClickListener() {
@@ -171,11 +176,13 @@ private void showPopupMenu(View v)
 			{
 				BlockedUser.deleteFromList(mParticipantFBID);
 				Toast.makeText(ChatWindow.this,mParticipantName + " unblocked", Toast.LENGTH_SHORT).show();
+				block_unblock_user.setText("Block");
 			}
 			else
 			{
 				BlockedUser.addtoList(mParticipantFBID, mParticipantName);
-		        Toast.makeText(ChatWindow.this,mParticipantName + " blocked", Toast.LENGTH_SHORT).show();	
+		        Toast.makeText(ChatWindow.this,mParticipantName + " blocked", Toast.LENGTH_SHORT).show();
+		        block_unblock_user.setText("Unblock");
 			}
 	        popUpMenu.dismiss();
 		}
@@ -291,6 +298,7 @@ private void showPopupMenu(View v)
 			Message newMessage = new Message(mParticipantFBID);
 			newMessage.setBody(inputContent);
 			newMessage.setFrom(mThiUserChatUserName+"@"+ServerConstants.CHATSERVERIP);			
+			newMessage.setTo(mParticipantFBID+"@"+ServerConstants.CHATSERVERIP);
 			newMessage.setSubject(mThisUserChatFullName);			
 			newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());	
 			newMessage.setTimeStamp(StringUtils.gettodayDateInFormat("hh:mm"));
@@ -478,6 +486,25 @@ private void showPopupMenu(View v)
 
 	    } 
 	    
+		private void buildUnblockAlertMessageToUnblock(final String fbid) {
+	        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	        builder.setMessage("Do you really want to unblock "+ mParticipantName + "?")
+	                .setCancelable(false)
+	                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	                    public void onClick(final DialogInterface dialog, final int id) {
+	                        BlockedUser.deleteFromList(fbid);
+	                        sendMessage();
+	                    }
+	                })
+	                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+	                    public void onClick(final DialogInterface dialog, final int id) {
+	                        dialog.cancel();
+	                    }
+	                });
+	        final AlertDialog alert = builder.create();
+	        alert.show();
+	    }
+	    
  
 //this is callback method executed on client when ChatService receives a message	
 private class SBOnChatMessageListener extends IMessageListener.Stub {
@@ -514,7 +541,7 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 			  //2) incoming msg from other user
 			  
 			  //handle 1)
-			  if(msg.getStatus() == SBChatMessage.SENT || msg.getStatus() == SBChatMessage.SENDING_FAILED)
+			  if(msg.getStatus() == SBChatMessage.SENT || msg.getStatus() == SBChatMessage.SENDING_FAILED )
 			  {
 				  mMessagesListAdapter.updateMessageStatusWithUniqueID(msg.getUniqueMsgIdentifier(), msg.getStatus());
 			  }
