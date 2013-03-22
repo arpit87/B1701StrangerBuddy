@@ -160,13 +160,23 @@ private void showPopupMenu(View v)
 		}
 	});
 	
-	Button block_user = (Button) layout.findViewById(R.id.chat_popupmenu_block);
-	block_user.setOnClickListener(new OnClickListener() {
+	Button block_unblock_user = (Button) layout.findViewById(R.id.chat_popupmenu_block);
+	if(BlockedUser.isUserBlocked(mParticipantFBID))
+		block_unblock_user.setText("Unblock");
+	block_unblock_user.setOnClickListener(new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
-			BlockedUser.addtoList(mParticipantFBID, mParticipantName);
-	        Toast.makeText(ChatWindow.this,mParticipantName + " blocked", Toast.LENGTH_SHORT).show();	
+			if(BlockedUser.isUserBlocked(mParticipantFBID))
+			{
+				BlockedUser.deleteFromList(mParticipantFBID);
+				Toast.makeText(ChatWindow.this,mParticipantName + " unblocked", Toast.LENGTH_SHORT).show();
+			}
+			else
+			{
+				BlockedUser.addtoList(mParticipantFBID, mParticipantName);
+		        Toast.makeText(ChatWindow.this,mParticipantName + " blocked", Toast.LENGTH_SHORT).show();	
+			}
 	        popUpMenu.dismiss();
 		}
 	});

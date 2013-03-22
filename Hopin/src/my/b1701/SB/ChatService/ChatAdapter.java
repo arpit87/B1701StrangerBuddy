@@ -41,7 +41,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 	private final Chat mSmackChat;
 	private final String mParticipant;	
 	private List<Message> mMessages;
-	private final LinkedHashMap<Long, Message> mSentNotDeliveredMsgHashSet;
+	private final HashMap<Long, Message> mSentNotDeliveredMsgHashSet;
 	private SBChatManager mChatManager;
 	SBMsgListener mMsgListener = null;
 	int notificationid = 0;	
@@ -62,7 +62,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 		mMsgqueue = new LinkedBlockingQueue<Message>();
 		mSmackChat.addMessageListener(mMsgListener);
 		mChatManager = chatManager;
-		mSentNotDeliveredMsgHashSet = new LinkedHashMap<Long, Message>();
+		mSentNotDeliveredMsgHashSet = new HashMap<Long, Message>();
 		notificationid = mChatManager.numChats() + 1;
 		mImageURL = ThisUserConfig.getInstance().getString(
 				ThisUserConfig.FBPICURL);
@@ -290,7 +290,9 @@ class ChatAdapter extends IChatAdapter.Stub {
 					if (BlockedUser.isUserBlocked(msg.getInitiator()))
 					{
 					 ackmsg = new Message(msg.getFrom(),Message.MSG_TYPE_ACKFOR_BLOCKED);
+					 ackmsg.setUniqueMsgIdentifier(msg.getUniqueMsgIdentifier());
 					 sendMessage(ackmsg);
+					 //return early if this user blocked
 					 return;
 					}
 					else
@@ -388,10 +390,17 @@ class ChatAdapter extends IChatAdapter.Stub {
 		msgToSend.setProperty(Message.TIME, msg.getTimestamp());		
 	
 		try {
-			mSmackChat.sendMessage(msgToSend);
-			Log.i(TAG, "chat message sent to " + msg.getTo());
-			updateMessageStatusInList(msg, SBChatMessage.SENT);			
-			mSentNotDeliveredMsgHashSet.put(msg.getUniqueMsgIdentifier(), msg);
+			if(BlockedUser.isUserBlocked(msg.getReceiver()))
+			{
+				updateMessageStatusInList(msg, SBChatMessage.BLOCKED);	
+			}
+			else
+			{
+				mSmackChat.sendMessage(msgToSend);
+				Log.i(TAG, "chat message sent to " + msg.getTo());
+				updateMessageStatusInList(msg, SBChatMessage.SENT);			
+				mSentNotDeliveredMsgHashSet.put(msg.getUniqueMsgIdentifier(), msg);
+			}
 		} catch (XMPPException e) {
 			// TODO retry sending msg?
 			Log.i(TAG, "message sending to had xmpp exception" + msg.getTo());
