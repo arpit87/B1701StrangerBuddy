@@ -248,7 +248,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 
 
 	
-	public void updateNearbyUsers() {
+	private void updateNearbyUsers() {
 		
 		//caution while updating nearbyusers
 		//this user may be interacting with a view so we are going to show progressbar			
@@ -328,20 +328,22 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
             }
         }
 		
+        
+        if(!groups.isEmpty())
+        {
+			nearbyUserGroupItemizedOverlay = new GourpedNearbyUsersIteamizedOverlay(mapView);
+			nearbyUserGroupItemizedOverlay.addList(groups);
+			 mapView.getOverlays().add(nearbyUserGroupItemizedOverlay);
+        }
 
-		nearbyUserGroupItemizedOverlay = new GourpedNearbyUsersIteamizedOverlay(mapView);
-		nearbyUserGroupItemizedOverlay.addList(groups);
-
+        if(!individualUsers.isEmpty())
+        {
         nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
         nearbyUserItemizedOverlay.addList(individualUsers);
-		Log.i(TAG,"adding nearby useroverlay");		
-		mapView.getOverlays().add(nearbyUserItemizedOverlay);
-        mapView.getOverlays().add(nearbyUserGroupItemizedOverlay);
+        mapView.getOverlays().add(nearbyUserItemizedOverlay);
+        }
+		Log.i(TAG,"adding nearby useroverlay");			
 		
-		mapView.postInvalidate();
-		
-		
-
 		
 		//show fb login popup at bottom if not yet logged in
 		boolean isfbloggedin = ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN);
@@ -351,7 +353,20 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		}	
 		
 		ProgressHandler.dismissDialoge();
+		
+	}
+	
+	public void updateOverlayOnZoomChange()
+	{
+		updateNearbyUsers();
+		mapView.postInvalidate();
+	}
+	
+	public void updateNearbyUsersOnUSersChange()
+	{
+		updateNearbyUsers();
 		centerMap();
+		mapView.postInvalidate();
 	}
 
     private void updateListFrag(List<NearbyUser> nearbyUsers) {
@@ -506,7 +521,7 @@ public void onReceive(Context context, Intent intent) {
 	if(intentAction.equals(BroadCastConstants.NEARBY_USER_UPDATED))
 	{
 		ToastTracker.showToast("update intent received");
-		updateNearbyUsers();
+		updateNearbyUsersOnUSersChange();
 	}	
 }
 
@@ -577,6 +592,9 @@ public void updateSrcDstTimeInListView() {
         BaseItemizedOverlay nearbyUserOverlay = MapListActivityHandler.getInstance().getNearbyUserItemizedOverlay();
         if(nearbyUserOverlay!=null)
             nearbyUserOverlay.removeExpandedShowSmallViews();
+        BaseItemizedOverlay nearbyUserGroupOverlay = MapListActivityHandler.getInstance().getNearbyUserGroupItemizedOverlay();
+		if(nearbyUserGroupOverlay!=null)
+			nearbyUserGroupOverlay.removeExpandedShowSmallViews();
     }
 
     public void setSourceAndDestination(JSONObject jsonObject) throws JSONException {

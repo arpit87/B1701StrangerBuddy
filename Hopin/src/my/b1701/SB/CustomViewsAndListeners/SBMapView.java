@@ -76,9 +76,9 @@ public class SBMapView extends MapView implements OnGestureListener {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-        if (getZoomLevel() != oldZoomLevel) {
-           // mListener.onZoom();
+        if (getZoomLevel() != oldZoomLevel) {           
             oldZoomLevel  = getZoomLevel();
+            MapListActivityHandler.getInstance().updateOverlayOnZoomChange();
         }
     }
        
@@ -94,6 +94,9 @@ public class SBMapView extends MapView implements OnGestureListener {
 				BaseItemizedOverlay nearbyUserOverlay = MapListActivityHandler.getInstance().getNearbyUserItemizedOverlay();
 				if(nearbyUserOverlay!=null)
 					nearbyUserOverlay.removeExpandedShowSmallViews();
+				BaseItemizedOverlay nearbyUserGroupOverlay = MapListActivityHandler.getInstance().getNearbyUserGroupItemizedOverlay();
+				if(nearbyUserGroupOverlay!=null)
+					nearbyUserGroupOverlay.removeExpandedShowSmallViews();
 				return true;
 			}
 
@@ -115,8 +118,8 @@ public class SBMapView extends MapView implements OnGestureListener {
 	public boolean onTouchEvent(MotionEvent ev) {
 		if (this.gd.onTouchEvent(ev)) {
 			return true;
-		} else {
-			return super.onTouchEvent(ev);
+		} else {			
+			return SBMapView.super.onTouchEvent(ev);
 		}
 	}
 	
