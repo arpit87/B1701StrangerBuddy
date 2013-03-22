@@ -287,8 +287,12 @@ class ChatAdapter extends IChatAdapter.Stub {
 			if (msg.getType() == Message.MSG_TYPE_CHAT) {
 				try {
 					Message ackmsg = null;					
-					if (BlockedUser.isUserBlocked(mParticipant))
+					if (BlockedUser.isUserBlocked(msg.getInitiator()))
+					{
 					 ackmsg = new Message(msg.getFrom(),Message.MSG_TYPE_ACKFOR_BLOCKED);
+					 sendMessage(ackmsg);
+					 return;
+					}
 					else
 						ackmsg = new Message(msg.getFrom(),Message.MSG_TYPE_ACKFOR_DELIVERED);	
 					ackmsg.setUniqueMsgIdentifier(msg.getUniqueMsgIdentifier());
