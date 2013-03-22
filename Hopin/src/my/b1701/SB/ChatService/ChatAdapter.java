@@ -14,7 +14,9 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPException;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -39,7 +41,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 	private final Chat mSmackChat;
 	private final String mParticipant;	
 	private List<Message> mMessages;
-	private final HashMap<Long, Message> mSentNotDeliveredMsgHashSet;
+	private final LinkedHashMap<Long, Message> mSentNotDeliveredMsgHashSet;
 	private SBChatManager mChatManager;
 	SBMsgListener mMsgListener = null;
 	int notificationid = 0;	
@@ -60,7 +62,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 		mMsgqueue = new LinkedBlockingQueue<Message>();
 		mSmackChat.addMessageListener(mMsgListener);
 		mChatManager = chatManager;
-		mSentNotDeliveredMsgHashSet = new HashMap<Long, Message>();
+		mSentNotDeliveredMsgHashSet =(LinkedHashMap<Long, Message>) Collections.synchronizedMap( new LinkedHashMap<Long, Message>());
 		notificationid = mChatManager.numChats() + 1;
 		mImageURL = ThisUserConfig.getInstance().getString(
 				ThisUserConfig.FBPICURL);
@@ -261,14 +263,14 @@ class ChatAdapter extends IChatAdapter.Stub {
 				Message origMsg = mSentNotDeliveredMsgHashSet.get(msg
 						.getUniqueMsgIdentifier());
 				if (origMsg != null) {
+					origMsg.setTimeStamp(msg.getTimestamp());
 					Log.i(TAG, "got ack for msg: " + origMsg.getBody());
 					if(msg.getType() == Message.MSG_TYPE_ACKFOR_BLOCKED)
 						updateMessageStatusInList(origMsg, SBChatMessage.BLOCKED);						
 					else
-						updateMessageStatusInList(origMsg, SBChatMessage.DELIVERED);						
-					origMsg.setTimeStamp(StringUtils
-							.gettodayDateInFormat("hh:mm"));
+						updateMessageStatusInList(origMsg, SBChatMessage.DELIVERED);					
 					mSentNotDeliveredMsgHashSet.remove(origMsg);
+					setPriorUndeliveredMsgsToFailed(origMsg);
 				} else {
 					Log.d(TAG,
 							"got ack but not msg uniqid: "
@@ -320,6 +322,22 @@ class ChatAdapter extends IChatAdapter.Stub {
 		}
 
 	}
+	
+	private void setPriorUndeliveredMsgsToFailed(Message lastDeliveredMsg)
+	{
+		int oneBeforedeliveredMsgIndex = mMessages.lastIndexOf(lastDeliveredMsg)-1;
+		while (oneBeforedeliveredMsgIndex >= 0)
+		{
+			Message oneBeforedeliveredMsg = mMessages.get(oneBeforedeliveredMsgIndex);
+			if(oneBeforedeliveredMsg.getStatus()==SBChatMessage.DELIVERED ||
+				oneBeforedeliveredMsg.getStatus()==SBChatMessage.BLOCKED 	)
+			break;  //break if delivered found before this msg
+			
+			updateMessageStatusInList(oneBeforedeliveredMsg, SBChatMessage.SENDING_FAILED);
+			mSentNotDeliveredMsgHashSet.remove(oneBeforedeliveredMsg);
+			oneBeforedeliveredMsgIndex--;
+		}
+	}
 
 	private boolean sendAck(Message msg) {
 		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();
@@ -328,7 +346,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 		// msgToSend.setType(org.jivesoftware.smack.packet.Message.Type.headline);
 		msgToSend.setProperty(Message.UNIQUEID, msg.getUniqueMsgIdentifier());		
 		msgToSend.setProperty(Message.SBMSGTYPE,msg.getType());
-
+		msgToSend.setProperty(Message.TIME,StringUtils.gettodayDateInFormat("hh:mm"));
 		try {
 			mSmackChat.sendMessage(msgToSend);
 			Log.i(TAG, "ack message sent  ");
