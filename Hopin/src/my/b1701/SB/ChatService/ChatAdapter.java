@@ -62,7 +62,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 		mMsgqueue = new LinkedBlockingQueue<Message>();
 		mSmackChat.addMessageListener(mMsgListener);
 		mChatManager = chatManager;
-		mSentNotDeliveredMsgHashSet =(LinkedHashMap<Long, Message>) Collections.synchronizedMap( new LinkedHashMap<Long, Message>());
+		mSentNotDeliveredMsgHashSet = new LinkedHashMap<Long, Message>();
 		notificationid = mChatManager.numChats() + 1;
 		mImageURL = ThisUserConfig.getInstance().getString(
 				ThisUserConfig.FBPICURL);
@@ -329,6 +329,12 @@ class ChatAdapter extends IChatAdapter.Stub {
 		while (oneBeforedeliveredMsgIndex >= 0)
 		{
 			Message oneBeforedeliveredMsg = mMessages.get(oneBeforedeliveredMsgIndex);
+			if(oneBeforedeliveredMsg.getStatus()==SBChatMessage.RECEIVED)
+			{
+				oneBeforedeliveredMsgIndex--;
+				continue;
+			}
+			
 			if(oneBeforedeliveredMsg.getStatus()==SBChatMessage.DELIVERED ||
 				oneBeforedeliveredMsg.getStatus()==SBChatMessage.BLOCKED 	)
 			break;  //break if delivered found before this msg

@@ -166,7 +166,7 @@ private void showPopupMenu(View v)
 		@Override
 		public void onClick(View v) {
 			BlockedUser.addtoList(mParticipantFBID, mParticipantName);
-	        ToastTracker.showToast(mParticipantName + " blocked", Toast.LENGTH_SHORT);	
+	        Toast.makeText(ChatWindow.this,mParticipantName + " blocked", Toast.LENGTH_SHORT).show();	
 	        popUpMenu.dismiss();
 		}
 	});
