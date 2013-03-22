@@ -494,6 +494,7 @@ public void clearAllData()
     Log.d(TAG, "clearing all data");
     thisUserOverlay = null;
     nearbyUserItemizedOverlay = null;
+    nearbyUserGroupItemizedOverlay = null;
     mListViewContainer = null;
 	if(mapView!=null)
 	{
