@@ -490,6 +490,13 @@ private class SBOnChatMessageListener extends IMessageListener.Stub {
 			  //he fetches all the msgs which have been updated in adapter.
 			  mMessagesListAdapter.updateMessageStatusWithUniqueID(msg.getUniqueMsgIdentifier(), SBChatMessage.DELIVERED);
 		  }
+		  else  if(msg.getType() == Message.MSG_TYPE_ACKFOR_BLOCKED)
+		  {
+			  //here we should receive acks of only open chats
+			  //non open chats ack update msgs in list of theie respective chatAdapter and user when next opens them
+			  //he fetches all the msgs which have been updated in adapter.
+			  mMessagesListAdapter.updateMessageStatusWithUniqueID(msg.getUniqueMsgIdentifier(), SBChatMessage.BLOCKED);
+		  }
 		  else if(msg.getType() == Message.MSG_TYPE_CHAT)
 		  {
 			  //here we can get two type of chat msg
