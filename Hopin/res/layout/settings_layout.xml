@@ -47,17 +47,19 @@
                         android:layout_height="wrap_content"
                         >
                     <TableRow android:layout_width="match_parent"
-                              android:layout_height="wrap_content">
+                              android:layout_height="wrap_content"
+                              android:layout_marginTop="5dip">
                         <TextView
                                 android:id="@+id/settings_newuser_showpopup_text"
                                 android:layout_width="0dip"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/gray"
                                 android:textSize="15dip"
                                 android:text="Show popup when new matching user found"
                                 android:paddingLeft="10dip"
                                 android:paddingRight="40dip"
-                                android:layout_weight="4"
+                                android:layout_weight="4"                               
+                                android:ellipsize="marquee"
                                 android:gravity="center_vertical"
                                 android:layout_gravity="center_vertical"
                                 />
@@ -70,76 +72,17 @@
                                 android:layout_weight="1"
                                 android:layout_gravity="center_vertical"
                                 />
-                    </TableRow>
-
-                    <!--          <TableRow android:layout_width="match_parent"
-                       android:layout_height="wrap_content">
-                   <TextView
-                       android:id="@+id/settings_newuser_showpopup_text"
-                       android:layout_width="0dip"
-                       android:layout_height="match_parent"
-                       android:textColor="@color/gray"
-                       android:textSize="15dip"
-                        android:text="Incoming chat"
-                        android:paddingLeft="10dip"
-                        android:paddingRight="40dip"
-                        android:layout_weight="4"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        />
-
-                    <CheckBox
-                       android:id="@+id/settings_newuser_showpopup_checkbox"
-                       android:layout_width="0dip"
-                       android:layout_height="wrap_content"
-                       android:button="@drawable/checkbox_selector"
-                       android:layout_weight="1"
-                       android:layout_gravity="center_vertical"
-                      />
-                    </TableRow>-->
+                         </TableRow>
                 </TableLayout>
-
-
+                   
+            
                 <View
                         android:layout_width="match_parent"
                         android:layout_height="1dip"
                         android:background="@color/gray"
                         android:layout_marginTop="5dip"
                         android:layout_marginLeft="5dip"/>
-                <LinearLayout
-                        android:id="@+id/settings_activerequset_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    <TextView
-                            android:id="@+id/settings_activerequset_header"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:textSize="20dip"
-                            android:text="Active request"
-                            android:layout_marginTop="10dip"
-                            android:layout_marginLeft="5dip"/>
-
-                    <TextView
-                            android:id="@+id/settings_activerequset"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/gray"
-                            android:textSize="15dip"
-                            android:text="Prompt on app close"
-                            android:layout_marginLeft="5dip"
-                            android:layout_marginBottom="10dip"/>
-
-                </LinearLayout>
-
-                <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dip"
-                        android:background="@color/gray"
-                        android:layout_marginTop="5dip"
-                        android:layout_marginLeft="5dip"/>
+            
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -157,9 +100,9 @@
                               android:layout_height="wrap_content"
                               android:layout_marginTop="5dip">
                         <TextView
-                                android:id="@+id/settings_newuser_showpopup_text"
+                                android:id="@+id/settings_fbfriendonly_text"
                                 android:layout_width="0dip"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/gray"
                                 android:textSize="15dip"
                                 android:text="Visible only to FB friends and FOF"
@@ -171,7 +114,7 @@
                                 />
 
                         <CheckBox
-                                android:id="@+id/settings_newuser_showpopup_checkbox"
+                                android:id="@+id/settings_fbfriendonly_checkbox"
                                 android:layout_width="0dip"
                                 android:layout_height="wrap_content"
                                 android:button="@drawable/checkbox_selector"
@@ -180,13 +123,14 @@
                                 />
                     </TableRow>
 
-                    <TableRow android:layout_width="match_parent"
+                    <TableRow android:id="@+id/settings_womenfilter_tablerow"
+                         	   android:layout_width="match_parent"
                               android:layout_height="wrap_content"
                               android:layout_marginTop="5dip">
                         <TextView
-                                android:id="@+id/settings_newuser_showpopup_text"
+                                android:id="@+id/settings_womenfilter_text"
                                 android:layout_width="0dip"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/gray"
                                 android:textSize="15dip"
                                 android:text="Visible only to women and vice versa"
@@ -198,7 +142,7 @@
                                 />
 
                         <CheckBox
-                                android:id="@+id/settings_newuser_showpopup_checkbox"
+                                android:id="@+id/settings_womenfilter_checkbox"
                                 android:layout_width="0dip"
                                 android:layout_height="wrap_content"
                                 android:button="@drawable/checkbox_selector"
