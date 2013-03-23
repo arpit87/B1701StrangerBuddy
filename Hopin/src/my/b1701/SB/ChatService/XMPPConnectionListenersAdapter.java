@@ -149,12 +149,11 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 			Log.d(TAG, "login called and is already authenticated");
 			return true;
 		}
-	    	//ToastTracker.showToast("tryin login but xmppconnected?"+mXMPPConnection.isConnected(), Toast.LENGTH_SHORT);
+	    	ToastTracker.showToast("tryin login is not authenticated", Toast.LENGTH_SHORT);
 		if (!mXMPPConnection.isConnected())
 		{			
-			Log.d(TAG, "tryin login but xmpp not connected,ll connect");
-			//Toast.makeText(mService, "tryin login but xmpp not connected", Toast.LENGTH_SHORT).show();
-		    connect(); //blocking
+			Log.d(TAG, "tryin login but xmpp not connected,ll return false");
+			return false; //blocking
 		}		
 		try {
 			Log.d(TAG, "login called and willl login");

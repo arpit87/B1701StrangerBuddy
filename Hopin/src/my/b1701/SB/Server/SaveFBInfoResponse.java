@@ -1,5 +1,6 @@
 package my.b1701.SB.Server;
 
+import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 
@@ -20,14 +21,14 @@ public class SaveFBInfoResponse extends ServerResponseBase{
 	
 	@Override
 	public void process() {
-		Log.i(TAG,"processing SaveFBInfoResponse response.status:"+this.getStatus());	
-		
+		Log.i(TAG,"processing SaveFBInfoResponse response.status:"+this.getStatus());		
 		//jobj = JSONHandler.getInstance().GetJSONObjectFromHttp(serverResponse);
 		Log.i(TAG,"got json "+jobj.toString());
 		try {
-			body = jobj.getJSONObject("body");
+			body = jobj.getJSONObject("body");			
 			//status = body.getString("Status");			
 			ThisUserConfig.getInstance().putBool(ThisUserConfig.FBINFOSENTTOSERVER, true);
+			ProgressHandler.dismissDialoge();
 			//ToastTracker.showToast("fb save:"+status);
 		} catch (JSONException e) {			
 			Log.e(TAG, "Error returned by server on user add");

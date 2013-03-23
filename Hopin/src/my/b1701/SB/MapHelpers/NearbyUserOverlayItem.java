@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
@@ -53,6 +54,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 	boolean isVisibleExpanded = false;
 	private NearbyUser mNearbyUser = null;
 	private UserFBInfo mUserFBInfo = null;
+	private ScrollView fbInfoScrollView = null;
     
     private int chatIconImgSrc;
     private int smsIconImgSrc;
@@ -131,10 +133,13 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		String name_str,worksat_str,studiedat_str,hometown_str,gender_str = "";
 		
 		if(!mNearbyUser.getUserFBInfo().FBInfoAvailable())
+		{
+			userNotLoggedIn = (TextView)viewOnMarkerExpanded.findViewById(R.id.usernotloggedintext);
+			userNotLoggedIn.setVisibility(View.VISIBLE);
+			fbInfoScrollView.setVisibility(View.GONE);
 			return;
+		}		
 		
-		userNotLoggedIn = (TextView)viewOnMarkerExpanded.findViewById(R.id.usernotloggedintext);
-		userNotLoggedIn.setVisibility(View.GONE);
 		
 		fb_name = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_balloon_header);
 		works_at = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_work);
@@ -179,6 +184,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		{		
 			removeSmallView();
 			viewOnMarkerExpanded = mInflater.inflate(R.layout.map_expanded_layout, null);
+			fbInfoScrollView = (ScrollView)viewOnMarkerExpanded.findViewById(R.id.expanded_bio_scroll);
 			picViewExpanded = (ImageView)viewOnMarkerExpanded.findViewById(R.id.expanded_pic);		
 			expandedBalloonHeader = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_balloon_header);
 			chatIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.chat_icon_view);

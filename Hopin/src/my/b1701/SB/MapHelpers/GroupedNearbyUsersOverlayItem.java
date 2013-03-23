@@ -32,6 +32,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.maps.GeoPoint;
@@ -52,6 +53,7 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
 	boolean isVisibleExpanded = false;
 	boolean isVisibleExpandedIndividual = false;	
 	private TextView textViewNumberOfUSers = null;
+	private ScrollView fbInfoScrollView = null;
 	
 	private NearbyUserGroup mUserGroup = null;
 	private int chatIconImgSrc;
@@ -184,6 +186,7 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
 			if(viewOnMarkerIndividualExpanded==null)
 			{
 			 viewOnMarkerIndividualExpanded = mInflater.inflate(R.layout.map_expanded_layout, null);
+			 fbInfoScrollView = (ScrollView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_bio_scroll);
 			 picViewExpanded = (ImageView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_pic);		
 			 expandedBalloonHeader = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_balloon_header);
 			 chatIcon = (ImageView)viewOnMarkerIndividualExpanded.findViewById(R.id.chat_icon_view);
@@ -341,12 +344,10 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
 		{
 			userNotLoggedIn = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.usernotloggedintext);
 			userNotLoggedIn.setVisibility(View.VISIBLE);
+			fbInfoScrollView.setVisibility(View.GONE);
 			return;
 		}
-		
-		userNotLoggedIn = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.usernotloggedintext);
-		userNotLoggedIn.setVisibility(View.GONE);
-		
+			
 		fb_name = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_balloon_header);
 		works_at = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_work);
 		studied_at = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_education);

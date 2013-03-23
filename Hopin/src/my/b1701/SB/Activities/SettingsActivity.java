@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Toast;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
@@ -56,7 +57,7 @@ public class SettingsActivity extends FragmentActivity{
           	
  			@Override
  			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
- 				if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
+ 				if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBINFOSENTTOSERVER))
  				{
  					Log.i(TAG,"woman filter clicked,checked:"+isChecked);
  					womenFilter.setChecked(false);
@@ -68,6 +69,7 @@ public class SettingsActivity extends FragmentActivity{
  				{
  					if(ThisUserConfig.getInstance().getString(ThisUserConfig.GENDER) != "female")
  					{
+ 						Toast.makeText(SettingsActivity.this, "Sorry this filter is only meant for women", Toast.LENGTH_SHORT).show();
  						womanFilterView.setVisibility(View.GONE);
  					}
  					else
@@ -82,7 +84,7 @@ public class SettingsActivity extends FragmentActivity{
            	
   			@Override
   			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-  				if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
+  				if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBINFOSENTTOSERVER))
   				{
   					Log.i(TAG,"fb chk clicked,checked:"+isChecked);
   					fbfriendsOnlyFilter.setChecked(false);
