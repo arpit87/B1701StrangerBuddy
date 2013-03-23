@@ -1,5 +1,7 @@
 package my.b1701.SB.Fragments;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -9,12 +11,23 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import my.b1701.SB.Activities.Tutorial;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
+import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.R;
 
 
 public class FBLoginDialogFragment extends DialogFragment{
 	
+	static FacebookConnector fbconnect;
+		
+	public static FBLoginDialogFragment newInstance(FacebookConnector fbconnector)
+	{
+		FBLoginDialogFragment f = new FBLoginDialogFragment();
+		fbconnect = fbconnector;
+		return f;
+	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,8 +49,9 @@ public class FBLoginDialogFragment extends DialogFragment{
 		fbLoginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				ProgressHandler.showInfiniteProgressDialoge(getActivity(), "Trying logging", "Please wait");
 				dismiss();
-				MapListActivityHandler.getInstance().getUnderlyingActivity().getFbConnector().loginToFB();
+				fbconnect.loginToFB();				
 			}
 		});
         

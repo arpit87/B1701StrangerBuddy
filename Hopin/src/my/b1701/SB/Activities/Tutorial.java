@@ -90,6 +90,7 @@ public class Tutorial extends Activity{
 			
 			@Override
 			public void onClick(View v) {
+				ProgressHandler.showInfiniteProgressDialoge(Tutorial.this, "Trying logging", "Please wait..");
 				fbconnect = new FacebookConnector(Tutorial.this);
 				fbconnect.loginToFB();
 			}

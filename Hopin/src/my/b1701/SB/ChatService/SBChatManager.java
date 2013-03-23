@@ -95,11 +95,13 @@ public class SBChatManager extends IChatManager.Stub {
     public ChatAdapter getChat(String participant) {	
 		String key = participant;
 		if (mAllChats.containsKey(key)) {
+			Log.i(TAG,"Chat returned for:"+key);
 		    return mAllChats.get(key);
 		}
 		else
 		{
 			Chat c = mChatManager.createChat(key, null);
+			Log.i(TAG,"Chat created for:"+key);
 			// maybe a little probleme of thread synchronization
 			// if so use an HashTable instead of a HashMap for mChats
 			return getChatAdapter(c);

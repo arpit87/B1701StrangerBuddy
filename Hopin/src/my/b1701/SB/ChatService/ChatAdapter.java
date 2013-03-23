@@ -185,11 +185,9 @@ class ChatAdapter extends IChatAdapter.Stub {
 						msgsent = sendChatMessage(m);
 						break;
 					case Message.MSG_TYPE_ACKFOR_DELIVERED:
+					case Message.MSG_TYPE_ACKFOR_BLOCKED:	
 						msgsent = sendAck(m);
-						break;
-					case Message.MSG_TYPE_ACKFOR_BLOCKED:
-						msgsent = sendAck(m);
-						break;	
+						break;						
 					case Message.MSG_TYPE_NEWUSER_BROADCAST:
 						msgsent = sendBroadCastMessage(m);
 						break;
@@ -230,20 +228,22 @@ class ChatAdapter extends IChatAdapter.Stub {
 
 		@Override
 		public void processMessage(Chat chat,
-				org.jivesoftware.smack.packet.Message message) {
-			Log.d(TAG, "new msg ");
-			Log.d(TAG, "chat is open?" + mIsOpen);
+				org.jivesoftware.smack.packet.Message message) {			
 			Message msg = new Message(message);
+			Log.d(TAG, "new msg of type:"+msg.getType());
+			Log.d(TAG, "chat is open?" + mIsOpen);
 			// if broadcast message from new user then do getMatch req
 			if (msg.getType() == Message.MSG_TYPE_NEWUSER_BROADCAST) {
 				// caution..call back listener to chatwindow might not be
 				// registered yet for this chat
-				// listener get registered only when chat window opens
-				if(!ThisAppConfig.getInstance().getBool(ThisAppConfig.NEWUSERPOPUP))
+				// listener get registered only when chat window opens				
+				
+				if(!ThisAppConfig.getInstance().getBool(ThisAppConfig.NEWUSERPOPUP) || BlockedUser.isUserBlocked(msg.getInitiator()))
+				{
+					ToastTracker.showToast("new user broadcast received but its disabled");
 					return;
-				String thisNearbyUserFBID = msg.getInitiator();
-				if(BlockedUser.isUserBlocked(thisNearbyUserFBID))
-					return;
+				}			
+				
 				String thisNearbyUserUSERID = (String) message
 						.getProperty(Message.USERID);
 				int daily_insta_type = (Integer) message
@@ -385,9 +385,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 		// every chat msg should havae:
 		// 1) unique id
 		// 2) msg type
-		// 3) time
-		// 4) travel info
-		// 5) daily_insta_type
+		// 3) time		
 		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();
 		String msgBody = msg.getBody();
 		Log.i(TAG, "message sending to " + msg.getTo());
@@ -435,17 +433,13 @@ class ChatAdapter extends IChatAdapter.Stub {
 		// 3) user id
 		// 4) dailyinstatype
 		org.jivesoftware.smack.packet.Message msgToSend = new org.jivesoftware.smack.packet.Message();
-		msgToSend.setProperty(Message.SBMSGTYPE,
-				Message.MSG_TYPE_NEWUSER_BROADCAST);		
-		msgToSend.setProperty(Message.USERID, ThisUserNew.getInstance()
-				.getUserID());
-		msgToSend.setProperty(Message.DAILYINSTATYPE, ThisUserNew.getInstance()
-				.get_Daily_Instant_Type());
-		
+		msgToSend.setProperty(Message.SBMSGTYPE,Message.MSG_TYPE_NEWUSER_BROADCAST);		
+		msgToSend.setProperty(Message.USERID, ThisUserNew.getInstance().getUserID());
+		msgToSend.setProperty(Message.DAILYINSTATYPE, ThisUserNew.getInstance().get_Daily_Instant_Type());		
 		msgToSend.setProperty(Message.UNIQUEID, System.currentTimeMillis());
 		try {
 			mSmackChat.sendMessage(msgToSend);
-			Log.i(TAG, "broadcast message sent to " + msg.getTo());
+			Log.i(TAG, "broadcast message sent to " + msgToSend.getTo());
 		} catch (XMPPException e) {
 			// TODO retry sending msg?
 			Log.e(TAG, "couldnt send broadcast");

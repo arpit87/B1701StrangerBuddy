@@ -46,7 +46,7 @@ public class AddUserResponse extends ServerResponseBase{
 			tutorial_activity.finish();
 			//now we will start map activity
 			final Intent showSBMapViewActivity = new Intent(Platform.getInstance().getContext(), MapListViewTabActivity.class);	
-			showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			showSBMapViewActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			 Platform.getInstance().getHandler().post(new Runnable() {
 	          public void run() { 
 	              Platform.getInstance().getContext().startActivity(showSBMapViewActivity);	              

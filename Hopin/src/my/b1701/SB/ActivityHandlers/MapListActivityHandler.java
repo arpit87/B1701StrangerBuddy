@@ -248,7 +248,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 
 
 	
-	private void updateNearbyUsers() {
+	private void updateNearbyUsersonMap() {
 		
 		//caution while updating nearbyusers
 		//this user may be interacting with a view so we are going to show progressbar			
@@ -279,8 +279,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
             }
 			mapView.removeAllNearbyUserView();
 		}
-        //update listview
-        updateListFrag(nearbyUsers);
+      
 
 		//null means 0 users returned by server or not yet single call to server
 		if(nearbyUsers == null) {
@@ -359,19 +358,22 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 	public void updateOverlayOnZoomChange()
 	{
 		Log.i(TAG,"updating nearby users on zoom change");
-		updateNearbyUsers();
+		updateNearbyUsersonMap();
+		  //update listview
+		updateNearbyUserOnList();
 		mapView.postInvalidate();
 	}
 	
 	public void updateNearbyUsersOnUSersChange()
 	{
 		Log.i(TAG,"updating nearby users on user change");
-		updateNearbyUsers();
+		updateNearbyUsersonMap();
 		centerMap();
 		mapView.postInvalidate();
 	}
 
-    private void updateListFrag(List<NearbyUser> nearbyUsers) {
+    private void updateNearbyUserOnList() {
+    	List<NearbyUser> nearbyUsers = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
         if (nearbyUsers == null){
             nearbyUsers = Collections.emptyList();
         }
@@ -407,7 +409,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 					@Override
 					public void onClick(View v) {
                         MapListActivityHandler.getInstance().closeExpandedViews();
-						FBLoginDialogFragment fblogin_dialog = new FBLoginDialogFragment();
+						FBLoginDialogFragment fblogin_dialog = FBLoginDialogFragment.newInstance(underlyingActivity.getFbConnector());
 						fblogin_dialog.show(underlyingActivity.getSupportFragmentManager(), "fblogin_dialog");
 						fbPopupWindow.dismiss();
 						fbloginPromptIsShowing = false;

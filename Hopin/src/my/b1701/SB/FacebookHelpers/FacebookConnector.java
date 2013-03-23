@@ -80,6 +80,7 @@ public class FacebookConnector {
     public void loginToFB()
     { 	
     	//facebook.authorize(underlying_activity, permissions, new LoginDialogListener());
+    	
 	    String access_token = ThisUserConfig.getInstance().getString(ThisUserConfig.FBACCESSTOKEN);
 	    long expires = ThisUserConfig.getInstance().getLong(ThisUserConfig.FBACCESSEXPIRES);
 	 
@@ -92,6 +93,7 @@ public class FacebookConnector {
 	    }
     	
     	 if (!facebook.isSessionValid()) {
+    		 ProgressHandler.dismissDialoge();
     		 facebook.authorize(underlying_activity, permissions, new LoginDialogListener());  
     		 
     	 }
@@ -106,7 +108,7 @@ public class FacebookConnector {
 	    public void onComplete(Bundle values) {	    	
 	    	ThisUserConfig.getInstance().putString(ThisUserConfig.FBACCESSTOKEN, facebook.getAccessToken());
         	ThisUserConfig.getInstance().putLong(ThisUserConfig.FBACCESSEXPIRES, facebook.getAccessExpires());
-        	ProgressHandler.showInfiniteProgressDialoge(underlying_activity, "Authentication successsful", "Preparing for first run");
+        	ProgressHandler.showInfiniteProgressDialoge(underlying_activity, "Authentication successsful", "Please wait..");
         	requestUserData();        	
         }    
 	    
@@ -137,7 +139,7 @@ public class FacebookConnector {
 	private void requestUserData() {
        
         Bundle params = new Bundle();
-        params.putString("fields", "username,first_name,last_name, picture, email");
+        params.putString("fields", "username,first_name,last_name, picture, email, gender");
         mAsyncRunner.request("me", params, new FBUserRequestListener());
     }
 	
@@ -150,15 +152,17 @@ public class FacebookConnector {
 	        JSONObject jsonObject;
 	        try {
 	            jsonObject = new JSONObject(response);	  
-	            String picurl,username,first_name,last_name,id;
+	            String picurl,username,first_name,last_name,id,gender;
 	            id = jsonObject.getString("id");
 	            username = jsonObject.getString("username");
 	            first_name  = jsonObject.getString("first_name");
 	            last_name = jsonObject.getString("last_name");
+	            gender = jsonObject.getString("gender");
 	            picurl = "http://graph.facebook.com/" + id + "/picture?type=small";
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID,id );
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBPICURL, picurl);
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUSERNAME, username);
+	            ThisUserConfig.getInstance().putString(ThisUserConfig.GENDER, gender);
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FB_FIRSTNAME, first_name);
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FB_LASTNAME, last_name);
                 ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, first_name+" "+last_name);
@@ -170,7 +174,7 @@ public class FacebookConnector {
                 	if(userId == "")
                 	{
                 		//this happens on fb login from tutorial page.
-                		ProgressHandler.showInfiniteProgressDialoge(underlying_activity, "Welcome "+first_name+" "+last_name+"!", "Please wait..");
+                		ProgressHandler.showInfiniteProgressDialoge(underlying_activity, "Welcome "+first_name+" "+last_name+"!", "Preparing for first run..");
                 		String uuid = ThisAppConfig.getInstance().getString(ThisAppConfig.APPUUID);
                 		SBHttpRequest request = new AddUserRequest(uuid,username,underlying_activity);		
                   		SBHttpClient.getInstance().executeRequest(request);
