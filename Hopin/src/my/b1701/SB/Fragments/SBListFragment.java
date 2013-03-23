@@ -22,7 +22,13 @@ public class SBListFragment extends ListFragment {
 	private ViewGroup mListViewContainer;
 	private List<NearbyUser> nearbyUserlist = null;
 	
-	
+	public void reset(){
+        nearbyUserlist = null;
+        if (getListAdapter() != null) {
+            ((NearbyUsersListViewAdapter) getListAdapter()).clear();
+        }
+    }
+    
 	@Override
 	public void onCreate(Bundle savedState) {
         super.onCreate(null);

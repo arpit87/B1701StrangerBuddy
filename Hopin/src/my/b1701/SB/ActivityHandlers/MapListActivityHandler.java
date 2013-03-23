@@ -504,9 +504,9 @@ public void clearAllData()
 		mapView.removeAllViews();
 		mapView.getOverlays().clear();
 	}
-	if(listFrag!=null && listFrag.getListAdapter()!=null)
+	if(listFrag!=null)
 	{		
-		((NearbyUsersListViewAdapter)listFrag.getListAdapter()).clear();
+		listFrag.reset();
 	}
 	if(mSource!=null) {
         mSource.setText(R.string.source_listview);
