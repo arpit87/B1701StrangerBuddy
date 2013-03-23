@@ -43,7 +43,7 @@ public class SBMapView extends MapView implements OnGestureListener {
     
     public void setOldZoomLevel(int level)
     {
-    	oldZoomLevel = -1;
+    	oldZoomLevel = level;
     }
     
     public void addNearbyUserView(View v, MapView.LayoutParams params )

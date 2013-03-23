@@ -339,15 +339,17 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
 		TextView gender = null;
 		
 		String name_str,worksat_str,studiedat_str,hometown_str,gender_str = "";
+		userNotLoggedIn = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.usernotloggedintext);
 		
 		if(!userFBInfo.FBInfoAvailable())
-		{
-			userNotLoggedIn = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.usernotloggedintext);
+		{			
 			userNotLoggedIn.setVisibility(View.VISIBLE);
 			fbInfoScrollView.setVisibility(View.GONE);
 			return;
 		}
-			
+		
+		userNotLoggedIn.setVisibility(View.VISIBLE);
+		fbInfoScrollView.setVisibility(View.GONE);
 		fb_name = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_balloon_header);
 		works_at = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_work);
 		studied_at = (TextView)viewOnMarkerIndividualExpanded.findViewById(R.id.expanded_education);

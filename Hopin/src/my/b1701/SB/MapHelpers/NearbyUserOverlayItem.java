@@ -131,16 +131,17 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 		TextView gender = null;
 		
 		String name_str,worksat_str,studiedat_str,hometown_str,gender_str = "";
+		userNotLoggedIn = (TextView)viewOnMarkerExpanded.findViewById(R.id.usernotloggedintext);
 		
-		if(!mNearbyUser.getUserFBInfo().FBInfoAvailable())
-		{
-			userNotLoggedIn = (TextView)viewOnMarkerExpanded.findViewById(R.id.usernotloggedintext);
+		if(!userFBInfo.FBInfoAvailable())
+		{			
 			userNotLoggedIn.setVisibility(View.VISIBLE);
 			fbInfoScrollView.setVisibility(View.GONE);
 			return;
 		}		
 		
-		
+		userNotLoggedIn.setVisibility(View.GONE);
+		fbInfoScrollView.setVisibility(View.VISIBLE);
 		fb_name = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_balloon_header);
 		works_at = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_work);
 		studied_at = (TextView)viewOnMarkerExpanded.findViewById(R.id.expanded_education);

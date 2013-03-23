@@ -252,18 +252,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 		
 		//caution while updating nearbyusers
 		//this user may be interacting with a view so we are going to show progressbar			
-			
-		
-		String updateString ="";
-		if(CurrentNearbyUsers.getInstance().getAllNearbyUsers() == null)
-			updateString = "Matching users found"; //fist time update
-		else
-			updateString = "Matching users changed";  //subsequent update
-		
-		ProgressHandler.showInfiniteProgressDialoge(underlyingActivity, "Updating users",updateString);
-		//this call changes current list to new list
-		//we are maintaining two list as dont want to unnecessaarily update mapview is no user has changed
-		//CurrentNearbyUsers.getInstance().updateCurrentToNew();
+					
 		List<NearbyUser> nearbyUsers = CurrentNearbyUsers.getInstance().getAllNearbyUsers();
 		
 		//update map view
@@ -280,18 +269,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 			mapView.removeAllNearbyUserView();
 		}
       
-
-		//null means 0 users returned by server or not yet single call to server
-		if(nearbyUsers == null) {
-			ProgressHandler.dismissDialoge();
-            return;
-        }
-		
-		//nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
-		//nearbyUserItemizedOverlay.addList(nearbyUsers);
-		//Log.i(TAG,"adding nearby useroverlay");		
-		//mapView.getOverlays().add(nearbyUserItemizedOverlay);	
-
+	
         Context context = Platform.getInstance().getContext();
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float density = displayMetrics.density;
@@ -330,6 +308,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
         
         if(!groups.isEmpty())
         {
+        	Log.i(TAG,"adding groups useroverlay");
 			nearbyUserGroupItemizedOverlay = new GourpedNearbyUsersIteamizedOverlay(mapView);
 			nearbyUserGroupItemizedOverlay.addList(groups);
 			 mapView.getOverlays().add(nearbyUserGroupItemizedOverlay);
@@ -337,12 +316,11 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 
         if(!individualUsers.isEmpty())
         {
-        nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
-        nearbyUserItemizedOverlay.addList(individualUsers);
-        mapView.getOverlays().add(nearbyUserItemizedOverlay);
+	        Log.i(TAG,"adding individualUsers useroverlay");	
+	        nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
+	        nearbyUserItemizedOverlay.addList(individualUsers);
+	        mapView.getOverlays().add(nearbyUserItemizedOverlay);
         }
-		Log.i(TAG,"adding nearby useroverlay");			
-		
 		
 		//show fb login popup at bottom if not yet logged in
 		boolean isfbloggedin = ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN);
@@ -358,9 +336,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 	public void updateOverlayOnZoomChange()
 	{
 		Log.i(TAG,"updating nearby users on zoom change");
-		updateNearbyUsersonMap();
-		  //update listview
-		updateNearbyUserOnList();
+		updateNearbyUsersonMap();		
 		mapView.postInvalidate();
 	}
 	
@@ -368,6 +344,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 	{
 		Log.i(TAG,"updating nearby users on user change");
 		updateNearbyUsersonMap();
+		updateNearbyUserOnList();
 		centerMap();
 		mapView.postInvalidate();
 	}
@@ -491,6 +468,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 
         mapcontroller.zoomToSpan(Math.abs(maxLat - minLat), Math.abs(maxLon - minLon));        
         mapcontroller.animateTo(new GeoPoint((maxLat + minLat) / 2, (maxLon + minLon) / 2));
+        mapView.setOldZoomLevel(mapView.getZoomLevel());
 }
 	
 public void clearAllData()
