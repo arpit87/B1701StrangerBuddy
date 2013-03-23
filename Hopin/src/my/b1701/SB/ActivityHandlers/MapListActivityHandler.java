@@ -308,7 +308,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
         
         if(!groups.isEmpty())
         {
-        	Log.i(TAG,"adding groups useroverlay");
+        	Log.i(TAG,"adding groups useroverlay,no.groups:"+groups.size());
 			nearbyUserGroupItemizedOverlay = new GourpedNearbyUsersIteamizedOverlay(mapView);
 			nearbyUserGroupItemizedOverlay.addList(groups);
 			 mapView.getOverlays().add(nearbyUserGroupItemizedOverlay);
@@ -316,7 +316,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 
         if(!individualUsers.isEmpty())
         {
-	        Log.i(TAG,"adding individualUsers useroverlay");	
+	        Log.i(TAG,"adding individualUsers useroverlay,no indi:"+individualUsers.size());	
 	        nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
 	        nearbyUserItemizedOverlay.addList(individualUsers);
 	        mapView.getOverlays().add(nearbyUserItemizedOverlay);

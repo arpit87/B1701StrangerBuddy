@@ -4,6 +4,7 @@ package my.b1701.SB.CustomViewsAndListeners;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class SBMapView extends MapView implements OnGestureListener {
 
+	private static final String TAG = "my.b1701.SB.CustomViewsAndListeners.SBMapView";
     private GestureDetector gd;    
     private OnSingleTapListener singleTapListener;
     private List<View> nearByUserViewList = new ArrayList<View>();
@@ -43,6 +45,7 @@ public class SBMapView extends MapView implements OnGestureListener {
     
     public void setOldZoomLevel(int level)
     {
+    	Log.i(TAG,"setting old zoom level to:"+level);
     	oldZoomLevel = level;
     }
     
@@ -81,7 +84,9 @@ public class SBMapView extends MapView implements OnGestureListener {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-        if (getZoomLevel() != oldZoomLevel && oldZoomLevel!= -1) {           
+        Log.i(TAG,"dispatchDraw oldzoon:"+oldZoomLevel+",curzoom:"+getZoomLevel());
+        if (getZoomLevel() != oldZoomLevel && oldZoomLevel!= -1) {  
+        	Log.i(TAG,"updateOverlayOnZoomChange ll be called");
             oldZoomLevel  = getZoomLevel();
             MapListActivityHandler.getInstance().updateOverlayOnZoomChange();
         }
