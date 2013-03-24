@@ -117,11 +117,15 @@ public class SettingsActivity extends FragmentActivity{
 	 {
 		 showNewUserPopup.setChecked(ThisAppConfig.getInstance().getBool(ThisAppConfig.NEWUSERPOPUP));
 		 if(ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN) &&
-		   ThisUserConfig.getInstance().getString(ThisUserConfig.GENDER).equalsIgnoreCase("female"))
+		   !ThisUserConfig.getInstance().getString(ThisUserConfig.GENDER).equalsIgnoreCase("female"))
+		 {
+			 Log.i(TAG,"not woman"); 
 			womanFilterView.setVisibility(View.GONE);
+		 }
 		else				
 			womenFilter.setChecked(ThisAppConfig.getInstance().getBool(ThisAppConfig.WOMANFILTER));
 		 fbfriendsOnlyFilter.setChecked(ThisAppConfig.getInstance().getBool(ThisAppConfig.FBFRIENDONLYFILTER));
+		 Log.i(TAG,"woman filter gender is:"+ThisUserConfig.getInstance().getString(ThisUserConfig.GENDER));		 
 	 }
 	 
 	 @Override
