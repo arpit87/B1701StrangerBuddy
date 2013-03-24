@@ -1,6 +1,7 @@
 package my.b1701.SB.HttpClient;
 
 import android.util.Log;
+import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.LocationHelpers.SBGeoPoint;
 import my.b1701.SB.Server.AddThisUserSrcDstCarPoolResponse;
 import my.b1701.SB.Server.ServerConstants;
@@ -68,6 +69,10 @@ public class AddThisUserScrDstCarPoolRequest extends SBHttpRequest {
         jsonobjAddRequest.put(UserAttributes.SRCADDRESS, ThisUserNew.getInstance().getSourceFullAddress());
         jsonobjAddRequest.put(UserAttributes.DSTADDRESS, ThisUserNew.getInstance().getDestinationFullAddress());       
         jsonobjAddRequest.put(UserAttributes.DATETIME, ThisUserNew.getInstance().getDateAndTimeOfTravel());
+        if(ThisAppConfig.getInstance().getBool(ThisAppConfig.WOMANFILTER))
+        	jsonobjAddRequest.put(UserAttributes.WOMANFLTER, 1);
+        if(ThisAppConfig.getInstance().getBool(ThisAppConfig.FBFRIENDONLYFILTER))
+        	jsonobjAddRequest.put(UserAttributes.FBFRIENDSFILTER, 1);
     }
 
     public ServerResponseBase execute() {

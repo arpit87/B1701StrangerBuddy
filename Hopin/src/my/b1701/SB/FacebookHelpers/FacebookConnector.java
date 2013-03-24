@@ -152,6 +152,7 @@ public class FacebookConnector {
 	        JSONObject jsonObject;
 	        try {
 	            jsonObject = new JSONObject(response);	  
+	            Log.i(TAG,"got my fbinfo:"+jsonObject.toString());
 	            String picurl,username,first_name,last_name,id,gender;
 	            id = jsonObject.getString("id");
 	            username = jsonObject.getString("username");

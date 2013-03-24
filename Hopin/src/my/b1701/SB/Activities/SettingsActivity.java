@@ -117,7 +117,7 @@ public class SettingsActivity extends FragmentActivity{
 	 {
 		 showNewUserPopup.setChecked(ThisAppConfig.getInstance().getBool(ThisAppConfig.NEWUSERPOPUP));
 		 if(ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN) &&
-		   ThisUserConfig.getInstance().getString(ThisUserConfig.GENDER) != "female")
+		   ThisUserConfig.getInstance().getString(ThisUserConfig.GENDER).equalsIgnoreCase("female"))
 			womanFilterView.setVisibility(View.GONE);
 		else				
 			womenFilter.setChecked(ThisAppConfig.getInstance().getBool(ThisAppConfig.WOMANFILTER));
