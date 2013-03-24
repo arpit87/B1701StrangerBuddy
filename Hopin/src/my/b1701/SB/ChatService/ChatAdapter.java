@@ -335,8 +335,6 @@ class ChatAdapter extends IChatAdapter.Stub {
 
 	}
 	
-
-	
 	private void setPriorUndeliveredMsgsToFailed(Message lastDeliveredMsg)
 	{
 		int oneBeforedeliveredMsgIndex = mMessages.lastIndexOf(lastDeliveredMsg)-1;
@@ -355,6 +353,9 @@ class ChatAdapter extends IChatAdapter.Stub {
 			
 			updateMessageStatusInList(oneBeforedeliveredMsg, SBChatMessage.SENDING_FAILED);
 			mSentNotDeliveredMsgHashSet.remove(oneBeforedeliveredMsg);
+			if (mIsOpen) {				
+				callListeners(oneBeforedeliveredMsg);
+			}
 			oneBeforedeliveredMsgIndex--;
 		}
 	}
