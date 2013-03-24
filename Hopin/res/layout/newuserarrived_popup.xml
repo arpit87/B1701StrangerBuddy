@@ -170,7 +170,7 @@
             android:layout_margin="5.0dip"
             android:layout_marginLeft="14dp"                       
             android:scaleType="fitXY"
-            android:src="@drawable/chat_icon" />
+            android:src="@drawable/chat_icon_blue" />
         
         <ImageView
             android:id="@+id/newuserarrive_popup_sms_icon"
