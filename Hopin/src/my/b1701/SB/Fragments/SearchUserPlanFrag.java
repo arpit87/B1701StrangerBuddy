@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -58,6 +59,8 @@ public class SearchUserPlanFrag extends AbstractSearchInputFrag implements SeekB
             timeSeekbar = (SeekBar) mPlanViewContainer.findViewById(R.id.search_user_plan_timeseekBar);
             am_pm_toggle = (ToggleButton)mPlanViewContainer.findViewById(R.id.search_user_plan_btn_am_pm_toggle);
             timeView = (TextView)mPlanViewContainer.findViewById(R.id.search_user_plan_time);
+            destination_progressbar = (ProgressBar)mPlanViewContainer.findViewById(R.id.search_user_plan_destinationprogress);
+            source_progressbar = (ProgressBar)mPlanViewContainer.findViewById(R.id.search_user_plan_sourceprogress);
         }		
 		
 	    timeSeekbar.setMax(48);
@@ -101,6 +104,8 @@ public class SearchUserPlanFrag extends AbstractSearchInputFrag implements SeekB
             offerRideButton = (Button)mPlanViewContainer.findViewById(R.id.search_user_plan_offerride);
             cancelFindUsers = (Button)mPlanViewContainer.findViewById(R.id.search_user_plan_cancelfindusers);
             timeSeekbar = (SeekBar) mPlanViewContainer.findViewById(R.id.search_user_plan_timeseekBar);
+            destination_progressbar = (ProgressBar)mPlanViewContainer.findViewById(R.id.search_user_plan_destinationprogress);
+            source_progressbar = (ProgressBar)mPlanViewContainer.findViewById(R.id.search_user_plan_sourceprogress);
         }
                 
         return mPlanViewContainer;

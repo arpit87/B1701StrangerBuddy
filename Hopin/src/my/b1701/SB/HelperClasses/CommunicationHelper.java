@@ -71,29 +71,37 @@ public class CommunicationHelper {
 		}	
 		else 
 		{
-			Intent startChatIntent = new Intent(Platform.getInstance().getContext(),ChatWindow.class);					
-			startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
-		 			| Intent.FLAG_ACTIVITY_NEW_TASK);			
-			startChatIntent.putExtra(ChatWindow.PARTICIPANT, fbid);			
-			startChatIntent.putExtra(ChatWindow.PARTICIPANT_NAME, full_name);
-			context.startActivity(startChatIntent);
+			if(fbid!="" && full_name!="")
+			{
+				Intent startChatIntent = new Intent(Platform.getInstance().getContext(),ChatWindow.class);					
+				startChatIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP
+			 			| Intent.FLAG_ACTIVITY_NEW_TASK);			
+				startChatIntent.putExtra(ChatWindow.PARTICIPANT, fbid);			
+				startChatIntent.putExtra(ChatWindow.PARTICIPANT_NAME, full_name);
+				context.startActivity(startChatIntent);
+			}
+			else
+				ToastTracker.showToast("Sorry, user is not logged in");
 		}
 		
 	
 	}
 	
-	public void onSmsClickWithUser(String userID)
+	public void onSmsClickWithUser(String userID, boolean isPhoneAvailable)
 	{
 		if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
 		{
 			//make popup 
 			MapListActivityHandler.getInstance().fbloginpromptpopup_show(true);
 		}
-		else if(userID!="" )
+		else if(userID!="" && isPhoneAvailable)
 		{
+			
 			SmsDialogFragment sms_dialog = new SmsDialogFragment(userID);
 			sms_dialog.show(MapListActivityHandler.getInstance().getUnderlyingActivity().getSupportFragmentManager(), "sms_dialog");						
 		}
+		else
+			ToastTracker.showToast("Sorry, user has not provided phone number");
 	}
 	
 	public void onFBIconClickWithUser(Activity underLyingActivity, String userFBID, String userFBName)

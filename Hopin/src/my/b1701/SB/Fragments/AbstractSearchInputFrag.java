@@ -37,6 +37,8 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +51,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ProgressBar;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
@@ -74,7 +77,8 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 	            "date"
 	    };
 	 
-	PlacesAutoCompleteAdapter placesAutoCompleteAdapter = null;
+	PlacesAutoCompleteAdapter sourceAutoCompleteAdapter = null;
+	PlacesAutoCompleteAdapter destinationAutoCompleteAdapter = null;
 	
 		
 	String time = "";
@@ -87,6 +91,8 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 	boolean takeRide = false;
 	boolean destinationSet = false;
 	boolean sourceSet = false;
+	ProgressBar source_progressbar = null;
+	ProgressBar destination_progressbar = null;
 	//0 daily pool,1 instant share
 	//0 take ,1 offer	
 	
@@ -103,7 +109,8 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 	@Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        placesAutoCompleteAdapter = new PlacesAutoCompleteAdapter(getActivity().getApplicationContext(), R.layout.address_suggestion_layout);        
+        sourceAutoCompleteAdapter = new PlacesAutoCompleteAdapter(getActivity().getApplicationContext(), R.layout.address_suggestion_layout,source_progressbar);        
+        destinationAutoCompleteAdapter = new PlacesAutoCompleteAdapter(getActivity().getApplicationContext(), R.layout.address_suggestion_layout,destination_progressbar);
         cancelFindUsers.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -133,7 +140,7 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 		});
         
         if(source!= null)
-        {
+        {        	
 	        source.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 	            @Override
 	            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -151,11 +158,12 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 	                    source.setText("");
 	                    showErrorDialog("Failed to get Source address", "Please try again...");
 	                }
+	                 source_progressbar.setVisibility(View.INVISIBLE);
 	            }
 	        
 	        });
-	        
-	        source.setAdapter(placesAutoCompleteAdapter);
+	        source.addTextChangedListener(new CustomTextWatcher(source_progressbar));
+	        source.setAdapter(sourceAutoCompleteAdapter);
         }
         destination.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -173,11 +181,12 @@ public abstract class AbstractSearchInputFrag extends Fragment{
                 	destination.setText("");
                     showErrorDialog("Failed to get destination address", "Please try again...");
                 }
+               destination_progressbar.setVisibility(View.INVISIBLE);
             }
         
         });
-        
-        destination.setAdapter(placesAutoCompleteAdapter);
+        destination.addTextChangedListener(new CustomTextWatcher(destination_progressbar));
+        destination.setAdapter(destinationAutoCompleteAdapter);
 	}
 	
 	@Override
@@ -403,11 +412,40 @@ public abstract class AbstractSearchInputFrag extends Fragment{
         return resultList;
     }
     
+    private class CustomTextWatcher implements TextWatcher {
+    	
+    	private ProgressBar thisTextProgressBar = null;
+    	public CustomTextWatcher( ProgressBar progressBar)
+    	{
+    		this.thisTextProgressBar = progressBar;
+    	}
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(s.length() > 0) {
+            	thisTextProgressBar.setVisibility(View.VISIBLE);
+            }
+
+        }
+
+		@Override
+		public void afterTextChanged(Editable arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+    }
+    
     class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements Filterable {
         private ArrayList<String> resultList;
+        private ProgressBar thisTextProgressBar = null;
 
-        public PlacesAutoCompleteAdapter(Context context, int textViewResourceId) {
+        public PlacesAutoCompleteAdapter(Context context, int textViewResourceId, ProgressBar progressBar) {
             super(context, textViewResourceId);
+            thisTextProgressBar = progressBar;
         }
 
         @Override
@@ -439,12 +477,13 @@ public abstract class AbstractSearchInputFrag extends Fragment{
 
                 @Override
                 protected void publishResults(CharSequence constraint, FilterResults results) {
-                    if (results != null && results.count > 0) {
+                    if (results != null && results.count > 0) {                    	
                         notifyDataSetChanged();
                     }
                     else {
                         notifyDataSetInvalidated();
                     }
+                    thisTextProgressBar.setVisibility(View.INVISIBLE);
                 }};
             return filter;
         }

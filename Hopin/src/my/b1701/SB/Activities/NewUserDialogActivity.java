@@ -111,7 +111,7 @@ public class NewUserDialogActivity extends Activity{
 			smsIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View buttonClose) {
-					CommunicationHelper.getInstance().onSmsClickWithUser(userid);
+					CommunicationHelper.getInstance().onSmsClickWithUser(userid,thisNearbyUserFBInfo.isPhoneAvailable());
 				}
 				});
 						

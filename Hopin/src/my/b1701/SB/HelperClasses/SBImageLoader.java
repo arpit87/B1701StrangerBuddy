@@ -36,7 +36,7 @@ public class SBImageLoader {
 	  {		  
 		  DisplayImageOptions options = new DisplayImageOptions.Builder()
 		    .showStubImage(stubResource)
-            .showImageForEmptyUri(R.drawable.nearbyusericon)
+            .showImageForEmptyUri(stubResource)
 		    .cacheInMemory()
 		    .build();
 		  imageLoader.displayImage(imageURL, imageView,options);

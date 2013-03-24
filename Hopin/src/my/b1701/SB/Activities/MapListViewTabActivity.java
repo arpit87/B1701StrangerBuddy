@@ -37,6 +37,7 @@ import my.b1701.SB.HttpClient.*;
 import my.b1701.SB.LocationHelpers.SBLocationManager;
 import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.R;
+import my.b1701.SB.Users.CurrentNearbyUsers;
 import my.b1701.SB.Users.ThisUserNew;
 import my.b1701.SB.Util.StringUtils;
 import org.json.JSONException;
@@ -173,6 +174,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     	this.unregisterReceiver(mapListActivityHandler);
     	mapListActivityHandler.clearAllData();  
     	ThisUserNew.clearAllData();
+    	CurrentNearbyUsers.getInstance().clearAllData();
     }
 	
 		

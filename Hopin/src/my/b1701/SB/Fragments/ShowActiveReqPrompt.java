@@ -1,9 +1,16 @@
 package my.b1701.SB.Fragments;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import my.b1701.SB.R;
+import my.b1701.SB.Activities.MyChatsActivity;
 import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.HelperClasses.ProgressHandler;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.GetMatchingCarPoolUsersRequest;
 import my.b1701.SB.HttpClient.GetMatchingNearbyUsersRequest;
 import my.b1701.SB.HttpClient.SBHttpClient;
@@ -14,14 +21,17 @@ import my.b1701.SB.Util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -36,7 +46,8 @@ public class ShowActiveReqPrompt extends DialogFragment{
 	View carPoolActiveLayout;
 	TextView carPoolNoActiveReq;
 	TextView instaNoActiveReq;
-
+	private static final String TAG = "my.b1701.SB.Fragments.ShowActiveReqPrompt";
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -101,16 +112,26 @@ public class ShowActiveReqPrompt extends DialogFragment{
         {  
         
         	try {
+        		
+        		final JSONObject responseJsonObj = new JSONObject(instaReqJson);
+        		String datetime = responseJsonObj.getString(UserAttributes.DATETIME);        		
+				if(checkIfRequestExpired(datetime))
+				{
+					ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_INSTA, "");
+					ToastTracker.showToast("Active insta req expired");
+				}
+				else
+				{
+				
         		instaActiveLayout.setVisibility(View.VISIBLE);
             	instaNoActiveReq.setVisibility(View.GONE);
-            	
-    				final JSONObject responseJsonObj = new JSONObject(instaReqJson);
-    				String source = responseJsonObj.getString(UserAttributes.SRCLOCALITY);
-    				String destination = responseJsonObj.getString(UserAttributes.DSTLOCALITY);
-    				String datetime = responseJsonObj.getString(UserAttributes.DATETIME);
-    				instasource.setText(source);
-    				instadestination.setText(destination);
-    				instatime.setText(StringUtils.formatDate("yyyy-MM-dd HH:mm", "d MMM, hh:mm a", datetime));
+            					
+				String source = responseJsonObj.getString(UserAttributes.SRCLOCALITY);
+				String destination = responseJsonObj.getString(UserAttributes.DSTLOCALITY);
+				
+				instasource.setText(source);
+				instadestination.setText(destination);
+				instatime.setText(StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "d MMM, hh:mm a", datetime));
     					
 				 instaActiveLayout.setOnClickListener(new OnClickListener() {
 						
@@ -131,11 +152,12 @@ public class ShowActiveReqPrompt extends DialogFragment{
 						}
 					});
 				
-				
+				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+        	
         }        
        
         
@@ -148,8 +170,41 @@ public class ShowActiveReqPrompt extends DialogFragment{
 				dismiss();
 			}
 		});
+        
+        ImageView chat_button = (ImageView)dialogView.findViewById(R.id.show_active_req_prompt_chat);
+        chat_button.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+					dismiss();
+				  Intent myChatsIntent = new Intent(getActivity(), MyChatsActivity.class);
+			       myChatsIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			       startActivity(myChatsIntent);
+				
+			}
+		});
 	       
 		return dialogView;
+	}
+	
+	private boolean checkIfRequestExpired(String dateTime)
+	{
+		//currently chking for 2 hrs
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Log.i(TAG,"got date in chkdate:"+dateTime);		
+		try {
+			Date date =  formatter.parse(dateTime);	
+			Long currentTime = System.currentTimeMillis();
+			Long instaTime = date.getTime();
+			Log.i(TAG,"cur time:"+currentTime);	
+			Log.i(TAG,"insta time:"+instaTime);	
+			if( currentTime - instaTime  > 7.2e6)
+				return true;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return false;
 	}
 	
 	

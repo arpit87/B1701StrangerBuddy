@@ -145,15 +145,16 @@ public class SBChatListViewAdapter extends BaseAdapter {
 		    {
 		        case SBChatMessage.SENDING_FAILED:
 		    	statusText = "Sending failed";
+		    	msgStatus.setTextColor(Color.RED);
 		    	break;
 		    	case SBChatMessage.SENDING: //sending
 		    	statusText = "Sending..";
 		    	break;
 		    	case SBChatMessage.SENT:
-		    	statusText = "Sent";
+		    	statusText = "Sent";		    	
 		    	break;
 		    	case SBChatMessage.DELIVERED:
-		    	statusText = "Delivered";
+		    	statusText = "Delivered";		    	
 			    break;	
 		    	case SBChatMessage.BLOCKED:
 		    	statusText = "Blocked";

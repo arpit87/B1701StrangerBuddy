@@ -269,6 +269,8 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 			mapView.removeAllNearbyUserView();
 		}
       
+		if(nearbyUsers == null || nearbyUsers.size()==0)
+			return;
 	
         Context context = Platform.getInstance().getContext();
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -305,6 +307,13 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
             }
         }
 		
+        if(!individualUsers.isEmpty())
+        {
+	        Log.i(TAG,"adding individualUsers useroverlay,no indi:"+individualUsers.size());	
+	        nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
+	        nearbyUserItemizedOverlay.addList(individualUsers);
+	        mapView.getOverlays().add(nearbyUserItemizedOverlay);
+        }
         
         if(!groups.isEmpty())
         {
@@ -313,14 +322,7 @@ public void centreMapToPlusLilUp(SBGeoPoint centrePoint)
 			nearbyUserGroupItemizedOverlay.addList(groups);
 			 mapView.getOverlays().add(nearbyUserGroupItemizedOverlay);
         }
-
-        if(!individualUsers.isEmpty())
-        {
-	        Log.i(TAG,"adding individualUsers useroverlay,no indi:"+individualUsers.size());	
-	        nearbyUserItemizedOverlay = new NearbyUsersItemizedOverlay(mapView);
-	        nearbyUserItemizedOverlay.addList(individualUsers);
-	        mapView.getOverlays().add(nearbyUserItemizedOverlay);
-        }
+      
 		
 		//show fb login popup at bottom if not yet logged in
 		boolean isfbloggedin = ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN);

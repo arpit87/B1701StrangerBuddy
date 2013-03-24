@@ -4,6 +4,7 @@ import java.net.ConnectException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import my.b1701.SB.ChatClient.ISBChatConnAndMiscListener;
+import my.b1701.SB.HelperClasses.SBConnectivity;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 
@@ -56,7 +57,8 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 
 	 public XMPPConnectionListenersAdapter(final XMPPConnection con,
 			     final SBChatService service) {
-		 mXMPPConnection = con;	
+		 mXMPPConnection = con;
+
 		mLogin = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);		
 		mPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);		
 		mService = service;	
@@ -84,13 +86,18 @@ public void removeMiscCallBackListener(ISBChatConnAndMiscListener listener) thro
 			return true;
 		else {
 		    try {
-		    	mXMPPConnection.connect();
-		    	mXMPPConnection.addConnectionListener(mConnectionListener);		    			
+		    	if(SBConnectivity.isConnected())
+		    	{
+		    		mXMPPConnection.connect();
+		    		mXMPPConnection.addConnectionListener(mConnectionListener);
+		    	}
+		    	else
+		    		ToastTracker.showToast("not connected to internet");
 		    } catch (XMPPException e) {
 			Log.e(TAG, "Error while connecting", e);
 			mErrorMsg = e.getMessage();
 			return false;
-		    } 
+		    }  
 		    return true;
 		}		    
 	    }

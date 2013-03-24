@@ -111,14 +111,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			viewOnMarkerSmall.setVisibility(View.VISIBLE);
 			isVisibleSmall = true;
 		}
-		else
-		{			
-			viewOnMarkerSmall.setLayoutParams(params);	
-			viewOnMarkerSmall.setVisibility(View.VISIBLE);
-			isVisibleSmall = true;
-		
-		}
-		
+			
 	}
 	
 	private void setFBInfoOnExpandedBalloon(View balloonView,UserFBInfo userFBInfo)
@@ -193,7 +186,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			facebookIcon = (ImageView)viewOnMarkerExpanded.findViewById(R.id.fb_icon_view);
 			buttonClose = (ImageView)viewOnMarkerExpanded.findViewById(R.id.button_close_balloon_expandedview);
 			
-            chatIconImgSrc = R.drawable.chat_icon;
+            chatIconImgSrc = R.drawable.chat_icon_blue;
             smsIconImgSrc = R.drawable.sms_icon;
             facebookIconImgSrc = R.drawable.fb_icon;
 
@@ -204,25 +197,25 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			
 			if(!ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN))
 			{
-				chatIcon.setImageResource(R.drawable.chat_icon_disabled);
+				chatIcon.setImageResource(R.drawable.chat_icon_blue_disabled);
 				chatIcon.invalidate();
 				smsIcon.setImageResource(R.drawable.sms_icon_disabled);
 				smsIcon.invalidate();
 				facebookIcon.setImageResource(R.drawable.fb_icon_disabled);
 				facebookIcon.invalidate();
 
-                chatIconImgSrc = R.drawable.chat_icon_disabled;
+                chatIconImgSrc = R.drawable.chat_icon_blue_disabled;
                 smsIconImgSrc = R.drawable.sms_icon_disabled;
                 facebookIconImgSrc = R.drawable.fb_icon_disabled;
             }
 			else if(!mUserFBInfo.FBInfoAvailable())
 			{
-				chatIcon.setImageResource(R.drawable.chat_icon_disabled);
+				chatIcon.setImageResource(R.drawable.chat_icon_blue_disabled);
 				chatIcon.invalidate();				
 				facebookIcon.setImageResource(R.drawable.fb_icon_disabled);
 				facebookIcon.invalidate();
 
-                chatIconImgSrc = R.drawable.chat_icon_disabled;
+                chatIconImgSrc = R.drawable.chat_icon_blue_disabled;
                 facebookIconImgSrc = R.drawable.fb_icon_disabled;
 			}
 			
@@ -243,7 +236,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			smsIcon.setOnClickListener(new OnClickListener() {				
 				@Override
 				public void onClick(View buttonClose) {
-					CommunicationHelper.getInstance().onSmsClickWithUser(mUserID);
+					CommunicationHelper.getInstance().onSmsClickWithUser(mUserID,mNearbyUser.getUserFBInfo().isPhoneAvailable());
 				}
 				});
 			//SBImageLoader.getInstance().displayImageElseStub(mImageURL, picView, R.drawable.userpicicon);
@@ -273,13 +266,7 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
 			viewOnMarkerExpanded.setVisibility(View.VISIBLE);
 			isVisibleExpanded = true;
 		}
-		else
-		{			
-			viewOnMarkerExpanded.setLayoutParams(params);	
-			viewOnMarkerExpanded.setVisibility(View.VISIBLE);
-			isVisibleExpanded = true;		
-		}
-		
+			
 	}
 	
 	public void removeExpandedView()
@@ -352,10 +339,10 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
             boolean isThisUserFbLoggedIn = ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN);
 
             if (!(isOtherUserFbInfoAvailable && isThisUserFbLoggedIn)){
-                if (chatIconImgSrc != R.drawable.chat_icon_disabled) {
-                    chatIcon.setImageResource(R.drawable.chat_icon_disabled);
+                if (chatIconImgSrc != R.drawable.chat_icon_blue_disabled) {
+                    chatIcon.setImageResource(R.drawable.chat_icon_blue_disabled);
                     chatIcon.invalidate();
-                    chatIconImgSrc = R.drawable.chat_icon_disabled;
+                    chatIconImgSrc = R.drawable.chat_icon_blue_disabled;
                 }
                 
                 if (facebookIconImgSrc != R.drawable.fb_icon_disabled){
@@ -364,10 +351,10 @@ public class NearbyUserOverlayItem extends BaseOverlayItem{
                     facebookIconImgSrc = R.drawable.fb_icon_disabled;
                 }
             } else {
-                if (chatIconImgSrc != R.drawable.chat_icon){
-                    chatIcon.setImageResource(R.drawable.chat_icon);
+                if (chatIconImgSrc != R.drawable.chat_icon_blue){
+                    chatIcon.setImageResource(R.drawable.chat_icon_blue);
                     chatIcon.invalidate();
-                    chatIconImgSrc = R.drawable.chat_icon;
+                    chatIconImgSrc = R.drawable.chat_icon_blue;
                 }
                 
                 if (facebookIconImgSrc != R.drawable.fb_icon){

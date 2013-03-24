@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import my.b1701.SB.Adapter.BlockedUsersAdapter;
 import my.b1701.SB.HelperClasses.BlockedUser;
 import my.b1701.SB.R;
@@ -17,14 +18,26 @@ public class BlockedUsersActivity extends ListActivity{
 
     private List<BlockedUser> blockedUsers;
     private BlockedUsersAdapter blockedUsersAdapter;
+    TextView noBlockedUsers = null;
+    ListView blockedListView = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blocked_users_layout);
+        noBlockedUsers = (TextView) findViewById(R.id.blocked_users_layout_noblocked);
+        blockedListView = (ListView) findViewById(android.R.id.list);        
         this.blockedUsers = BlockedUser.getList();
-        this.blockedUsersAdapter = new BlockedUsersAdapter(this, this.blockedUsers);
-        setListAdapter(blockedUsersAdapter);
+        if(blockedUsers.isEmpty())
+        {
+        	noBlockedUsers.setVisibility(View.VISIBLE);
+        	blockedListView.setVisibility(View.GONE);
+        }
+        else
+        {
+	        this.blockedUsersAdapter = new BlockedUsersAdapter(this, this.blockedUsers);
+	        setListAdapter(blockedUsersAdapter);
+        }
     }
 
     @Override

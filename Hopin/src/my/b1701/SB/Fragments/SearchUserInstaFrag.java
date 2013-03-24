@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 
 public class SearchUserInstaFrag extends AbstractSearchInputFrag{
@@ -19,6 +20,7 @@ public class SearchUserInstaFrag extends AbstractSearchInputFrag{
 	RadioGroup radio_group_time = null ;
 	String mDestination = "";
 	int mRadio_button_selected = 5;  //5 for 5 min,15 for 15 min,30 for 30 min	
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -32,6 +34,7 @@ public class SearchUserInstaFrag extends AbstractSearchInputFrag{
          	cancelFindUsers = (Button)mInstaViewContainer.findViewById(R.id.search_usersinsta_btn_cancelfindusers);
             offerRideButton = (Button)mInstaViewContainer.findViewById(R.id.search_usersinsta_btn_offerride);
             takeRideButton = (Button)mInstaViewContainer.findViewById(R.id.search_usersinsta_btn_takeride);
+            destination_progressbar = (ProgressBar)mInstaViewContainer.findViewById(R.id.search_users_insta_destinationprogress);
             radio_group_time.check(R.id.search_user_insta_radiobutton_5min);
         } 
 		//call super at end as it uses above inflation
@@ -50,6 +53,7 @@ public class SearchUserInstaFrag extends AbstractSearchInputFrag{
          	takeRideButton = (Button)mInstaViewContainer.findViewById(R.id.search_usersinsta_btn_cancelfindusers);
             offerRideButton = (Button)mInstaViewContainer.findViewById(R.id.search_usersinsta_btn_offerride);
             cancelFindUsers = (Button)mInstaViewContainer.findViewById(R.id.search_usersinsta_btn_takeride);
+            destination_progressbar = (ProgressBar)mInstaViewContainer.findViewById(R.id.search_users_insta_destinationprogress);
             radio_group_time.check(R.id.search_user_insta_radiobutton_5min);
         } 
         return mInstaViewContainer;
