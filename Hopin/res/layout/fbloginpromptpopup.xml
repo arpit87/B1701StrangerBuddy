@@ -6,7 +6,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_width="fill_parent"
 	    android:layout_alignParentBottom="true"
-	    android:background="@drawable/fbloginpromptflicker"
+	    android:background="@drawable/transparent_black"
 	    >
 	    <LinearLayout 
 	       android:id="@+id/fbloginpromptloginlayout"

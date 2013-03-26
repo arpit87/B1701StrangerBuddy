@@ -112,41 +112,7 @@
         android:text="Chat with users heading to same destination" />
         </TableRow>
 
-    <!--       <TableRow android:paddingBottom="5dip" >
-
-           <ImageView
-                android:paddingRight="10dip"
-                android:paddingLeft="30dip"
-                android:layout_gravity="right|center_vertical"
-                android:src="@drawable/bluelinemarker" />
-
-             <TextView
-        android:id="@+id/textView4"
-        android:textColor="@color/fb_blue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"            
-        android:text="No posting on walls" />
-        </TableRow>
-
-               
-        <TableRow android:paddingBottom="5dp" >
-
-             <ImageView
-                android:paddingRight="10dip"
-                android:paddingLeft="30dip"
-                android:paddingTop="7dip"
-                android:layout_gravity="right"
-                android:src="@drawable/bluelinemarker" />
-
-             <TextView
-        android:id="@+id/textView3"
-        android:textColor="@color/fb_blue"
-        android:layout_width="80dip"
-        android:layout_height="wrap_content"            
-        android:text="Name,hometown,education accessed" />
-        </TableRow>-->
-
-           </TableLayout>  
+      </TableLayout>  
 
     
     <Button
