@@ -104,7 +104,7 @@ public class UserFBInfo {
     }
 	
 	public boolean isPhoneAvailable() {  
-		if(phone!="")
+		if(!phone.equalsIgnoreCase("null"))
 			return true;
 		else
 			return false;

@@ -2,6 +2,7 @@ package my.b1701.SB.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,11 @@ import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import my.b1701.SB.Activities.OtherUserProfileActivity;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.HelperClasses.SBImageLoader;
 import my.b1701.SB.R;
+import my.b1701.SB.Platform.Platform;
 import my.b1701.SB.Users.NearbyUser;
 import my.b1701.SB.Users.ThisUserNew;
 import my.b1701.SB.Users.UserFBInfo;
@@ -90,6 +93,15 @@ public class NearbyUsersListViewAdapter extends BaseAdapter{
 			public void onClick(View chatIconView) {
 				FacebookConnector fbconnect = new FacebookConnector(underLyingActivity);
 				fbconnect.openFacebookPage(thisUserFBInfo.getFbid(),thisUserFBInfo.getFBUsername());						
+			}
+		});
+        
+        userProfileView.setOnClickListener(new OnClickListener() {				
+			@Override
+			public void onClick(View chatIconView) {
+				Intent i = new Intent(Platform.getInstance().getContext(),OtherUserProfileActivity.class);				
+				i.putExtra("fb_info", thisUserFBInfo.toString());
+				Platform.getInstance().getContext().startActivity(i);						
 			}
 		});
         

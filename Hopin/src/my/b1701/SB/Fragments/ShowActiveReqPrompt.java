@@ -79,6 +79,10 @@ public class ShowActiveReqPrompt extends DialogFragment{
     				String source = responseJsonObj.getString(UserAttributes.SRCLOCALITY);
     				String destination = responseJsonObj.getString(UserAttributes.DSTLOCALITY);
     				String datetime = responseJsonObj.getString(UserAttributes.DATETIME);
+    				if(source.equalsIgnoreCase("null"))
+    					source = responseJsonObj.getString(UserAttributes.SRCADDRESS);
+    				if(destination.equalsIgnoreCase("null"))
+    					source = responseJsonObj.getString(UserAttributes.DSTADDRESS);
     				carpoolsource.setText(source);
     				carpooldestination.setText(destination);
     				carpooltime.setText(StringUtils.formatDate("yyyy-MM-dd HH:mm", "hh:mm a", datetime));
@@ -128,7 +132,10 @@ public class ShowActiveReqPrompt extends DialogFragment{
             					
 				String source = responseJsonObj.getString(UserAttributes.SRCLOCALITY);
 				String destination = responseJsonObj.getString(UserAttributes.DSTLOCALITY);
-				
+				if(source.equalsIgnoreCase("null"))
+					source = responseJsonObj.getString(UserAttributes.SRCADDRESS);
+				if(destination.equalsIgnoreCase("null"))
+					source = responseJsonObj.getString(UserAttributes.DSTADDRESS);
 				instasource.setText(source);
 				instadestination.setText(destination);
 				instatime.setText(StringUtils.formatDate("yyyy-MM-dd HH:mm:ss", "d MMM, hh:mm a", datetime));
