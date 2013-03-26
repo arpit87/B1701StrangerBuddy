@@ -75,7 +75,7 @@ public abstract class AbstractHistoryFragment extends ListFragment {
         List<HistoryAdapter.HistoryItem> historyItems = new ArrayList<HistoryAdapter.HistoryItem>();
         List<HistoryAdapter.HistoryItem> historyItemList = ThisUserNew.getInstance().getHistoryItemList();
         for (HistoryAdapter.HistoryItem historyItem : historyItemList) {
-            if (historyItem.getPlanInstantType() == getPlanInstantType()){
+            if (historyItem.getPlanInstantType() == getPlanInstantType()){            	
                 historyItems.add(historyItem); //plan is 0,insta is 1
             }
         }

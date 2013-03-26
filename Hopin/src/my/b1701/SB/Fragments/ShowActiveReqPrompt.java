@@ -115,7 +115,7 @@ public class ShowActiveReqPrompt extends DialogFragment{
         		
         		final JSONObject responseJsonObj = new JSONObject(instaReqJson);
         		String datetime = responseJsonObj.getString(UserAttributes.DATETIME);        		
-				if(checkIfRequestExpired(datetime))
+				if(StringUtils.checkIfRequestExpired(datetime))
 				{
 					ThisUserConfig.getInstance().putString(ThisUserConfig.ACTIVE_REQ_INSTA, "");
 					ToastTracker.showToast("Active insta req expired");
@@ -185,26 +185,6 @@ public class ShowActiveReqPrompt extends DialogFragment{
 		});
 	       
 		return dialogView;
-	}
-	
-	private boolean checkIfRequestExpired(String dateTime)
-	{
-		//currently chking for 2 hrs
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Log.i(TAG,"got date in chkdate:"+dateTime);		
-		try {
-			Date date =  formatter.parse(dateTime);	
-			Long currentTime = System.currentTimeMillis();
-			Long instaTime = date.getTime();
-			Log.i(TAG,"cur time:"+currentTime);	
-			Log.i(TAG,"insta time:"+instaTime);	
-			if( currentTime - instaTime  > 7.2e6)
-				return true;
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		return false;
 	}
 	
 	

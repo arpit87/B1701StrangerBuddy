@@ -5,7 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class StringUtils {
+import android.util.Log;
+
+public class StringUtils {	
+	
     
     public static boolean isEmpty(String s){
         return (s == null || s.length() == 0);
@@ -89,5 +92,24 @@ public class StringUtils {
 		String date = dateFormat.format(travelDate);
 		return date;		
     }
+    
+    public static boolean checkIfRequestExpired(String dateTime)
+	{
+		//currently chking for 2 hrs
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");			
+		try {
+			Date date =  formatter.parse(dateTime);	
+			Long currentTime = System.currentTimeMillis();
+			Long instaTime = date.getTime();			
+			if( currentTime - instaTime  > 7.2e6)
+				return true;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return false;
+	}
+	
+	
 }
 
