@@ -2,12 +2,9 @@ package my.b1701.SB.ChatClient;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -67,7 +64,8 @@ public class ChatWindow extends Activity{
 	private ProgressDialog progressDialog;
 	private FacebookConnector fbconnect; // required if user not logged in
 	PopupWindow popUpMenu;
-	
+    private NotificationManager notificationManager;
+
     
 		    
 	    @Override
@@ -108,7 +106,7 @@ public class ChatWindow extends Activity{
 		mThiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
 		mThisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
 		mThisUserChatFullName = ThisUserConfig.getInstance().getString(ThisUserConfig.FB_FULLNAME);
-		
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 }
 	    
 	    
@@ -117,10 +115,11 @@ public class ChatWindow extends Activity{
 @Override
 public void onResume() {
 	super.onResume();
-	//set participant before binding	
+	//set participant before binding
 	mParticipantFBID = getIntent().getStringExtra(PARTICIPANT);	
-	if(StringUtils.isBlank(mParticipantFBID))
+    if(StringUtils.isBlank(mParticipantFBID))
 	  return;
+    notificationManager.cancel(mParticipantFBID.hashCode());
 	mParticipantName = getIntent().getStringExtra(PARTICIPANT_NAME);
 	mContactNameTextView.setText(mParticipantName);
 	mParticipantImageURL = "http://graph.facebook.com/" + mParticipantFBID + "/picture?type=small";

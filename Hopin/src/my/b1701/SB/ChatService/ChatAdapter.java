@@ -1,31 +1,23 @@
 package my.b1701.SB.ChatService;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
-
+import android.os.RemoteCallbackList;
+import android.os.RemoteException;
+import android.util.Log;
 import my.b1701.SB.ChatClient.IMessageListener;
 import my.b1701.SB.ChatClient.SBChatMessage;
-import my.b1701.SB.HelperClasses.BlockedUser;
-import my.b1701.SB.HelperClasses.ChatHistory;
-import my.b1701.SB.HelperClasses.ThisAppConfig;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.HelperClasses.ToastTracker;
+import my.b1701.SB.HelperClasses.*;
 import my.b1701.SB.HttpClient.GetFBInfoForUserIDAndShowPopup;
 import my.b1701.SB.HttpClient.SBHttpClient;
 import my.b1701.SB.Users.ThisUserNew;
 import my.b1701.SB.Util.StringUtils;
-
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPException;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.RemoteCallbackList;
-import android.os.RemoteException;
-import android.util.Log;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /***
  * There is a chatAdapter for every chat which stores a list of all chat msgs
@@ -50,7 +42,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 	private final HashMap<Long, Message> mSentNotDeliveredMsgHashSet;
 	private SBChatManager mChatManager;
 	SBMsgListener mMsgListener = null;
-	int notificationid = 0;	
+	//int notificationid = 0;
 	String mImageURL = "";
 	private final RemoteCallbackList<IMessageListener> mRemoteListeners = new RemoteCallbackList<IMessageListener>();
 	private LinkedBlockingQueue<Message> mMsgqueue = null;
@@ -69,7 +61,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 		mSmackChat.addMessageListener(mMsgListener);
 		mChatManager = chatManager;
 		mSentNotDeliveredMsgHashSet = new HashMap<Long, Message>();
-		notificationid = mChatManager.numChats() + 1;
+		//notificationid = mChatManager.numChats() + 1;
 		mImageURL = ThisUserConfig.getInstance().getString(
 				ThisUserConfig.FBPICURL);
 		String instaReqJson = ThisUserConfig.getInstance().getString(
@@ -79,10 +71,6 @@ class ChatAdapter extends IChatAdapter.Stub {
 		mSenderThread = new SenderThread();
 		mSenderThread.start();
 		Log.i(TAG, "chatadapter created for:" + mParticipant);
-	}
-
-	public int getNotificationid() {
-		return notificationid;
 	}
 
 	/*private String setTravelInfo(String responseJsonStr, int daily_insta_type) {
@@ -326,7 +314,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 					if (participant_name == "")
 						participant_name = "Unknown";
 					
-					mChatManager.notifyChat(notificationid, msg.getInitiator(),participant_name,msg.getBody());
+					mChatManager.notifyChat(msg.getInitiator().hashCode(), msg.getInitiator(),participant_name,msg.getBody());
 
 				}
 

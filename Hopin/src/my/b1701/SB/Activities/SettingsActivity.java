@@ -1,6 +1,5 @@
 package my.b1701.SB.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -10,7 +9,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
-import my.b1701.SB.ActivityHandlers.MapListActivityHandler;
 import my.b1701.SB.FacebookHelpers.FacebookConnector;
 import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.HelperClasses.ThisAppConfig;
@@ -67,7 +65,7 @@ public class SettingsActivity extends FragmentActivity{
  				}
  				else
  				{
- 					if(ThisUserConfig.getInstance().getString(ThisUserConfig.GENDER) != "female")
+ 					if(!"female".equalsIgnoreCase(ThisUserConfig.getInstance().getString(ThisUserConfig.GENDER)))
  					{
  						Toast.makeText(SettingsActivity.this, "Sorry this filter is only meant for women", Toast.LENGTH_SHORT).show();
  						womanFilterView.setVisibility(View.GONE);
