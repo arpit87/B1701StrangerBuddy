@@ -170,7 +170,7 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
 		if(viewOnMarkerIndividualExpanded!=null)
 		{
             boolean isOtherUserFbInfoAvailable = n.getUserFBInfo().FBInfoAvailable();
-            boolean isOtherUserPhoneAvailable = n.getUserFBInfo().isPhoneAvailable();
+            //boolean isOtherUserPhoneAvailable = n.getUserFBInfo().isPhoneAvailable();
             boolean isThisUserFbLoggedIn = ThisUserConfig.getInstance().getBool(ThisUserConfig.FBLOGGEDIN);
 
             if (!(isOtherUserFbInfoAvailable && isThisUserFbLoggedIn)){
@@ -199,7 +199,7 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
                 }
             }
 
-            if (!(isOtherUserPhoneAvailable && isThisUserFbLoggedIn)){
+          /*  if (!(isOtherUserPhoneAvailable && isThisUserFbLoggedIn)){
                 if (smsIconImgSrc != R.drawable.sms_icon_disabled) {
                     smsIcon.setImageResource(R.drawable.sms_icon_disabled);
                     smsIcon.invalidate();
@@ -211,7 +211,7 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
                     smsIcon.invalidate();
                     smsIconImgSrc = R.drawable.sms_icon;
                 }
-            }
+            }*/
             
             smsIcon.setOnClickListener(new OnClickListener() {				
 				@Override
@@ -307,13 +307,13 @@ public class GroupedNearbyUsersOverlayItem extends BaseOverlayItem{
             facebookIconImgSrc = R.drawable.fb_icon_disabled;
 		}
 		
-		if(!n.getUserFBInfo().isPhoneAvailable())
+		/*if(!n.getUserFBInfo().isPhoneAvailable())
 		{				
 			smsIcon.setImageResource(R.drawable.sms_icon_disabled);
 			smsIcon.invalidate();
             smsIconImgSrc = R.drawable.sms_icon_disabled;
           
-		}
+		}*/
 					
 		buttonClose.setOnClickListener(new OnClickListener() {				
 			@Override

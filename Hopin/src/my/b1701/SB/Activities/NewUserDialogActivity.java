@@ -94,11 +94,11 @@ public class NewUserDialogActivity extends Activity{
 			buttonClose = (ImageView)findViewById(R.id.newuserarrive_popup_button_close_balloon_expandedview);
 		
 					
-			if(!thisNearbyUserFBInfo.isPhoneAvailable())
+			/*if(!thisNearbyUserFBInfo.isPhoneAvailable())
 			{				
 				smsIcon.setImageResource(R.drawable.sms_icon_disabled);
 				smsIcon.invalidate();                
-			}
+			}*/
 			
 			
 			buttonClose.setOnClickListener(new OnClickListener() {				
