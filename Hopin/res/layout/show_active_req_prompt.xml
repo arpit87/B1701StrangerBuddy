@@ -121,7 +121,7 @@
                 android:layout_height="1dip"
                 android:background="@color/gray"
                 android:layout_marginTop="5dip"
-                android:layout_marginLeft="5dip"/>
+                />
  <LinearLayout 
      android:id="@+id/show_active_req_prompt_carpoollayout"
       android:layout_width="match_parent"
@@ -227,7 +227,7 @@
                 android:layout_height="1dip"
                 android:background="@color/gray"
                 android:layout_marginTop="5dip"
-                android:layout_marginLeft="5dip"/>
+                />
    <RelativeLayout 
        android:layout_height="match_parent"
        android:layout_width="match_parent" 

@@ -3,9 +3,8 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#ffffffff"
-              >
-              
+              android:background="#ffffffff">   
+              
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"        
@@ -32,26 +31,10 @@
         android:layout_margin="3dip"
         android:layout_centerVertical="true" 
          />
-  
- <!--   <TextView
-        android:id="@+id/milestone_list_image"
-        android:layout_width="70dp"
-        android:layout_height="80dp"             
-        android:layout_margin="8dip"
-        android:layout_centerVertical="true" 
-        android:background="@drawable/milestone"
-        android:layout_alignParentRight="true" 
-        android:text="20 KM"     
-        android:textColor="@color/black"
-        android:paddingTop="40dip"
-        android:textSize="20dip"
-        android:paddingLeft="4dip"
-        
-         />-->
   <LinearLayout
       android:id="@+id/selfInfoLayout"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"     
+      android:layout_height="wrap_content"    
       
       android:layout_toRightOf="@+id/selfthumbnail"
       android:orientation="vertical"
@@ -103,12 +86,14 @@
     <View android:layout_width="fill_parent" android:layout_height="2dp"
           android:fadingEdge="horizontal" android:background="@color/gray"/>
 
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ListView 
               android:id="@android:id/list"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:textSize="24dp"
-              android:background="#D3D3D3">
+              android:cacheColorHint="@android:color/transparent"
+              android:divider="@color/dark_gray"
+              android:dividerHeight="1dip">
     </ListView>
 
     <TextView android:id="@id/android:empty"
@@ -116,3 +101,4 @@
               android:layout_height="match_parent"
               android:background="#D3D3D3"/>
 </LinearLayout>
+
