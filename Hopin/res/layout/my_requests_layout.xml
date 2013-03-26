@@ -31,12 +31,10 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="20dip"
-                android:text="Insta Request"
+                android:text="One time pool"
                 android:textStyle="bold"    
                 android:layout_marginTop="5dip"                
                 android:layout_gravity="center_horizontal" />
-       
-        
          
          <TextView
              android:id="@+id/my_requests_insta_noactivereq" 
