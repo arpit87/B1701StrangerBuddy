@@ -5,24 +5,23 @@
     android:layout_width="wrap_content"   
       > 
             <TextView
-            android:id="@+id/sms_header_text"
+            android:id="@+id/feedback_header_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" 
-            android:text="Send sms"   
+            android:text="Send feedback"   
             android:textColor="@color/white"
             android:textSize="20dip"
-            android:padding="2.0dip" 
+            android:padding="2.0dip"
             android:background="@drawable/transparent_black"         
              />            
       
   <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"                
-        android:orientation="vertical"        
-        
+        android:orientation="vertical"
         android:padding="10dip"
          android:background="@color/white">
-    <EditText android:id="@+id/smsText"
+    <EditText android:id="@+id/feedback_feedbackedittext"
         android:layout_width="250dip"
         android:layout_marginTop="10dip"
         android:layout_height="150dip"
@@ -42,7 +41,7 @@
         android:layout_marginTop="10dip">
 
         <Button
-            android:id="@+id/btn_cancelsms"
+            android:id="@+id/feedback_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="40dip"
             android:layout_gravity="center"
@@ -53,7 +52,7 @@
             android:textColor="@color/black" />
 
         <Button
-            android:id="@+id/btn_sendsms"
+            android:id="@+id/feedback_btn_send"
             android:layout_width="wrap_content"
             android:layout_height="40dip"
             android:layout_gravity="center"
