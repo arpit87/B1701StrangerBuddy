@@ -28,6 +28,7 @@ public class ThisUserConfig extends ConfigBase{
     public static final String ACTIVE_REQ_INSTA = "active_req_insta";
     public static final String ACTIVE_REQ_CARPOOL = "active_req_carpool";
     public static final String GENDER = "fb_gender";
+    public static final String EMAIL = "email";
 	
 	private ThisUserConfig(){super(Constants.USER_CONF_FILE);}
 	

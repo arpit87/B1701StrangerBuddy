@@ -153,12 +153,13 @@ public class FacebookConnector {
 	        try {
 	            jsonObject = new JSONObject(response);	  
 	            Log.i(TAG,"got my fbinfo:"+jsonObject.toString());
-	            String picurl,username,first_name,last_name,id,gender;
+	            String picurl,username,first_name,last_name,id,gender,email;
 	            id = jsonObject.getString("id");
 	            username = jsonObject.getString("username");
 	            first_name  = jsonObject.getString("first_name");
 	            last_name = jsonObject.getString("last_name");
 	            gender = jsonObject.getString("gender");
+	            email = jsonObject.getString("email");
 	            picurl = "http://graph.facebook.com/" + id + "/picture?type=small";
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBUID,id );
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FBPICURL, picurl);
@@ -168,6 +169,7 @@ public class FacebookConnector {
 	            ThisUserConfig.getInstance().putString(ThisUserConfig.FB_LASTNAME, last_name);
                 ThisUserConfig.getInstance().putString(ThisUserConfig.USERNAME, first_name+" "+last_name);
                 ThisUserConfig.getInstance().putString(ThisUserConfig.FB_FULLNAME, first_name+" "+last_name);
+                ThisUserConfig.getInstance().putString(ThisUserConfig.EMAIL, email);
                 if(!StringUtils.isBlank(id))
                 {
                 	ThisUserConfig.getInstance().putBool(ThisUserConfig.FBLOGGEDIN, true);

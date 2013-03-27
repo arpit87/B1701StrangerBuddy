@@ -73,36 +73,7 @@ class ChatAdapter extends IChatAdapter.Stub {
 		Log.i(TAG, "chatadapter created for:" + mParticipant);
 	}
 
-	/*private String setTravelInfo(String responseJsonStr, int daily_insta_type) {
-		JSONObject responseJsonObj;
-		String formattedTraveDetails = "";
-		try {
-			responseJsonObj = new JSONObject(responseJsonStr);
-			String source = responseJsonObj
-					.getString(UserAttributes.SRCLOCALITY);
-			String destination = responseJsonObj
-					.getString(UserAttributes.DSTLOCALITY);
-			String datetime = responseJsonObj
-					.getString(UserAttributes.DATETIME);
-
-			if (daily_insta_type == 0)
-				formattedTraveDetails = datetime
-						+ " Daily@"
-						+ StringUtils.formatDate("yyyy-MM-dd HH:mm:ss",
-								"hh:mm a", datetime);
-			else
-				formattedTraveDetails = datetime
-						+ ","
-						+ StringUtils.formatDate("yyyy-MM-dd HH:mm:ss",
-								"d MMM hh:mm a", datetime);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return formattedTraveDetails;
-
-	}*/
-
+	
 	private void addMessageToList(Message msg)
 	{
 		mMessages.add(msg);

@@ -69,6 +69,7 @@ public class StartStrangerBuddyActivity extends Activity {
 		String uuid = ThisAppInstallation.id(this.getBaseContext());
 		ThisAppConfig.getInstance().putString(ThisAppConfig.APPUUID,uuid);
 		ThisAppConfig.getInstance().putBool(ThisAppConfig.NEWUSERPOPUP,true);
+		ThisAppConfig.getInstance().putInt(ThisAppConfig.APPOPENCOUNT,0);
 		//with uuid means first time start
 		final Intent show_tutorial = new Intent(this,Tutorial.class);
 		show_tutorial.putExtra("uuid", uuid);

@@ -8,6 +8,7 @@ public class ThisAppConfig extends ConfigBase{
 	
 	//app settings
 	public static final String NEWUSERPOPUP = "new_user_popup";
+	public static final String APPOPENCOUNT = "app_open_count";
 	public static final String CHATPOPUP = "chat_popup";
 	public static final String WOMANFILTER = "woman_filter";
 	public static final String FBFRIENDONLYFILTER = "fb_friendonly_filter";

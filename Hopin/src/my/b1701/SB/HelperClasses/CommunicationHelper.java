@@ -101,7 +101,7 @@ public class CommunicationHelper {
 			sms_dialog.show(MapListActivityHandler.getInstance().getUnderlyingActivity().getSupportFragmentManager(), "sms_dialog");						
 		}
 		else
-			ToastTracker.showToast("Sorry, user has not provided phone number");
+			ToastTracker.showToast("Sorry, user has not provided phone number ");
 	}
 	
 	public void onFBIconClickWithUser(Activity underLyingActivity, String userFBID, String userFBName)

@@ -1,5 +1,11 @@
 package my.b1701.SB.Activities;
 
+import my.b1701.SB.R;
+import my.b1701.SB.FacebookHelpers.FacebookConnector;
+import my.b1701.SB.Fragments.FBLoginDialogFragment;
+import my.b1701.SB.HelperClasses.ThisAppConfig;
+import my.b1701.SB.HelperClasses.ThisUserConfig;
+import my.b1701.SB.Platform.Platform;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -9,11 +15,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
-import my.b1701.SB.FacebookHelpers.FacebookConnector;
-import my.b1701.SB.Fragments.FBLoginDialogFragment;
-import my.b1701.SB.HelperClasses.ThisAppConfig;
-import my.b1701.SB.HelperClasses.ThisUserConfig;
-import my.b1701.SB.R;
 
 public class SettingsActivity extends FragmentActivity{
 	
@@ -25,7 +26,7 @@ public class SettingsActivity extends FragmentActivity{
 	CheckBox fbfriendsOnlyFilter;
     View blockedUsersView;
     FacebookConnector fbconnect;
-    
+    View feedbackView;
    
 
 	 @Override
@@ -36,6 +37,7 @@ public class SettingsActivity extends FragmentActivity{
 		 womenFilter = (CheckBox)findViewById(R.id.settings_womenfilter_checkbox);
 		 fbfriendsOnlyFilter = (CheckBox)findViewById(R.id.settings_fbfriendonly_checkbox);		 
          blockedUsersView = findViewById(R.id.settings_blockedusers_layout);         
+         feedbackView = findViewById(R.id.settings_feedback_layout);
          womanFilterView = findViewById(R.id.settings_womenfilter_tablerow);
 	 }
 	 
@@ -95,10 +97,7 @@ public class SettingsActivity extends FragmentActivity{
   					ThisAppConfig.getInstance().putBool(ThisAppConfig.FBFRIENDONLYFILTER, isChecked);  					
   				}
   			}
-  		});
-          
-         
-         
+  		}); 
 
          blockedUsersView.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -108,6 +107,17 @@ public class SettingsActivity extends FragmentActivity{
                  startActivity(blockedUsersIntent);
              }
          });
+         
+         feedbackView.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+            	Intent i = new Intent(Platform.getInstance().getContext(),FeedbackActivity.class);
+     			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);     			
+     			Platform.getInstance().getContext().startActivity(i);						
+             }
+         });
+         
+        
 		 
 	 }
 	 

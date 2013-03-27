@@ -29,8 +29,10 @@ import my.b1701.SB.Fragments.FBLoginDialogFragment;
 import my.b1701.SB.Fragments.SBListFragment;
 import my.b1701.SB.Fragments.SBMapFragment;
 import my.b1701.SB.Fragments.ShowActiveReqPrompt;
+import my.b1701.SB.HelperClasses.BlockedUser;
 import my.b1701.SB.HelperClasses.BroadCastConstants;
 import my.b1701.SB.HelperClasses.ProgressHandler;
+import my.b1701.SB.HelperClasses.ThisAppConfig;
 import my.b1701.SB.HelperClasses.ThisUserConfig;
 import my.b1701.SB.HelperClasses.ToastTracker;
 import my.b1701.SB.HttpClient.*;
@@ -145,7 +147,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     @Override
     public void onStop(){
         super.onStop();
-        EasyTracker.getInstance().activityStop(this);
+        EasyTracker.getInstance().activityStop(this);       
     }
     
     @Override
@@ -174,9 +176,21 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
     	this.unregisterReceiver(mapListActivityHandler);
     	mapListActivityHandler.clearAllData();  
     	ThisUserNew.clearAllData();
-    	CurrentNearbyUsers.getInstance().clearAllData();
+    	CurrentNearbyUsers.getInstance().clearAllData();    	  
+        int count = ThisAppConfig.getInstance().getInt(ThisAppConfig.APPOPENCOUNT);     	
+     	ThisAppConfig.getInstance().putInt(ThisAppConfig.APPOPENCOUNT,++count);
+     	if(count%5==0)
+     	{
+     		//show msg every fifth time ap is closed
+     		Intent i = new Intent(Platform.getInstance().getContext(),FeedbackActivity.class);
+ 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);     			
+ 			Platform.getInstance().getContext().startActivity(i);
+     		
+     	}
+    	
     }
 	
+ 
 		
 	@Override
 	public void onBackPressed() {
@@ -191,26 +205,7 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
         }
         
 	}
-
-    private void buildExitMessageDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to keep you request active?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        MapListViewTabActivity.super.onBackPressed();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        DeleteRequest deleteRequest = new DeleteRequest(1);
-                        SBHttpClient.getInstance().executeRequest(deleteRequest);                        
-                        MapListViewTabActivity.super.onBackPressed();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
+  
 
 	@Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
