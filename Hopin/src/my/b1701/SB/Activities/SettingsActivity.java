@@ -112,7 +112,8 @@ public class SettingsActivity extends FragmentActivity{
              @Override
              public void onClick(View view) {
             	Intent i = new Intent(Platform.getInstance().getContext(),FeedbackActivity.class);
-     			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);     			
+     			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);     		
+     			i.putExtra("show_prompt", false);
      			Platform.getInstance().getContext().startActivity(i);						
              }
          });

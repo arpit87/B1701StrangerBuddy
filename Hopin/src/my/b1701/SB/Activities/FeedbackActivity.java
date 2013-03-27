@@ -30,7 +30,9 @@ public class FeedbackActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.feedback_dialog);
-        buildfeedbackAlertMessage();
+        boolean showprompt = getIntent().getBooleanExtra("showprompt", false);
+        if(showprompt)
+        	buildfeedbackAlertMessage();
       		
 	}
 	

@@ -183,7 +183,8 @@ public class MapListViewTabActivity extends SherlockFragmentActivity  {
      	{
      		//show msg every fifth time ap is closed
      		Intent i = new Intent(Platform.getInstance().getContext(),FeedbackActivity.class);
- 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);     			
+ 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);     	
+ 			i.putExtra("showprompt", true);
  			Platform.getInstance().getContext().startActivity(i);
      		
      	}
